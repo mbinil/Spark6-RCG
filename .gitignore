@@ -1,4 +1,11 @@
-/app/Config
+/app/Config/Schema
+/app/Config/acl.ini.php
+/app/Config/acl.php
+/app/Config/bootstrap.php
+/app/Config/core.php
+/app/Config/database.php
+/app/Config/email.php.default
+/app/Config/site_url.php
 /app/tmp
 /lib/Cake/Console/Templates/skel/tmp/
 /plugins
