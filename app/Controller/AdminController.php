@@ -1196,11 +1196,17 @@ class AdminController extends AppController
 		if($newchildcatinfo['gradient'] == 1)
 		{
 			// Draw a red rectangle with nearest colours
+			imagefilledrectangle($im, 0, 0, 50, 200, $red);
+			imagefilledrectangle($im, 50, 0, 100, 200, $red1);
+			imagefilledrectangle($im, 100, 0, 150, 200, $red2);
+			imagefilledrectangle($im, 150, 0, 200, 200, $red3);
+			
+			/* Five gradiant colors
 			imagefilledrectangle($im, 0, 0, 40, 200, $red);
 			imagefilledrectangle($im, 40, 0, 80, 200, $red1);
 			imagefilledrectangle($im, 80, 0, 120, 200, $red2);
 			imagefilledrectangle($im, 120, 0, 160, 200, $red3);
-			imagefilledrectangle($im, 160, 0, 200, 200, $red4);
+			imagefilledrectangle($im, 160, 0, 200, 200, $red4);*/
 		}
 		else
 		{

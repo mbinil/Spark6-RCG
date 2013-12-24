@@ -18,7 +18,6 @@ function ajax_reg_step3()
 			url: "users/ajax_registration_step3",
 			data: "hobby="+hobby,  //data
 			success: function(response) {
-			
 			if(response=='1')
 				{
 					window.location = "discover";

@@ -142,14 +142,9 @@ $eBayBusinessUnitLoc = Configure::read('eBayBusinessUnitLoc');
 					<div class="discrption_label">Email Notification</div>
 					<div class="clear"></div>
 					<div style="float:left;">
-					<?php if(isset($reg_array['user_notification'])) { ?>
-						<input type="radio" id="emailnot" name="emailnot[]" value="0" <?php if(isset($reg_array['user_notification']) && $reg_array['user_notification']=='0') { ?>checked="checked" <?php } ?> /><span style="margin-left:10px;">Notify me if i've been invited to participate in a challenge.</span><br/>
-						<input type="radio" id="emailnot1" name="emailnot[]" value="1"  <?php if(isset($reg_array['user_notification']) && $reg_array['user_notification']=='1') { ?>checked="checked" <?php } ?> /><span style="margin-left:10px;">Notify me when i've finished a challenge.</span>
-						<?php } else { ?>
-						<input type="radio" id="emailnot" name="emailnot[]" value="0" checked="checked" /><span style="margin-left:10px;">Notify me if i've been invited to participate in a challenge.</span><br/>
-						<input type="radio" id="emailnot1" name="emailnot[]" value="1" /><span style="margin-left:10px;">Notify me when i've finished a challenge.</span>
-						<?php } ?>
-					</div>
+                                            <input type="checkbox" id="emailnot" name="emailnot1" value="1" <?php if(isset($reg_array['user_notification_participate']) && $reg_array['user_notification_participate']=='1') { ?>checked="checked" <?php } ?> /><span style="margin-left:10px;">Notify me if i've been invited to participate in a challenge.</span><br/>
+                                            <input type="checkbox" id="emailnot1" name="emailnot2" value="1"  <?php if(isset($reg_array['user_notification_finished']) && $reg_array['user_notification_finished']=='1') { ?>checked="checked" <?php } ?> /><span style="margin-left:10px;">Notify me when i've finished a challenge.</span>
+                                        </div>
 				</div>
 				<div style="width:17%; float:right; margin-top:15px;">
 					<!--drag & drop starting here-->

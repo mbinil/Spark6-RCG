@@ -2835,11 +2835,11 @@ h1{
 	color:#0077c9;
 	display:block;
 	padding:0 12px 0 0;
-	margin:0 -13px 0 0;
+	margin:0 -12px 0 0;
 }
 .tabset .mask{
 	padding:0 12px 0 0;
-	background:url(../img/sprite.png) no-repeat 100% -98px;
+	/*background:url(../img/sprite.png) no-repeat 100% -98px;*/
 }
 .tabset .mask-frame{
 	display:block;
@@ -2872,10 +2872,15 @@ h1{
 .tabset .Relationships .ico{background-position:-3px -1593px;}
 /* .tabset a:hover, */
 .tabset .active{color:#fff !important;}
-.tabset .active .mask{opacity:1 !important;}
+.tabset .active span {background-color:#2A2E31 !important;}
+.tabset .active .mask{
+	opacity:1 !important;
+    background: url("../img/sprite.png") no-repeat scroll 100% -149px rgba(0, 0, 0, 0);
+    padding: 0 12px 0 0;
+}
 .tabset .active.All .mask{background-position:100% -149px;}
 .tabset .active.All .mask-frame{background-color:#2a2e31;}
-.tabset .mask-frame{background-color:#67b000;}
+.tabset .mask-frame{background-color:#FFFFFF;}
 .tabset .Health .ico-hover{background-position:-2px -1644px;}
 .tabset .Wealth .ico-hover{background-position:-4px -1696px;}
 .tabset .Relationships .ico-hover{background-position:-4px -1743px;}

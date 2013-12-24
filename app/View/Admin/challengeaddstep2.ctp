@@ -95,19 +95,32 @@ var session_start_date = '<?php echo (isset($newchallengeinfo['start_date']))?$n
 
 $('#child_val').live('change',function(){
 	var baseurl = $('#baseurl').val();
-    $('#child_category_val').val($(this).val());
-    $.ajax({  //Make the Ajax Request
-            type: "POST",  
-            url: "ajax_getchildcombo",
-            data: "id="+$(this).val(),  //data
-            async:false,
-            success: function(response) {
-                var data    =   new Array();
-                data        =   response.split('@#@');
-                $('#child_image_div').css('background','url("'+baseurl+'img/badgedesign/'+data[2]+'")');
-				$('#child_image_name').val(data[2]);
-            }
-        });
+        var val =   $(this).val();
+        $('#child_category_val').val($(this).val());
+        if( val != 0)
+        {
+            $.ajax({  //Make the Ajax Request
+                    type: "POST",  
+                    url: "ajax_getchildcombo",
+                    data: "id="+$(this).val(),  //data
+                    async:false,
+                    success: function(response) {
+                        var data    =   new Array();
+                        data        =   response.split('@#@');
+                        if(val != 0)
+                        {
+                            $('#child_image_div').css('background','url("'+baseurl+'img/badgedesign/'+data[2]+'")');
+                            $('#child_image_name').val(data[2]);
+                        }
+                    }
+                });
+        }
+        else
+        {
+            $('#child_image_div').css('background','url("")');
+            $('#child_image_div').css('background-color','#EEEEEE');
+            $('#child_image_name').val('');
+        }
 });
 
 function badgenamechange(val)
@@ -346,7 +359,7 @@ Need another child category?<a href="javascript:getChildCategory();">create one 
       </div>
 	  
 	  <div style="float:right; width:30%; margin-left:20px;">
-		<div style="border-radius:100px;height:200px;margin:20px 60px 10px; <?php if(isset($newchallengeinfo['chalngparentchildimagename'])) { ?>background:url('../img/badgedesign/<?php echo $newchallengeinfo['chalngparentchildimagename']; ?>'); <?php } else { ?>background-color:#EEEEEE;<?php } ?>" id="child_image_div"></div>
+		<div style="border-radius:100px;height:200px;margin:20px 60px 10px; <?php if(isset($newchallengeinfo['chalngparentchildimagename']) && $newchallengeinfo['chalngparentchildimagename']) { ?>background:url('../img/badgedesign/<?php echo $newchallengeinfo['chalngparentchildimagename']; ?>'); <?php } else { ?>background-color:#EEEEEE;<?php } ?>" id="child_image_div"></div>
 		
 		<div style="position: absolute; background-color:#AAAAAA; border-radius: 100px; width: 150px; height: 150px; margin: -184px 0 0 86px;"></div>
 		<div id="parent_image_div" style="position: absolute; margin: -157px 0 0 109px;">

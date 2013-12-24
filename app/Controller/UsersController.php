@@ -42,7 +42,19 @@ class UsersController extends AppController {
 	public $uses = array();
 		
 	/*New user registration pages*/	
-	public function registration_step1() { }
+	
+	public function registration_step1() { 
+            $this->Session->delete("session_user_id");
+            $this->Session->delete('username');
+            $this->Session->delete('userid');
+            $this->Session->delete('locateid');
+            $this->Session->delete('loginerror');
+            $this->Session->delete('dispstatus');
+            $this->Session->delete('newdiffinfo');
+            $this->Session->delete('newchallengeinfo');
+            $this->Session->delete('stepinfo');
+            //$this->Session->destroy();
+        }
 	
 	public function ajax_registration_step1() 
 	{
@@ -60,7 +72,8 @@ class UsersController extends AppController {
 		{
 			$newreginfo['user_business_loc'] = $_POST['ebay_buz_loc'];
 		}
-		$newreginfo['user_notification'] = $_POST['email_noti'];
+		$newreginfo['user_notification_participate']    =   $_POST['email_noti1'];
+		$newreginfo['user_notification_finished']       =   $_POST['email_noti2'];
 		$this->Session->write("newreginfo",$newreginfo);
 		echo "1";
 	}
@@ -120,10 +133,13 @@ class UsersController extends AppController {
 		$newreginfo['user_active'] = 1;
 		$this->Session->write("newreginfo",$newreginfo);
 		
-		//print_r($newreginfo);
+		
 		$newreginfo = $this->Session->read("newreginfo");
 		if(!empty($newreginfo ))
 		{
+                        if(!isset($newreginfo['user_profile_picture']) || $newreginfo['user_profile_picture'] == '')
+                            $newreginfo['user_profile_picture'] =   'no_image.png';
+                        
 			$this->loadModel("User");
 			$result = $this->User->registr($newreginfo);
 			if($result==1)
@@ -207,7 +223,8 @@ class UsersController extends AppController {
 		{
 			$newreginfo['user_business_loc'] = $_POST['ebay_buz_loc'];
 		}
-		$newreginfo['user_notification'] = $_POST['email_noti'];
+		$newreginfo['user_notification_participate']    =   $_POST['email_noti1'];
+		$newreginfo['user_notification_finished']       =   $_POST['email_noti2'];
 		$this->Session->write("newreginfo",$newreginfo);
 		echo "1";
 	}

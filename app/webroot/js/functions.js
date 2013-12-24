@@ -1392,7 +1392,7 @@ function gottochallengestep3()
 	var chalngending                =   getDateFormat($('#datepicker-to').datepicker('getDate'));
         var step                        =   $('#step').val();
         var return_flag                 =   0;
-
+	
         if(chalngparentchild == '')
         {
             $('#message_span').html('Select a child category!!');
@@ -1756,18 +1756,18 @@ function reg_info_ajax()
 		//var gender= $("#chalngwhosets").val();
 		var ebay_buz_unit= $("#unit_info").val();
 		var ebay_buz_loc= $("#loc_info").val();
-		if(document.getElementsByName('emailnot[]')[0].checked==true)
-		{
-			var email_noti= document.getElementsByName('emailnot[]')[0].value;
-		}
-		else
-		{
-			var email_noti= document.getElementsByName('emailnot[]')[1].value;
-		}
+                    
+		var email_noti1= 0;
+		var email_noti2= 0;
+                
+                if($("#emailnot").is(':checked'))
+                    email_noti1= $("#emailnot").val();
+                if($("#emailnot1").is(':checked'))
+                    email_noti2= $("#emailnot1").val();
 		$.ajax({  //Make the Ajax Request
 			type: "POST",  
 			url: "users/ajax_registration_step1",
-			data: "fname="+fname+"&lname="+lname+"&email="+email+"&pass="+pass+"&gender="+gender+"&ebay_buz_unit="+ebay_buz_unit+"&ebay_buz_loc="+ebay_buz_loc+"&email_noti="+email_noti,  //data
+			data: "fname="+fname+"&lname="+lname+"&email="+email+"&pass="+pass+"&gender="+gender+"&ebay_buz_unit="+ebay_buz_unit+"&ebay_buz_loc="+ebay_buz_loc+"&email_noti1="+email_noti1+"&email_noti2="+email_noti2,  //data
 			success: function(response) {
 				if(response=='1')
 				{
@@ -2055,18 +2055,19 @@ function ajax_manage_account_step1()
 		}
 		var ebay_buz_unit= $("#unit_info").val();
 		var ebay_buz_loc= $("#loc_info").val();
-		if(document.getElementsByName('emailnot[]')[0].checked==true)
-		{
-			var email_noti= document.getElementsByName('emailnot[]')[0].value;
-		}
-		else
-		{
-			var email_noti= document.getElementsByName('emailnot[]')[1].value;
-		}
+		
+                var email_noti1= 0;
+		var email_noti2= 0;
+                
+                if($("#emailnot").is(':checked'))
+                    email_noti1= $("#emailnot").val();
+                if($("#emailnot1").is(':checked'))
+                    email_noti2= $("#emailnot1").val();
+                
 		$.ajax({  //Make the Ajax Request
 			type: "POST",  
 			url: "users/ajax_manage_account_step1",
-			data: "fname="+fname+"&lname="+lname+"&email="+email+"&pass="+pass+"&gender="+gender+"&ebay_buz_unit="+ebay_buz_unit+"&ebay_buz_loc="+ebay_buz_loc+"&email_noti="+email_noti,  //data
+			data: "fname="+fname+"&lname="+lname+"&email="+email+"&pass="+pass+"&gender="+gender+"&ebay_buz_unit="+ebay_buz_unit+"&ebay_buz_loc="+ebay_buz_loc+"&email_noti1="+email_noti1+"&email_noti2="+email_noti2,  //data
 			success: function(response) {
 				if(response=='1')
 				{

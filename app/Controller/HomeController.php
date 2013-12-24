@@ -53,7 +53,18 @@ class HomeController extends AppController {
  */
  
 	public function display() {
-	
+
+            $this->Session->delete("session_user_id");
+            $this->Session->delete('username');
+            $this->Session->delete('userid');
+            $this->Session->delete('locateid');
+            $this->Session->delete('loginerror');
+            $this->Session->delete('dispstatus');
+            $this->Session->delete('newdiffinfo');
+            $this->Session->delete('newchallengeinfo');
+            $this->Session->delete('stepinfo');
+            $this->Session->destroy();
+            
 		$path = func_get_args();
 
 		$count = count($path);

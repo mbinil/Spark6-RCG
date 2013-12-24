@@ -48,16 +48,21 @@ echo $this->Html->script('discover.js');?>
                 <!-- tabs navigation -->
                 <nav>
                     <ul class="tabset">
-                        <li class="parent_class" id="all_li_id"><a href="javascript:void(0);" onclick="showChallenge(this,'parent','','')" class="active" data-default="#0077c9" data-hover="#ffffff" ><span>All</span><em class="mask"><strong class="mask-frame"></strong></em></a></li>
+                        <li class="parent_class" id="all_li_id">
+							<a href="javascript:void(0);" onclick="showChallenge(this,'parent','','')" class="active" data-default="#0077c9" data-hover="#ffffff" >
+								<span>All</span>
+								<em class="mask"><strong class="mask-frame"></strong></em>
+							</a>
+						</li>
                         <?php foreach ($parent_category as $key => $value) { ?>
-                            <li class="parent_class">
-                                <a href="javascript:void(0);" onclick="showChallenge(this,'parent','','<?php echo $value['Category']['id'];?>')" class="<?php echo $value['Category']['title'];?>" data-default="#0077c9" data-hover="#ffffff">
-                                    <em class="ico"></em>
-                                    <em class="ico-hover"></em>
-                                    <span><?php echo $value['Category']['title'];?></span>
-                                    <em class="mask"><strong class="mask-frame"></strong></em>
-                                </a>
-                            </li>
+						<li class="parent_class">
+							<a href="javascript:void(0);" onclick="showChallenge(this,'parent','','<?php echo $value['Category']['id'];?>')" class="<?php echo $value['Category']['title'];?>" data-default="#0077c9" data-hover="#ffffff">
+								<em class="ico"></em>
+								<em class="ico-hover"></em>
+								<span><?php echo $value['Category']['title'];?></span>
+								<em class="mask"><strong class="mask-frame"></strong></em>
+							</a>
+						</li>
                         <?php } ?>
                     </ul>
                 </nav>

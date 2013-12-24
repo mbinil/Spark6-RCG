@@ -24,6 +24,12 @@
 		} 
 	});
 }*/
+function checkSubmit(evt)
+{
+    if(evt.which == 13)
+        submitLoginuser();
+}
+
 /*Field validation on blur of an input element*/
 function validateFieldcheck(id,val)
 {
@@ -48,10 +54,10 @@ function validateFieldcheck(id,val)
   <!--discrption-->
   <div class="Difficulty_step1" style="width:85%; float:left; margin-bottom: 15px;">
     <div class="discrption_label" style="width:50% !important; float:left;">Username:</div>
-	<div style="width:50% !important; float:right;"><input type="text" value="" placeholder="Username" class="form-control input-sm" id="loginusername" onblur="javascript:validateFieldcheck(this.id,this.value);" style="width: 200px;"></div>
+    <div style="width:50% !important; float:right;"><input type="text" value="" placeholder="Username" class="form-control input-sm" id="loginusername" onblur="javascript:validateFieldcheck(this.id,this.value);" onkeypress="checkSubmit(event)" style="width: 200px;"></div>
     <div class="clear"></div>
     <div class="discrption_label" style="width:50% !important; float:left;">Password:</div>
-    <div style="width:50% !important; float:right;"><input type="password" value="" placeholder="Password" class="form-control input-sm" id="loginpassword" onblur="javascript:validateFieldcheck(this.id,this.value);" style="width: 200px;"></div>
+    <div style="width:50% !important; float:right;"><input type="password" value="" placeholder="Password" class="form-control input-sm" id="loginpassword" onblur="javascript:validateFieldcheck(this.id,this.value);" onkeypress="checkSubmit(event)" style="width: 200px;"></div>
   </div>
   <div class="clear"></div>
   <!--discrption end-->

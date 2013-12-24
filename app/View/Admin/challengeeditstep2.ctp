@@ -93,19 +93,32 @@
 <script type="text/javascript">
 $('#child_val').live('change',function(){
 	var baseurl = $('#baseurl').val();
-    $('#child_category_val').val($(this).val());
-    $.ajax({  //Make the Ajax Request
-            type: "POST",  
-            url: baseurl+"ajax_getchildcombo",
-            data: "id="+$(this).val(),  //data
-            async:false,
-            success: function(response) {
-                var data    =   new Array();
-                data        =   response.split('@#@');
-                $('#child_image_div').css('background','url("'+baseurl+'img/badgedesign/'+data[2]+'")');
-                $('#child_image_name').val(data[2]);
-            }
-        });
+        var val =   $(this).val();
+        $('#child_category_val').val($(this).val());
+        if( val != 0)
+        {
+            $.ajax({  //Make the Ajax Request
+                    type: "POST",  
+                    url: baseurl+"admin/ajax_getchildcombo",
+                    data: "id="+$(this).val(),  //data
+                    async:false,
+                    success: function(response) {
+                        var data    =   new Array();
+                        data        =   response.split('@#@');
+                        if(val != 0)
+                        {
+                            $('#child_image_div').css('background','url("'+baseurl+'img/badgedesign/'+data[2]+'")');
+                            $('#child_image_name').val(data[2]);
+                        }
+                    }
+                });
+        }
+        else
+        {
+            $('#child_image_div').css('background','url("")');
+            $('#child_image_div').css('background-color','#EEEEEE');
+            $('#child_image_name').val('');
+        }
 });
 
 function badgenamechange(val)
@@ -351,7 +364,7 @@ Need another child category?<a href="javascript:getChildCategory();">create one 
         <div class="discrption_label_right" style="margin-top: -20px;">Need another parent category?<a href="javascript:getParentCategory();" >create one now</a></div>
       </div>
 <div style="float:right; width:30%; margin-left:20px;">
-    <div style="background-color:#EEEEEE;border-radius:100px;height:200px;margin:20px 60px 10px; background:url('<?php echo Router::url('/', true); ?>img/badgedesign/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; ?>');" id="child_image_div"></div>;
+    <div style="background-color:#EEEEEE;border-radius:100px;height:200px;margin:20px 60px 10px; <?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename']) && $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']) { ?>background:url('<?php echo Router::url('/', true); ?>img/badgedesign/<?php echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; ?>')<?php } ?>;" id="child_image_div"></div>;
     <div id="badge_color_image_div" style="position: absolute; <?php if(isset($newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename'])) { ?>background:url('<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo $newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename']; ?>');<?php } else { ?>background-color:#AAAAAA; <?php } ?>border-radius: 100px; width: 150px; height: 150px; margin: -206px 0 0 86px;">
     </div>
     <div id="parent_image_div" style="position: absolute; margin: -181px 0 0 109px;">
