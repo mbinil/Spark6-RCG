@@ -61,7 +61,7 @@ class Category extends AppModel
 	{
 		$array  =   $this->getChildFromParent($id);
 		
-		$reurn_html =   '<select class="select-block" name="info" id="'.$name.'"><option value="">Select a child</option>';
+		$reurn_html =   '<select class="select-block" name="info" id="'.$name.'"><option value="0">No child</option>';
 		
 		foreach ($array as $key => $value) {
 			$reurn_html .=   '<option value="'.$value['Category']['id'].'"';
@@ -119,10 +119,10 @@ class Category extends AppModel
         {
             $child_category =   $this->getChildFromParent($id);
 
-            $return_html    =   '<ul><li class="active"><a href="javascript:void(0);" onclick="showChallenge(this,\'child\',\'\',\'\')" >All</a></li>';
+            $return_html    =   '<ul class="child_class"><li class="active"><a href="javascript:void(0);" onclick="showChallenge(this,\'child\',\'\',\'\')" >All</a></li>';
 
             foreach ($child_category as $key => $value) {
-                        $return_html    .=   '<li><a href="javascript:void(0);" onclick="showChallenge(this,\'child\',\'\',\''.$value['Category']['id'].'\')" >'.$value['Category']['title'].'</a></li>';
+                        $return_html    .=   '<li class=""><a href="javascript:void(0);" onclick="showChallenge(this,\'child\',\'\',\''.$value['Category']['id'].'\')" >'.$value['Category']['title'].'</a></li>';
             }
             $return_html    .=   '</ul>';
             

@@ -15,9 +15,9 @@ class Difficulty extends AppModel
 		return $difficultytype;
 	}
 	
-	public function CheckDifficultyAvailable($data)
+	public function CheckDifficultyAvailable($conditions)
 	{
-		$difficultyinfo = $this->find('all',array('conditions'=>array('title'=>$data)));
+		$difficultyinfo = $this->find('all',array('conditions'=>$conditions));
 		$availablecount = count($difficultyinfo);
 		return $availablecount;
 	}

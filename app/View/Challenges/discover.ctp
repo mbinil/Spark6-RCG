@@ -12,6 +12,9 @@ echo $this->Html->script('discover.js');?>
     position: relative;
     z-index: 1;
 }
+.tabset .Health .ico {
+    background-position: -3px -1494px;
+}
 </style>
 <!-- main content block -->
 <div class="container_left" style="width:100% !important; border: 1px solid #fff;">
@@ -20,6 +23,13 @@ echo $this->Html->script('discover.js');?>
             Discover Fun Challenges.
             <input type='hidden' name='parenthiddn' id='parenthiddn' />
         </h1>
+        <div class="clear"></div>
+        <!----Error message div------------------>
+          <div class="alert" id="alert_div_discover" style="background-color: #FF6A6A;border-color: red;color:#FFFFFF;width:700px;display:none;">
+            <button type="button" data-dismiss="alert1" class="close fui-cross" onclick="javascript:$('#alert_div_discover').hide();"></button>
+            <span id="message_span_discover"></span>	
+          </div>
+        <!--------------------------------------->
         <!-- two columns section -->
         <div id="two-columns">
             <!-- challenges -->
@@ -27,37 +37,7 @@ echo $this->Html->script('discover.js');?>
                 <div class="tabs-area">
                     <div id="challenge_total_div" class="tab-content ajax-holder">
                         <!-- article -->
-
-                        <?php foreach ($challenges as $key => $value) { ?>
-                            <div class="column-holder" id='challenge_individual_<?php echo $value['Challenge']['id']; ?>'>
-                                <article class="column">
-                                    <div class="visual-block">
-                                        <img src="<?php echo Router::url('/', true); ?>img/challengeuploads/cropped/cropped<?php echo $value['Challenge']['hero_image']; ?>" width="710" height="249" alt="image description" class="bg">
-                                        <figure><img class="alignleft" src="<?php echo Router::url('/', true); ?>img/challengeuploads/<?php echo $value['Challenge']['hero_image']; ?>" width="324" height="219" alt="image description"></figure>
-                                        <strong class="title">Host This.</strong>
-                                        <span class="label blue"></span>
-                                    </div>
-                                    <div class="desctiption">
-                                        <a href="#" class="more" style="background: url('<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo $value['badgecombo']['comboimg']; ?>')">more</a>
-                                        <div class="txt">
-                                                <h2><?php echo $value['Challenge']['name']; ?></h2>
-                                                <p><?php echo $value['Challenge']['learn_more']; ?></p>
-                                        </div>
-                                    </div>
-                                    <ul class="meta">
-                                        <li>In <a href="#"><?php echo $value['categorie']['title']; ?></a></li>
-                                        <li class="difficulty easy"><span><?php echo $value['difficulty']['title']; ?> Difficulty</span></li>
-                                        <li class="people"><span>60 Finished This</span></li>
-                                        <li class="points increase"><span>0 Points</span></li>
-                                    </ul>
-                                    <?php if(getHourMinutes($value['Challenge']['start_date'],$value['Challenge']['end_date'])) { ?>
-                                        <div class="notification">
-                                            <p>Starts in <?php echo getHourMinutes($value['Challenge']['start_date'],$value['Challenge']['end_date']); ?>. Join The Challenge!</p>
-                                        </div>
-                                    <?php } ?>
-                                </article>
-                            </div>
-                        <?php } ?>
+                        <?php echo $challenges;?>
                     </div>
                 </div>
             </section>
@@ -68,10 +48,10 @@ echo $this->Html->script('discover.js');?>
                 <!-- tabs navigation -->
                 <nav>
                     <ul class="tabset">
-                        <li><a href="javascript:void(0);" onclick="showChallenge(this,'parent','','')" class="active all" data-default="#0077c9" data-hover="#ffffff" ><span>All</span><em class="mask"><strong class="mask-frame"></strong></em></a></li>
+                        <li class="parent_class" id="all_li_id"><a href="javascript:void(0);" onclick="showChallenge(this,'parent','','')" class="active" data-default="#0077c9" data-hover="#ffffff" ><span>All</span><em class="mask"><strong class="mask-frame"></strong></em></a></li>
                         <?php foreach ($parent_category as $key => $value) { ?>
-                            <li>
-                                <a href="javascript:void(0);" onclick="showChallenge(this,'parent','','<?php echo $value['Category']['id'];?>')" class="health" data-default="#0077c9" data-hover="#ffffff">
+                            <li class="parent_class">
+                                <a href="javascript:void(0);" onclick="showChallenge(this,'parent','','<?php echo $value['Category']['id'];?>')" class="<?php echo $value['Category']['title'];?>" data-default="#0077c9" data-hover="#ffffff">
                                     <em class="ico"></em>
                                     <em class="ico-hover"></em>
                                     <span><?php echo $value['Category']['title'];?></span>
@@ -84,12 +64,7 @@ echo $this->Html->script('discover.js');?>
                 <h1>Categories</h1>
                 <!-- side navigation -->
                 <nav class="side-nav" id="child_category_side_nav">
-                    <ul>
-                        <li><a href="javascript:void(0);" onclick="showChallenge(this,'child','','')" >All</a></li>
-                        <?php foreach ($child_category as $key => $value) { ?>
-                            <li><a href="javascript:void(0);" onclick="showChallenge(this,'child','','<?php echo $value['Category']['id'];?>')" ><?php echo $value['Category']['title'];?></a></li>
-                        <?php } ?>
-                    </ul>
+                    <?php echo $child_category; ?>
                 </nav>
             </aside>
         </div>
@@ -128,3 +103,23 @@ function getHourMinutes($from,$to)
         return '';
 }
 ?>
+
+<div id="dialog_host_this" style="display: none;" >
+    <?php echo $this->element('element_host_challenge_step1'); ?>
+</div>
+<script>
+    setInterval(function(){get_fb();}, 120000);
+    
+    function get_fb()
+    {
+        $.ajax({
+            type: "POST",  
+            url: 'ajax_challenge_checking',
+            data: "",
+            success: function(response) {
+                if(response == 1)
+                    showChallenge(this,'parent','','');
+            } 
+        });
+    }
+</script>

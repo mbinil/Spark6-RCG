@@ -92,16 +92,17 @@
 <?php $newchallengeinfo = $this->Session->read("newchallengeinfo"); //print_r($newchallengeinfo); ?>
 <script type="text/javascript">
 $('#child_val').live('change',function(){
+	var baseurl = $('#baseurl').val();
     $('#child_category_val').val($(this).val());
     $.ajax({  //Make the Ajax Request
             type: "POST",  
-            url: "../ajax_getchildcombo",
+            url: baseurl+"ajax_getchildcombo",
             data: "id="+$(this).val(),  //data
             async:false,
             success: function(response) {
                 var data    =   new Array();
                 data        =   response.split('@#@');
-                $('#child_image_div').css('background','url("../../img/badgedesign/'+data[2]+'")');
+                $('#child_image_div').css('background','url("'+baseurl+'img/badgedesign/'+data[2]+'")');
                 $('#child_image_name').val(data[2]);
             }
         });
@@ -113,16 +114,17 @@ function badgenamechange(val)
 }
 function selectedpcat(id, count)
 {
-	$('#child_category_val').val('');
+	var baseurl = $('#baseurl').val();
+	$('#child_category_val').val(0);
 	$('.childclass').each(function(){
 		$(this).html('');
 	});
 
-	$('#childdiv_'+id).html('<img alt="Image" src="../../img/loading.gif" width="50" height="50">');
+	$('#childdiv_'+id).html('<img alt="Image" src="'+baseurl+'img/loading.gif" width="50" height="50">');
 
 	$.ajax({  //Make the Ajax Request
 		type: "POST",  
-		url: "../ajax_getchildcombo",
+		url: baseurl+"admin/ajax_getchildcombo",
 		data: "id="+id,  //data
 		async:false,
 		success: function(response) {
@@ -130,7 +132,7 @@ function selectedpcat(id, count)
 			var data    =   new Array();
 			data        =   response.split('@#@');
 			$('#childdiv_'+id).html(data[0]+'<br/>Need another child category?<a href="javascript:getChildCategory();">create one now</a>');
-			$('#parent_image_div').html('<img src="../../img/catuploads/'+data[1]+'" width="100" />');
+			$('#parent_image_div').html('<img src="'+baseurl+'img/catuploads/'+data[1]+'" width="100" />');
 			$('#child_image_div').html('');
 			$('#parent_image_name').val(data[1]);
 			$('#child_image_name').val('');
@@ -206,24 +208,31 @@ String.prototype.repeat = function(num) {
 })(jQuery);
 
 $(function() {
-	$( "#datepicker-from" ).datepicker({ minDate: 0,onSelect: function( selectedDate ) {
+
+var min_date    =   getDays('<?php echo date('Y-m-d',strtotime($newchallengeinfo[0]['Challenge']['start_date'])); ?>', '');
+
+
+	$( "#datepicker-from" ).datepicker({ minDate: min_date,onSelect: function( selectedDate ) {
 		changeDate();
 	}});
+	$( "#datepicker-from" ).datepicker("setDate", min_date);
 	$( "#datepicker-to" ).datepicker({ minDate: 0, maxDate: "+4D" });
-	<?php if($newchallengeinfo[0]['Challenge']['start_date']) {  ?>
-	var session_start_date = "<?php echo $newchallengeinfo[0]['Challenge']['start_date']; ?>";
-	$( "#datepicker-from" ).datepicker("setDate", new Date(session_start_date));
+
 	changeDate();
-	<?php } ?>
 	$( "#datepicker-to" ).datepicker( "option", "disabled", true );
 });
 
 function changeDate()
 {
+var min_date    =   0;
+        min_date    =   getDays($("#datepicker-from").datepicker('getDate'));
+
+
 	var date    =   $("#datepicker-from").datepicker('getDate'); //getting from date picker selected date.
-	var days    =   getDays(date)
+	var days    =   getDays(date,$('#chalnglen').val())
+
 	$( "#datepicker-to" ).datepicker( "destroy" );
-	$( "#datepicker-to" ).datepicker({ minDate: 0, maxDate: days });
+	$( "#datepicker-to" ).datepicker({ minDate: min_date, maxDate: days });
 	$( "#datepicker-to" ).datepicker( "setDate", days );
 	$( "#datepicker-to" ).datepicker('show');
 	$( "#datepicker-to" ).datepicker( "option", "disabled", true );
@@ -232,7 +241,7 @@ function changeDate()
 
 function getDays(date,val)
 {
-	var val   =   $('#chalnglen').val();
+	val   =   val?$('#chalnglen').val():'';
   
 	var d = new Date(date); // format that date and get the days of that date.
 
@@ -250,17 +259,19 @@ function getDays(date,val)
 
 	days = Math.floor(diffD);
 
-	if(days >= 0)
-		days    =   (days) + 1;
-	else
-		days    =   (days * -1) - 1;
-
 	if(val)
 		days    =   days +  parseFloat(val) - 1;
 
-	days    =   '+'+days+'D';
 
-	return days;
+
+	if(days >= 0)
+	{
+		return '+'+parseFloat( (days) + 1)+'D';
+	}
+	else
+	{
+		return '-'+parseFloat( parseFloat( (days) + 1) * -1)+'D';
+	}
 }
 
 /**
@@ -302,6 +313,7 @@ function getParentCategory()
     <span id="message_span"></span>	
   </div>
 <!--------------------------------------->
+<input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
   <!--discrption-->
 <input type="hidden" id="child_category_val" name="child_category_val" value="<?php echo $newchallengeinfo[0]['Challenge']['child_category']; ?>" >
 <input type="hidden" id="child_image_name" value="<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename']) && $newchallengeinfo) { echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; } ?>" >
@@ -320,7 +332,7 @@ function getParentCategory()
 			<div <?php if($newchallengeinfo[0]['Challenge']['parent_category']==$pcat['Category']['id']){ ?> class="pcatindividualselected"<?php } else { ?> class="pcatindividual" <?php } ?>id="<?php echo $pcat['Category']['id']; ?>" style="width:650px;margin-top:30px;height:102px;">
 		<?php } ?>
 		<a style="width:100%;" href="Javascript:selectedpcat('<?php echo $pcat['Category']['id']; ?>','<?php echo $pccount; ?>');">
-		<span style="width:250px;"><img width="100" border="0" src="../../img/catuploads/<?php echo $pcat['Category']['decal']; ?>" style="background-color:#999999;"></span>
+		<span style="width:250px;"><img width="100" border="0" src="<?php echo Router::url('/', true); ?>img/catuploads/<?php echo $pcat['Category']['decal']; ?>" style="background-color:#999999;"></span>
 		<div class="pcatindividual" style="width: 350px; padding-left: 130px; margin-top: -62px; color:#999999;"><?php echo str_replace('\"', '', $pcat['Category']['title']); ?></div>
 		</a>
 		</div>
@@ -339,14 +351,14 @@ Need another child category?<a href="javascript:getChildCategory();">create one 
         <div class="discrption_label_right" style="margin-top: -20px;">Need another parent category?<a href="javascript:getParentCategory();" >create one now</a></div>
       </div>
 <div style="float:right; width:30%; margin-left:20px;">
-    <div style="background-color:#EEEEEE;border-radius:100px;height:200px;margin:20px 60px 10px; background:url('../../img/badgedesign/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; ?>');" id="child_image_div"></div>;
-    <div id="badge_color_image_div" style="position: absolute; <?php if(isset($newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename'])) { ?>background:url('../../img/badgecolor/<?php echo $newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename']; ?>');<?php } else { ?>background-color:#AAAAAA; <?php } ?>border-radius: 100px; width: 150px; height: 150px; margin: -206px 0 0 86px;">
+    <div style="background-color:#EEEEEE;border-radius:100px;height:200px;margin:20px 60px 10px; background:url('<?php echo Router::url('/', true); ?>img/badgedesign/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; ?>');" id="child_image_div"></div>;
+    <div id="badge_color_image_div" style="position: absolute; <?php if(isset($newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename'])) { ?>background:url('<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo $newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename']; ?>');<?php } else { ?>background-color:#AAAAAA; <?php } ?>border-radius: 100px; width: 150px; height: 150px; margin: -206px 0 0 86px;">
     </div>
     <div id="parent_image_div" style="position: absolute; margin: -181px 0 0 109px;">
-        <img width="100" src="../../img/catuploads/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngparentimagename']; ?>">
+        <img width="100" src="<?php echo Router::url('/', true); ?>img/catuploads/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngparentimagename']; ?>">
     </div>
     <div id="difficulty_image_div" style="position: absolute; margin: -107px 0 0 175px">
-        <img width="33" src="../../img/diffuploads/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngdifficultyimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']; ?>">
+        <img width="33" src="<?php echo Router::url('/', true); ?>img/diffuploads/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngdifficultyimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']; ?>">
     </div>
     <div style="color:#666666; text-align:center;" id="badgename"><?php if(isset($newchallengeinfo[0]['Challenge']['badge_title']) && $newchallengeinfo[0]['Challenge']['badge_title']!="") { echo $newchallengeinfo[0]['Challenge']['badge_title']; } else { ?>Badge title<?php  } ?></div>
 </div>
@@ -373,10 +385,10 @@ Need another child category?<a href="javascript:getChildCategory();">create one 
 	<div class="clear"></div>
 	<div style="margin:10px 0 0 0;font-weight:bold; font-size: 18px;">Select Begining and End Dates</div>
 	<div style="width:80%;float:left;margin:15px 0 30px;">
-		<input type="radio" id="chalngwhosets" name="chalngwhosets" value="0"<?php if($newchallengeinfo[0]['Challenge']['host_set_start_date']!=''){ ?> checked="checked" <?php } ?> /><span style="margin-left:10px;">User shall set the start-date for this challenge</span><br/>
-		<input type="radio" id="chalngwhosets" name="chalngwhosets" value="1"<?php if($newchallengeinfo[0]['Challenge']['host_set_start_date']!=''){ ?> checked="checked" <?php } ?> /><span style="margin-left:10px;">Admin shall set the start-date for this challenge</span>
+		<input type="radio" id="chalngwhosets" name="chalngwhosets" value="0" onclick="$('#datepicker_div').hide();" <?php if($newchallengeinfo[0]['Challenge']['host_set_start_date']==0){ ?> checked="checked" <?php } ?> /><span style="margin-left:10px;">User shall set the start-date for this challenge</span><br/>
+		<input type="radio" id="chalngwhosets" name="chalngwhosets" value="1" onclick="$('#datepicker_div').show();" <?php if($newchallengeinfo[0]['Challenge']['host_set_start_date']==1){ ?> checked="checked" <?php } ?> /><span style="margin-left:10px;">Admin shall set the start-date for this challenge</span>
 	</div>
-	<div style="width:80%;float:left;margin-bottom:25px;"> 
+	<div style="width:80%;float:left;margin-bottom:25px;<?php if(isset($newchallengeinfo[0]['Challenge']['host_set_start_date']) && ( $newchallengeinfo[0]['Challenge']['host_set_start_date'] == 0) ) { ?>display:none;<?php } ?>" id="datepicker_div"> 
 		<div style="float:left; margin:0 30px 0 0;">
 			<div style="text-align:center;font-weight:bold;">BEGIN</div>
 			<div id="datepicker-from"></div>

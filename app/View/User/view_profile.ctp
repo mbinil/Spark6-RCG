@@ -1,108 +1,138 @@
-<!-- main content block -->
-<?php 
-$reg_array = $this->Session->read("newreginfo");
+<style>
+#sidebar {
+    border-right: 0;
+	padding:0;
+}
+</style>
+<?php $reg_array = $this->Session->read("newreginfo");
+$eBayBusinessUnit = Configure::read('eBayBusinessUnit');
+$eBayBusinessUnitLoc = Configure::read('eBayBusinessUnitLoc');
 ?>
+<!-- main content block -->
 <div id="main">
-	<h1>Discover Fun Challenges.</h1>
 	<!-- two columns section -->
-	<div id="two-columns">
+	<div id="two-columns" style="margin-top:35px;">
 		<!-- content -->
-		<section id="content" class="main-column alignright" style="width: 74% !important;">
+		<section id="content" class="main-column alignright" style="width: 76% !important; padding-left: 10px !important;">
 			<div class="tabs-area">
-				<div id="tab01" class="tab-content ajax-holder">
-					<div class="column-holder">
-						<!-- article -->
-						<article class="column">
-							<!-- visual block -->
-							<div class="visual-block">
-								<img src="images/img-33.png" width="710" height="249" alt="image description" class="bg">
-								<figure><img class="alignleft" src="images/img-31.jpg" width="324" height="219" alt="image description"></figure>
-								<div class="about">
-									<div class="about-holder">
-										<div class="person-info">
-											<a href="#"><img src="images/img-32.jpg" width="100" height="101" alt="image description"></a>
-											<dl>
-												<dt>Catherine</dt>
-												<dd>Host</dd>
-												<dt>+89</dt>
-												<dd>Participants</dd>
-											</dl>
-										</div>
-										<div class="persons-list">
-											<ul>
-												<li><a href="#"><img src="images/ico-30.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-31.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-09.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-32.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-33.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-34.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-13.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-35.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-36.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-37.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-38.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-39.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-40.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-41.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-42.jpg" width="50" height="50" alt="image description"></a></li>
-												<li><a href="#"><img src="images/ico-43.jpg" width="50" height="50" alt="image description"></a></li>
-											</ul>
-										</div>
-									</div>
+				<div style="margin:0px;">
+					<div style="font-size: 40px; margin: 5px 0px; width: 300px; float:left; text-align: left;"><?php echo $Loggeduserinfo[0]['User']['user_firstname']." ".$Loggeduserinfo[0]['User']['user_lastname']; ?></div>
+					<div style="font-size: 40px; margin: 5px 0px; width: 130px; float:left; text-align: center;"><?php echo $Loggeduserinfo[0]['User']['user_level']; ?></div>
+					<div style="font-size: 40px; margin: 5px 0px; width: 130px; float:left; text-align: center;"><?php echo $Loggeduserinfo[0]['User']['user_points']; ?></div>
+					<div style="font-size: 40px; margin: 5px 0px; width: 150px; float:left; text-align: center;">0%</div>
+				</div>
+				<div style="margin:0px;">
+					<div style="font-size: 16px; margin: 5px 0px; width: 300px; float:left; text-align: left;">member since <?php echo  date("Y-m-d", strtotime($Loggeduserinfo[0]['User']['user_added'])); ?></div>
+					<div style="font-size: 16px; margin: 5px 0px; width: 130px; float:left; text-align: center;">level</div>
+					<div style="font-size: 16px; margin: 5px 0px; width: 130px; float:left; text-align: center;">points earned</div>
+					<div style="font-size: 16px; margin: 5px 0px; width: 150px; float:left; text-align: center;">finish rate</div>
+				</div>
+				<div class="clear"></div>
+				<hr/>
+				<div class="clear"></div>
+				<div style="margin:25px 0;">
+					<div style="font-size: 32px; margin: 5px 0px; text-align: left;">Active challenges</div>
+					<div style="margin:15px 0;">
+					<?php if($activechallenge==""){ ?>
+						No challenges to list!!
+					<?php } else { ?>
+						<?php foreach($activechallenge as $chalinfo) { ?>
+							<div style="border: 1px solid #ccc; padding:10px; margin:0 10px 10px 0px; width:48%; float:left; min-height:155px; overflow:hidden;">
+								<div style="margin:0 0 5px 0; color:#0099FF; font-size:20px;"><?php echo $chalinfo['Challenge']['name']; ?></div>
+								<div style="margin:0px;">
+									<div style="margin:5px 10px 0 0; float:left;"><img src="<?php echo Router::url('/img/challengeuploads/', true) . $chalinfo['Challenge']['hero_image']; ?>" border="0" width="100" /></div>
+									<div style="margin:0px;"><?php echo $chalinfo['Challenge']['daily_commitment']; ?></div>
 								</div>
-							<span class="label orange"></span>										</div>
-							<div class="desctiption">
-								<a href="#" class="more orange">more</a>
-								<div class="txt">
-									<h2>Run For The Love</h2>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean non lacus id est imperdiet auctor vitae sed dui.</p>
-								</div>
-						  </div>
-							<ul class="meta">
-								<li>In <a href="#">Health Lifestyle</a></li>
-								<li class="difficulty medium"><span>Medium Difficulty</span></li>
-								<li class="people"><span>6,930 Finished This</span></li>
-								<li class="points increase"><span>500 Points</span></li>
-							</ul>
-							<div class="notification">
-								<p>Starts in 3 Minutes. Join The Challenge!</p>
 							</div>
-						</article>
+						<?php } ?>	
+					<?php } ?>
 					</div>
 				</div>
+				<div class="clear"></div>
+				<div style="margin:35px 0;">
+					<div style="font-size: 32px; margin: 5px 0px; text-align: left;">Upcoming challenges</div>
+					<div style="margin:15px 0;">
+					<?php if($upcomingchallenge==""){ ?>
+						No challenges to list!!
+					<?php } else { ?>
+						<?php foreach($activechallenge as $chalinfo) { ?>
+							<div style="border: 1px solid #ccc; padding:10px; margin:0 10px 10px 0px; width:48%; float:left; min-height:155px; overflow:hidden;">
+								<div style="margin:0 0 5px 0; color:#0099FF; font-size:20px;"><?php echo $chalinfo['Challenge']['name']; ?></div>
+								<div style="margin:0px;">
+									<div style="margin:5px 10px 0 0; float:left;"><img src="<?php echo Router::url('/img/challengeuploads/', true) . $chalinfo['Challenge']['hero_image']; ?>" border="0" width="100" /></div>
+									<div style="margin:0px;"><?php echo $chalinfo['Challenge']['daily_commitment']; ?></div>
+								</div>
+							</div>
+						<?php } ?>
+					<?php } ?>
+					</div>
+				</div>
+				<div class="clear"></div>
+				<div style="margin:35px 0;">
+					<div style="font-size: 32px; margin: 5px 0px; text-align: left;">Completed challenges</div>
+					<div style="margin:15px 0;">
+					<?php if($completedchallenge==""){ ?>
+						No challenges to list!!
+					<?php } else { ?>
+						<?php foreach($activechallenge as $chalinfo) { ?>
+							<div style="border: 1px solid #ccc; padding:10px; margin:0 10px 10px 0px; width:48%; float:left; min-height:155px; overflow:hidden;">
+								<div style="margin:0 0 5px 0; color:#0099FF; font-size:20px;"><?php echo $chalinfo['Challenge']['name']; ?></div>
+								<div style="margin:0px;">
+									<div style="margin:5px 10px 0 0; float:left;"><img src="<?php echo Router::url('/img/challengeuploads/', true) . $chalinfo['Challenge']['hero_image']; ?>" border="0" width="100" /></div>
+									<div style="margin:0px;"><?php echo $chalinfo['Challenge']['daily_commitment']; ?></div>
+								</div>
+							</div>
+						<?php } ?>
+					<?php } ?>
+					</div>
+				</div>
+				<div class="clear"></div>
 			</div>
 		</section>
 		<!-- sidebar -->
 		<aside id="sidebar" class="main-column alignleft">
-			<h1>Life Balance</h1>
-			<!-- tabs navigation -->
-			<nav>
-				<ul class="tabset">
-					<li><a href="#tab01" class="active all" data-default="#0077c9" data-hover="#ffffff" ><span>All</span><em class="mask"><strong class="mask-frame"></strong></em></a></li>
-					<li><a href="#tab02" class="health" data-default="#0077c9" data-hover="#ffffff"><em class="ico"></em><em class="ico-hover"></em><span>Health</span><em class="mask"><strong class="mask-frame"></strong></em></a></li>
-					<li><a href="#tab03" class="wealth" data-default="#0077c9" data-hover="#ffffff"><em class="ico"></em><em class="ico-hover"></em><span>Wealth</span><em class="mask"><strong class="mask-frame"></strong></em></a></li>
-					<li><a href="#tab04" class="relationships" data-default="#0077c9" data-hover="#ffffff"><em class="ico"></em><em class="ico-hover"></em><span>Relationships</span><em class="mask"><strong class="mask-frame"></strong></em></a></li>
-				</ul>
-			</nav>
-			<h1>Categories</h1>
-			<!-- side navigation -->
-			<nav class="side-nav">
-				<ul>
-					<li><a href="#">All</a></li>
-					<li><a href="#">Career</a></li>
-					<li><a href="#">Diet</a></li>
-					<li><a href="#">Empathy</a></li>
-					<li class="active"><a href="#">Fitness</a></li>
-					<li><a href="#">Friendship</a></li>
-					<li><a href="#">Health Lifestyle</a></li>
-					<li><a href="#">Inner Peace</a></li>
-					<li><a href="#">Parenting</a></li>
-					<li><a href="#">Personal Growth</a></li>
-					<li><a href="#">Romance</a></li>
-					<li><a href="#">Social Consciousness</a></li>
-					<li><a href="#">Spirituality</a></li>
-				</ul>
-			</nav>
+			<div style="margin:0;"><img src="<?php echo Router::url('/img/useruploads/', true) . $Loggeduserinfo[0]['User']['user_profile_picture']; ?>" border="0" width="200" style="border:1px solid #ccc; padding:5px;" /></div>
+			<div class="clear"></div>
+			<div style="margin:15px 0; width: 219px;">
+				<div>Business Unit:</div>
+				<div><?php echo $eBayBusinessUnit[$Loggeduserinfo[0]['User']['user_business_unit']]; ?></div>
+			</div>
+			<div class="clear"></div>
+			<div style="margin:15px 0; width: 219px;">
+				<div>Business Unit Location:</div>
+				<div><?php echo $eBayBusinessUnitLoc[$Loggeduserinfo[0]['User']['user_business_loc']]; ?></div>
+			</div>
+			<div class="clear"></div>
+			<div style="margin:15px 0; width: 219px;">
+				<div>Degree:</div>
+				<div><?php echo $Loggeduserinfo[0]['User']['user_grd_degree']; ?></div>
+			</div>
+			<div class="clear"></div>
+			<div style="margin:15px 0; width: 219px;">
+				<div>School Name:</div>
+				<div><?php echo $Loggeduserinfo[0]['User']['user_grd_schl']; ?></div>
+			</div>
+			<div class="clear"></div>
+			<div style="margin:15px 0; width: 219px;">
+				<div>Graduation Year:</div>
+				<div><?php echo $Loggeduserinfo[0]['User']['user_grd_year']; ?></div>
+			</div>
+			<div class="clear"></div>
+			<div style="margin:15px 0; width: 219px;">
+				<div>Degree:</div>
+				<div><?php echo $Loggeduserinfo[0]['User']['user_grd_level']." ".$Loggeduserinfo[0]['User']['user_grd_cat']; ?></div>
+			</div>
+			<div class="clear"></div>
+			<div style="margin:15px 0; width: 219px;">
+				<div>Hobbies:</div>
+				<div><?php echo $Loggeduserinfo[0]['User']['user_hobbies']; ?></div>
+			</div>
+			<?php if($this->Session->read("session_user_id")){ ?>
+			<div class="clear"></div>
+			<div style="margin:15px 0; width: 219px;">
+				<div><a href="<?php echo Router::url('/manage_account_step1', true); ?>" style="cursor:pointer; font-size:14px;">Edit this info</a></div>
+			</div>
+			<?php } ?>
 		</aside>
 	</div>
 </div>

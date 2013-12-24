@@ -1,12 +1,12 @@
 <!--Right said start-->
 <link href="<?php echo Router::url('/app/webroot/file_upload/css/style.css',true); ?>" rel="stylesheet" />
 <script type="text/javascript">
-
 function checkavail(val,field_name)
 {
+	var baseurl = $('#baseurl').val();
 	$.ajax({  //Make the Ajax Request
 		type: "POST",  
-		url: "../ajax_checkavail",
+		url: baseurl+"ajax_checkavail",
 		data: "checkavail="+val+"&mode=Admin&field_name="+field_name+"&flag=edit&edit_id="+$('#adminid').val(),  //data
 		success: function(response) {
 			if(response=='1')
@@ -64,6 +64,7 @@ function validateFieldcheck(id,val)
   </div>
 <!--------------------------------------->
   <!--discrption-->
+  <input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
   <input type="hidden" value="<?php echo $admininfo[0]['Admin']['id']; ?>" id="adminid">
   <div class="Difficulty_step1" style="width:65%; float:left;">
     <div>

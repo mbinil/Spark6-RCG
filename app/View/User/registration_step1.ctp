@@ -50,6 +50,8 @@ $.ajax({  //Make the Ajax Request
 <!-- main content block -->
 <?php 
 $reg_array = $this->Session->read("newreginfo");
+$eBayBusinessUnit = Configure::read('eBayBusinessUnit');
+$eBayBusinessUnitLoc = Configure::read('eBayBusinessUnitLoc');
 ?>
 <div id="main">       
 	<div id="userreg">  
@@ -121,13 +123,9 @@ $reg_array = $this->Session->read("newreginfo");
 					<div class="clear"></div>
 					<div style="margin:0px; float:left;">
 						<select name="unit_info" class="select-block" id="unit_info">
-						<?php if(isset($reg_array['user_business_unit'])) { ?>
-						<option value="0" <?php if(isset($reg_array['user_business_unit']) && $reg_array['user_business_unit']=='0' ) { ?> selected="selected" <?php } ?>>Select a message</option>
-						<option value="1" <?php if(isset($reg_array['user_business_unit']) && $reg_array['user_business_unit']=='1' ) { ?> selected="selected" <?php } else { ?> selected="" <?php } ?>>eBay Marketpalces</option>
-						<?php }  else { ?>
-						<option value="0" selected="selected" >Select an option</option>
-						<option value="1">eBay Marketpalces</option>
-						<?php } ?>
+							<?php foreach ($eBayBusinessUnit as $key=>$value) { ?>
+							<option value="<?php echo $key; ?>" <?php if(isset($reg_array['user_business_unit']) && $reg_array['user_business_unit']==$key ) { ?> selected="selected" <?php } ?>><?php echo $value; ?></option>
+							<?php } ?>
 						</select>
 					</div>
 					<div class="clear"></div>
@@ -135,12 +133,8 @@ $reg_array = $this->Session->read("newreginfo");
 					<div class="clear"></div>
 					<div style="margin:0px; float:left;">
 						<select name="loc_info" class="select-block" id="loc_info">
-						<?php if(isset($reg_array['user_business_loc'])) { ?>
-						<option value="0" <?php if(isset($reg_array['user_business_loc']) && $reg_array['user_business_loc']=='0' ) { ?> selected="selected" <?php } ?>>Select an option</option>
-							<option value="1" <?php if(isset($reg_array['user_business_loc']) && $reg_array['user_business_loc']=='1' ) { ?> selected="selected" <?php } else { ?> selected="" <?php } ?>>San Jose, CA</option>
-							<?php }  else { ?>
-							<option value="0">Select an option</option>
-							<option value="1">San Jose, CA</option>
+							<?php foreach ($eBayBusinessUnitLoc as $key=>$value) { ?>
+							<option value="<?php echo $key; ?>" <?php if(isset($reg_array['user_business_loc']) && $reg_array['user_business_loc']==$key ) { ?> selected="selected" <?php } ?>><?php echo $value; ?></option>
 							<?php } ?>
 						</select>
 					</div>

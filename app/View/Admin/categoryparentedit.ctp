@@ -3,9 +3,10 @@
 <script type="text/javascript">
 function checkavail(val)
 {
+	var baseurl = $('#baseurl').val();
 	$.ajax({  //Make the Ajax Request
 		type: "POST",  
-		url: "../ajax_checkavail",
+		url: baseurl+"ajax_checkavail",
 		data: "checkavail="+val+"&mode=Parent&flag=edit&edit_id="+$('#pcatid').val(),  //data
 		success: function(response) {
 			if(response=='1')
@@ -49,6 +50,7 @@ function validateFieldcheck(id,val)
     <span id="message_span"></span>	
   </div>
 <!--------------------------------------->
+<input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
   <!--discrption-->
   <div class="Difficulty_step1" style="width:65%; float:left;">
     <div class="discrption_label" style="width:25% !important;">Parent Category Name:</div>
@@ -57,7 +59,7 @@ function validateFieldcheck(id,val)
     <input type="text" value="<?php echo str_replace('\"', '', $pcatinfo[0]['Category']['title']); ?>" placeholder="Parent category name" class="form-control input-sm" id="pcattitle" onchange="javascript:checkavail(this.value);" onblur="javascript:validateFieldcheck(this.id,this.value);" style="width: 500px;">
     <div class="clear"></div>
     <?php if($pcatinfo[0]['Category']['decal']!=''){ ?>
-    <div style="position: absolute; margin: 49px 0 0 0;"> <img src="<?php echo "../../img/catuploads/".$pcatinfo[0]['Category']['decal']; ?>" width="100" height="100" alt="<?php echo $pcatinfo[0]['Category']['title']; ?>" style="background-color:#999999;" /> </div>
+    <div style="position: absolute; margin: 49px 0 0 0;"> <img src="<?php echo Router::url('/', true)."img/catuploads/".$pcatinfo[0]['Category']['decal']; ?>" width="100" height="100" alt="<?php echo $pcatinfo[0]['Category']['title']; ?>" style="background-color:#999999;" /> </div>
     <?php } ?>
     <div class="discrption_label">Decal:</div>
     <div class="clear"></div>

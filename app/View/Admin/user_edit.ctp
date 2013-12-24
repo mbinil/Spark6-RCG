@@ -54,18 +54,4 @@ function validateFieldcheck(id,val)
 </div>
 <!--discrption end--> 
 </div>    
-<!--right said end--> 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!--right said end-->

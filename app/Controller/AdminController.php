@@ -150,7 +150,7 @@ class AdminController extends AppController
 				
 				// checking in user side.......................................
 				$this->loadModel('User');
-				$user_result  =   $this->User->searchUser($search_keyword);
+				$user_result  =  $this->User->searchUser($search_keyword);
 				$this->set('user_details',$user_result);
 				
 				// checking in challenge side.......................................
@@ -1138,8 +1138,17 @@ class AdminController extends AppController
 		}
 		if($_POST['mode']=="Difficulty")
 		{
+                        if($_POST['flag']   ==  'add')
+                                $conditions =   array('title' => $_POST['checkavail']);
+                        else
+                        {
+                                $conditions =   array(
+                                        'title' => $_POST['checkavail'],
+                                        'id !=' => $_POST['edit_id']
+                                );
+                        }
 			$this->loadModel("Difficulty");
-			echo $difficultyavail = $this->Difficulty->CheckDifficultyAvailable($_POST['checkavail']);
+			echo $difficultyavail = $this->Difficulty->CheckDifficultyAvailable($conditions);exit;
 		}
 		if($_POST['mode']=="Challenge")
 		{
@@ -1148,6 +1157,21 @@ class AdminController extends AppController
 		}
 	}
 	
+        public function ajax_change_invitation()
+        {
+            $status =   7;
+            if($_POST['need'] == 'agree')
+                $status =   6;
+            
+            $this->loadModel('Userchallenge');
+            $this->Userchallenge->id  =   $_POST['id'];
+            if($this->Userchallenge->SaveField('user_challenge_status',$status))
+                echo "1";
+            else
+                echo "0";
+            exit;
+        }
+        
 	/**
 	 * Creating the image for badge while selecting the color from color picker
 	 */
@@ -1328,7 +1352,7 @@ class AdminController extends AppController
 				$parent_img_name    =   $this->Category->getCategoryInfobyId($newchallengeinfo[0]['Challenge']['parent_category']);
 				$newchallengeinfo[0]['Challenge']['chalngparentimagename']  =   $parent_img_name[0]['Category']['decal'];
                 $child_img_name    =   $this->Category->getCategoryInfobyId($newchallengeinfo[0]['Challenge']['child_category']);
-                $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']  =   $child_img_name[0]['Category']['badgecolor'];
+                $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']  =   $child_img_name?$child_img_name[0]['Category']['badgecolor']:'';
                                 
                 $this->loadModel('Difficulty');
 				$parent_img_name    =   $this->Difficulty->getDifficultybyId($newchallengeinfo[0]['Challenge']['difficulty']);
@@ -1477,7 +1501,7 @@ class AdminController extends AppController
 				$parent_img_name    =   $this->Category->getCategoryInfobyId($newchallengeinfo[0]['Challenge']['parent_category']);
 				$newchallengeinfo[0]['Challenge']['chalngparentimagename']  =   $parent_img_name[0]['Category']['decal'];
 				$child_img_name    =   $this->Category->getCategoryInfobyId($newchallengeinfo[0]['Challenge']['child_category']);
-				$newchallengeinfo[0]['Challenge']['chalngparentchildimagename']  =   $child_img_name[0]['Category']['badgecolor'];
+				$newchallengeinfo[0]['Challenge']['chalngparentchildimagename']  =   $child_img_name?$child_img_name[0]['Category']['badgecolor']:'';
 
 				$this->Session->delete("newchallengeinfo");
 				$this->Session->write("newchallengeinfo",$newchallengeinfo);
@@ -1682,7 +1706,7 @@ class AdminController extends AppController
 				$newchallengeinfo[0]['Challenge']['chalngparentimagename']  =   $parent_img_name[0]['Category']['decal'];
 				
 				$child_img_name    =   $this->Category->getCategoryInfobyId($newchallengeinfo[0]['Challenge']['child_category']);
-				$newchallengeinfo[0]['Challenge']['chalngparentchildimagename']  =   $child_img_name[0]['Category']['badgecolor'];
+				$newchallengeinfo[0]['Challenge']['chalngparentchildimagename']  =   $child_img_name?$child_img_name[0]['Category']['badgecolor']:'';
 
 				$this->Session->delete("newchallengeinfo");
 				$this->Session->write("newchallengeinfo",$newchallengeinfo);
@@ -1806,7 +1830,12 @@ class AdminController extends AppController
 		unset($newchallengeinfo['pre_notification']);
 		unset($newchallengeinfo['chalngparentimagename']);
 		unset($newchallengeinfo['chalngparentchildimagename']);
-                
+                if($newchallengeinfo['host_set_start_date'] == 0)
+                {
+                    unset($newchallengeinfo['start_date']);
+                    unset($newchallengeinfo['end_date']);
+                }
+
 		if(!empty($newchallengeinfo))
 		{
 			$this->loadModel("Challenge");
@@ -1827,7 +1856,11 @@ class AdminController extends AppController
 		$id	=	$_POST['challengeid'];
 		if(!empty($newchallengeinfo))
 		{
-		
+		if($newchallengeinfo[0]['Challenge']['host_set_start_date'] == 0)
+                {
+                    $newchallengeinfo[0]['Challenge']['start_date'] =   '';
+                    $newchallengeinfo[0]['Challenge']['end_date']   =   '';
+                }
 		$newchallengeinfo	=	array("id"	=>	$id,
 			"name" => $newchallengeinfo[0]['Challenge']['name'],
 			"badge_title" => $newchallengeinfo[0]['Challenge']['badge_title'],

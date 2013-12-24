@@ -16,7 +16,8 @@ function removeallselection()
 }
 function badgecombo(img)
 {
-	$('#badgecombo').html('<img src="../../img/badgedesign/'+img+'" border="0" style="border-radius:100px; width:200px;" />');
+	var baseurl = $('#baseurl').val();
+	$('#badgecombo').html('<img src="'+baseurl+'img/badgedesign/'+img+'" border="0" style="border-radius:100px; width:200px;" />');
 	$('#comboimg').val(img);
 }
 /*Field validation on blur of an input element*/
@@ -61,10 +62,11 @@ function getDialogue()
 
 function getClose()
 {
+	var baseurl = $('#baseurl').val();
 	$( "#dialog-modal" ).dialog('close');
 	$.ajax({  //Make the Ajax Request
 	    type: "POST",  
-	    url: "../ajax_createimage",
+	    url: baseurl+"ajax_createimage",
 	    data: "val="+$('#color_code').val()+"&gradient=1",
 	    async: false,
 	    success: function(response) {//alert(response);
@@ -72,7 +74,7 @@ function getClose()
 			data        =   response.split('@#&');
 	        if(data[0] != 0)
 	        {
-	            var div =  '<div style="float:left;padding:0px;margin:5px;"><div style="position: absolute; margin-left:66px; visibility: visible;" id="pbadgering'+data[1]+'"><a href="Javascript:deletebadgecombo(\''+data[1]+'\',\''+data[2]+'\');" style="margin:0px;"><img src="../../img/remove.png" border="0" /></a></div><a href="Javascript:badgecombo(\''+data[0]+'\',\''+data[1]+'\');" onmouseover="Javascript:showdeletecombo(\''+data[1]+'\');" onmouseout="Javascript:hidedeletecombo(\''+data[1]+'\');"><img src="../../img/badgedesign/'+data[0]+'" border="0" style="border-radius:100px; width:75px;" /></a></div>';					
+	            var div =  '<div style="float:left;padding:0px;margin:5px;"><div style="position: absolute; margin-left:66px; visibility: visible;" id="pbadgering'+data[1]+'"><a href="Javascript:deletebadgecombo(\''+data[1]+'\',\''+data[2]+'\');" style="margin:0px;"><img src="'+baseurl+'img/remove.png" border="0" /></a></div><a href="Javascript:badgecombo(\''+data[0]+'\',\''+data[1]+'\');" onmouseover="Javascript:showdeletecombo(\''+data[1]+'\');" onmouseout="Javascript:hidedeletecombo(\''+data[1]+'\');"><img src="'+baseurl+'img/badgedesign/'+data[0]+'" border="0" style="border-radius:100px; width:75px;" /></a></div>';					
 	            $( ".image_listing" ).append(div);
 	        }
 	    } 
@@ -88,11 +90,12 @@ function hidedeletecombo(id)
 }
 function deletebadgecombo(id,val,cat)
 {
+	var baseurl = $('#baseurl').val();
 	var checkstr =  confirm('Are you sure you want to delete this user?');
     if(checkstr == true){
     	$.ajax({  //Make the Ajax Request
 			type: "POST",  
-			url: "../badgecombo_delete",
+			url: baseurl+"badgecombo_delete",
 			data: "id="+id+'&comboimg='+val+'&folder=badgedesign',  //data
 			success: function(response) {
 				if(response=='1')
@@ -127,6 +130,7 @@ function deletebadgecombo(id,val,cat)
     <span id="message_span"></span>	
   </div>
 <!--------------------------------------->
+<input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
 <!--discrption-->  
 <div class="Difficulty_step1" style="width:100%; float:left;">
 <div class="discrption_label" style="width:25% !important;">Child Category Name:</div>
@@ -144,7 +148,7 @@ if($i==0) { ?>
     <div <?php if($ccatinfo[0]['Category']['parent']==$pcat['Category']['id']){ ?> class="pcatindividualselected"<?php } else { ?> class="pcatindividual" <?php } ?>id="<?php echo $pcat['Category']['id']; ?>" style="width:550px;margin-top:30px;height:102px;">
 <?php } ?>
 		<a style="width:100%;" href="Javascript:selectedpcat('<?php echo $pcat['Category']['id']; ?>','<?php echo $pccount; ?>');">
-<span style="width:250px;"><img width="100" border="0" src="../../img/catuploads/<?php echo $pcat['Category']['decal']; ?>" style="background-color:#999999;"></span>
+<span style="width:250px;"><img width="100" border="0" src="<?php echo Router::url('/', true); ?>img/catuploads/<?php echo $pcat['Category']['decal']; ?>" style="background-color:#999999;"></span>
 
 </a><div class="pcatindividual" style="width: 350px; padding-left: 130px; margin-top: -62px;"><?php echo str_replace('\"', '', $pcat['Category']['title']); ?></div>
 	</div>
@@ -160,16 +164,16 @@ if($i==0) { ?>
 <div id="badgecolor" style="margin:10px 0;">
 	
     <div id="badgecombo" style="float: left;border: 2px dashed #999999 !important;">
-            <img src="../../img/badgedesign/<?php echo $ccatinfo[0]['Category']['badgecolor']; ?>" border="0" style="border-radius:100px; width:200px;" />
+            <img src="<?php echo Router::url('/', true); ?>img/badgedesign/<?php echo $ccatinfo[0]['Category']['badgecolor']; ?>" border="0" style="border-radius:100px; width:200px;" />
         </div>
 	<div style="margin:25px 0 0 220px;" align="left">Badge Ring Combo:</div>
 	<div style="margin: 10px 0px 0px 215px; height: 173px;" align="left" class="image_listing">
 	  <?php foreach($badgecombos as $badgecinfo) { ?>
 	  <div style="float:left;<?php if($badgecinfo['Badgecombo']['comboimg']==$ccatinfo[0]['Category']['badgecolor']){ ?>border:1px solid #D8DCE0;border-radius:100px;padding:4px;margin:0px;<?php } else { ?>padding:0px;margin:5px;<?php } ?>">
 		<div style="position: absolute; margin-left:66px; display: block;" id="pbadgering<?php echo $badgecinfo['Badgecombo']['id']; ?>"><?php $imgname = substr($badgecinfo['Badgecombo']['comboimg'], 0, -4); ?>
-			<a href="Javascript:deletebadgecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>','<?php echo $imgname; ?>','<?php echo $ccatinfo[0]['Category']['id']; ?>');" style="margin:0px;"><img src="../../img/remove.png" border="0" /></a>
+			<a href="Javascript:deletebadgecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>','<?php echo $imgname; ?>','<?php echo $ccatinfo[0]['Category']['id']; ?>');" style="margin:0px;"><img src="<?php echo Router::url('/', true); ?>img/remove.png" border="0" /></a>
 		</div>
-		<a href="Javascript:badgecombo('<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>');"><img src="../../img/badgedesign/<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>" border="0" style="border-radius:100px; width:75px;" onmouseover="Javascript:showdeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');" onmouseout="Javascript:hidedeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');" /></a>
+		<a href="Javascript:badgecombo('<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>');"><img src="<?php echo Router::url('/', true); ?>img/badgedesign/<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>" border="0" style="border-radius:100px; width:75px;" onmouseover="Javascript:showdeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');" onmouseout="Javascript:hidedeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');" /></a>
 	  </div>
 	  <?php } ?>
 	</div>
@@ -194,5 +198,5 @@ if($i==0) { ?>
   </form>
 </div>
 <div id="dialog-parent_category" style="display: none;" >
-    <?php echo $this->element('categoryparentadd',array('mode'=>'Parent','rootpath'=>'../../img/catuploads')); ?>
+    <?php echo $this->element('categoryparentadd',array('mode'=>'Parent','rootpath'=> Router::url('/', true).'img/catuploads')); ?>
 </div>

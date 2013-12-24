@@ -19,11 +19,14 @@ if(isset($success[1])) {
 		<?php echo $msg; ?>
 	</div> 
 <?php }?>
-<div class="btn_allUser" style="float:left; margin:7px 0 0 550px;position: absolute;">
+<div class="btn_allUser" style="float:left; margin:3px 0 0 550px;position: absolute;">
 	<a href="challengeaddstep1" class="btn btn-primary btn-block" style="width:200px;background-color:#3498DB;">+ New Challenge</a>
 </div>
 <div class="clear"></div>
-<div class="table-responsive" <?php if(empty($Challengeinfo)){ ?>  style="margin-top:57px;"<?php } ?>>
+<div class="table-responsive">
+    <?php if(isset($Challengeinfo) && empty($Challengeinfo)){ ?>
+        <div class="row-fluid"><div class="span6"></div><div class="span6"><div class="search_fieald" id="example_filter"><label><input type="text" class="form-control" id="search-query-1" placeholder="Search" aria-controls="example"></label></div></div></div>
+    <?php } ?>
 	<table class="table table-bordered" <?php if(isset($Challengeinfo) && !empty($Challengeinfo)){ ?> id="example" <?php } ?>>
 		<thead>
 		  <tr>

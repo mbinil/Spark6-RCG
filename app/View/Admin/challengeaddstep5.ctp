@@ -6,7 +6,8 @@
 <script type="text/javascript">
     function badgecombo(img,id)
     {
-        $('#badgecombo').html('<img src="../img/badgecolor/'+img+'" border="0" style="border-radius:100px; width:200px;" />');
+		var baseurl = $('#baseurl').val();
+        $('#badgecombo').html('<img src="'+baseurl+'img/badgecolor/'+img+'" border="0" style="border-radius:100px; width:200px;" />');
         $('#comboimg').val(img);
         $('#badgecolor_hidden').val(id);
     }
@@ -34,6 +35,7 @@
 
     function getClose()
     {
+		var baseurl = $('#baseurl').val();
 		$( "#dialog-modal" ).dialog('close');
 		$.ajax({  //Make the Ajax Request
 			type: "POST",  
@@ -46,7 +48,7 @@
 				data        =   response.split('@#&');
 				if(data[0] != 0)
 				{
-					var div =  '<div style="float:left;margin:5px;"><div style="position: absolute; margin-left:55px; visibility: hidden;" id="'+data[1]+'"><a href="Javascript:deletebadgecombo(\''+data[1]+'\',\''+data[2]+'\');" style="margin:0px;"><img src="../img/remove.png" border="0" /></a></div><a href="Javascript:badgecombo(\''+data[0]+'\',\''+data[1]+'\');" onmouseover="Javascript:showdeletecombo(\''+data[1]+'\');" onmouseout="Javascript:hidedeletecombo(\''+data[1]+'\');"><img src="../img/badgecolor/'+data[0]+'" border="0" style="border-radius:100px; width:75px;" /></a></div>'; 
+					var div =  '<div style="float:left;margin:5px;"><div style="position: absolute; margin-left:55px; visibility: hidden;" id="'+data[1]+'"><a href="Javascript:deletebadgecombo(\''+data[1]+'\',\''+data[2]+'\');" style="margin:0px;"><img src="'+baseurl+'img/remove.png" border="0" /></a></div><a href="Javascript:badgecombo(\''+data[0]+'\',\''+data[1]+'\');" onmouseover="Javascript:showdeletecombo(\''+data[1]+'\');" onmouseout="Javascript:hidedeletecombo(\''+data[1]+'\');"><img src="'+baseurl+'img/badgecolor/'+data[0]+'" border="0" style="border-radius:100px; width:75px;" /></a></div>'; 
 					$( ".image_listing" ).append(div);
 				}
 			} 
@@ -92,7 +94,7 @@
 <div class="clear"></div>
 <hr/>  
 <div class="container_left" style="width:100% !important; border: 1px solid #fff;">
-  <div class="btn_next"> <a href="javascript:challemgeSave();" class="btn btn-primary btn-block">Save<span class="fui-arrow-right pull-right"></span></a> </div>
+  <div class="btn_next"> <a href="javascript:challengeSave();" class="btn btn-primary btn-block">Save<span class="fui-arrow-right pull-right"></span></a> </div>
   <h1>Hero Image and Badge Color</h1>
   <h3>Choose the image for this Challenge and the color of the badge.</h3>
   <div class="clear">&nbsp;</div>
@@ -102,6 +104,7 @@
     <span id="message_span"></span>	
   </div>
 <!--------------------------------------->
+<input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
     <!--discrption-->
 	<div class="Difficulty_step1" style="width:100%; float:left;">
 		<div class="discrption_label"><h2>Hero Image</h2></div>
@@ -115,7 +118,7 @@
 				<input type="hidden" name="root_path" id="root_path" value="<?php echo Router::url('/app/webroot/img/challengeuploads', true); ?>" />
 				<input type="hidden" name="image_rand_num" id="image_rand_num" value="<?php echo $image_prepend_random_number; ?>" />
 				<div id="drop" style="background-color: white;width:705px;height:160px;"> <br/>
-					<img src="../img/default_banner.png" alt='IMAGE' />
+					<img src="<?php echo Router::url('/', true); ?>img/default_banner.png" alt='IMAGE' />
 					<br/>
 					drop user icon<br/>
 					You can also <a style="text-decoration: underline; color:#999999;">browse for a file</a>
@@ -133,7 +136,7 @@
 		<div style="width:100%;" align="center">
 			<div id="badgecolor" style="margin: 10px 0px; height: 235px;">
 				<div id="badgecombo" style="float: left;border: 2px dashed #999999 !important;">
-					<img src="../img/badgecolor/space_ship.png" border="0" style="border-radius:100px; width:200px;" />
+					<img src="<?php echo Router::url('/', true); ?>img/badgecolor/space_ship.png" border="0" style="border-radius:100px; width:200px;" />
 				</div>
 				<div style="float: left; position: absolute; margin: 210px 0px 0px; width: 205px; text-align: center;"><?php echo $newchallengeinfo['badge_title'];?></div>
 				<div style="float:left;margin:55px 0 25px 15px;" align="left" class="image_listing">
@@ -141,9 +144,9 @@
 					<?php foreach($badgecombos as $badgecinfo) { ?>
 						<div style="float:left;margin:5px;">
 						<div style="position: absolute; margin-left:66px; visibility: visible;" id="<?php echo $badgecinfo['Badgecombo']['id']; ?>"><?php $imgname = substr($badgecinfo['Badgecombo']['comboimg'], 0, -4); ?>
-						<a href="Javascript:deletebadgecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>','<?php echo $imgname; ?>');" style="margin:0px;"><img src="../img/remove.png" border="0" /></a>
+						<a href="Javascript:deletebadgecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>','<?php echo $imgname; ?>');" style="margin:0px;"><img src="<?php echo Router::url('/', true); ?>img/remove.png" border="0" /></a>
 						</div>
-						<a href="Javascript:badgecombo('<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>','<?php echo $badgecinfo['Badgecombo']['id']; ?>');" onmouseover="Javascript:showdeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');" onmouseout="Javascript:hidedeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');"><img src="../img/badgecolor/<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>" border="0" style="border-radius:100px; width:75px;" /></a>
+						<a href="Javascript:badgecombo('<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>','<?php echo $badgecinfo['Badgecombo']['id']; ?>');" onmouseover="Javascript:showdeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');" onmouseout="Javascript:hidedeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');"><img src="<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>" border="0" style="border-radius:100px; width:75px;" /></a>
 						</div>
 				   <?php } ?>
 				<?php } ?>
@@ -156,7 +159,7 @@
 		<div class="clear"></div>	
 		<!--badge color creation ends here-->
 		<div class="btn_next" > 
-			<a href="javascript:challemgeSave();" class="btn btn-primary btn-block">Save<span class="fui-arrow-right pull-right"></span></a> 
+			<a href="javascript:challengeSave();" class="btn btn-primary btn-block">Save<span class="fui-arrow-right pull-right"></span></a> 
 		</div>
 	</div>
     <!---->

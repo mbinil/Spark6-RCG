@@ -37,7 +37,7 @@ function validateFieldcheck(id,val)
 <div class="clear"></div>
 <?php if(isset($diffinfo['decal']) && $diffinfo['decal']!=''){ ?>
 <div style="position: absolute; margin: 39px 0px 0px 0px;">
-<img src="<?php echo "../img/diffuploads/".$diffinfo['decal']; ?>" width="120" height="120" />
+<img src="<?php echo Router::url('/', true)."img/diffuploads/".$diffinfo['decal']; ?>" width="120" height="120" />
 </div>
 <?php } ?>
   <!----Error message div------------------>

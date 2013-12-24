@@ -2,7 +2,8 @@
 class Challenge extends AppModel
 {
    	var $name="Challenge";		
-		
+        public $session_user_id  =   '';
+        
 	public function getChallenges()
 	{
 		$challengesinfo = $this->find("all");
@@ -14,6 +15,12 @@ class Challenge extends AppModel
 		$challengesinfo = $this->find('all',array('conditions'=>array('id'=>$id)));
 		return $challengesinfo;
 	}
+        
+	public function getChallengebyCondition($conditions)
+	{
+		$challengesinfo = $this->find('all',array('conditions'=>$conditions));
+		return $challengesinfo;
+	}
 	
 	public function CheckChallengeAvailable($data)
 	{
@@ -22,148 +29,489 @@ class Challenge extends AppModel
 		return $availablecount;
 	}
         
-        /**
-         * Creating the condition for fetching the challenge.
-         * @param string $from parent,child,search
-         * @param integer|null $val may be parent id, child id, serch keyword, null 
-         * @param integer|null $parent parent id or null
-         * @return array $condition condition array
-         */
-        public function getConditions($from, $val, $parent)
-        {
-            $condition   =   '';
-            switch ($from) 
-            {
-                case 'parent':
-                                 if($val)
-                                 {
-                                     $condition   =  array('parent_category' => $val);
-                                 }
-                                 break;
-                case 'child':
-                                 if($parent && $val)
-                                 {
-                                     $condition   =  array('parent_category' => $parent, 'child_category' => $val);
-                                 }
-                                 else
-                                 {
-                                     if($parent)
-                                         $condition   =  array('parent_category' => $parent);
-                                     else
-                                         $condition   =  array('child_category' => $val);
-                                 }
-                                 break;
-                case 'search':
-                                 $condition   =  array('OR'  =>  
-                                                     array(  'name like'  =>  "%$val%",
-                                                             'badge_title like'  =>  "%$val%",
-                                                             'daily_commitment like'  =>  "%$val%",
-                                                             'why like'  =>  "%$val%",
-                                                             'how like'  =>  "%$val%",
-                                                             'learn_more like'  =>  "%$val%"
-                                                         )
-                                                 );
-                                 break;
-            }
-            
-            return $condition;
-        }
-        
-        /**
-         * fetching the challenge value related to the conditions
-         * @param array $conditions
-         * @return array challenge array
-         */
-        public function getValue($conditions)
-        {
-            return $this->find('all', array('fields'=>array('Challenge.*,badgecombo.comboimg,difficulty.decal,difficulty.title,categorie.title'),
-                                                'joins' => array(
-                                                                    array(
-                                                                        'table' => 'badgecombos',
-                                                                        'alias' => 'badgecombo',
-                                                                        'type' => 'inner',
-                                                                        'foreignKey' => false,
-                                                                        'conditions'=> array('badgecombo.id = Challenge.badge_color')
-                                                                    ),
-                                                                    array(
-                                                                        'table' => 'difficulties',
-                                                                        'alias' => 'difficulty',
-                                                                        'type' => 'inner',
-                                                                        'foreignKey' => false,
-                                                                        'conditions'=> array(
-                                                                            'difficulty.id = Challenge.difficulty'
-                                                                        )
-                                                                    ),
-                                                                    array(
-                                                                        'table' => 'categories',
-                                                                        'alias' => 'categorie',
-                                                                        'type' => 'inner',
-                                                                        'foreignKey' => false,
-                                                                        'conditions'=> array(
-                                                                            'categorie.id = Challenge.child_category'
-                                                                        )
-                                                                    )
-                                                                ),
-                                                 'conditions' => $conditions
-                                            )
-                    );
-        }
-        
-        /**
-         * creating the challenge html part
-         * @param array $challenges challenge array
-         * @return string challenge html wil return
-         */
-        public function getHtml($challenges)
-        {
-            $return_html    =   '';
-            foreach ($challenges as $key => $value) 
-            {
-				$fullurl = Router::url('/', true);
-                $return_html    .=   '<div class="column-holder" id="challenge_individual_'.$value['Challenge']['id'].'">
-                                        <article class="column">
-                                        <div class="visual-block">
-                                            <img src="'.$fullurl.'img/challengeuploads/cropped/cropped'.$value['Challenge']['hero_image'].'" width="710" height="249" alt="image description" class="bg">
-                                            <figure><img class="alignleft" src="'.$fullurl.'img/challengeuploads/'.$value['Challenge']['hero_image'].'" width="324" height="219" alt="image description"></figure>
-                                            <strong class="title">Host This.</strong>
-                                            <span class="label blue"></span>
-                                        </div>
-                                        <div class="desctiption">
-                                            <a href="#" class="more" style="background: url(\''.$fullurl.'img/badgecolor/'.$value['badgecombo']['comboimg'].'\')">more</a>
-                                            <div class="txt">
-                                                    <h2>'.$value['Challenge']['name'].'</h2>
-                                                    <p>'.$value['Challenge']['learn_more'].'</p>
-                                            </div>
-                                        </div>
-                                        <ul class="meta">
-                                            <li>In <a href="#">'.$value['categorie']['title'].'</a></li>
-                                            <li class="difficulty easy"><span>'.$value['difficulty']['title'].' Difficulty</span></li>
-                                            <li class="people"><span>60 Finished This</span></li>
-                                            <li class="points increase"><span>0 Points</span></li>
-                                        </ul>';
+	/**
+	 * Creating the condition for fetching the challenge.
+	 * @param string $from parent,child,search
+	 * @param integer|null $val may be parent id, child id, serch keyword, null 
+	 * @param integer|null $parent parent id or null
+	 * @return array $condition condition array
+	 */
+	public function getConditions($from, $val, $parent)
+	{
+		$condition   =   '';
+		switch ($from) 
+		{
+			case 'parent':
+				 if($val)
+				 {
+					 $condition   =  array('Challenge.parent_category' => $val, 'Challenge.status' => '1');
+				 }
+				 else
+				 {
+					 $condition   =  array('Challenge.status' => '1');
+				 }
+				 break;
+			case 'child':
+				 if($parent && $val)
+				 {
+					 $condition   =  array('Challenge.parent_category' => $parent, 'Challenge.child_category' => $val, 'Challenge.status' => '1');
+				 }
+				 else
+				 {
+					 if($parent)
+						 $condition  =  array('Challenge.parent_category' => $parent, 'Challenge.status' => '1');
+					 else if($val)
+						 $condition  =  array('Challenge.child_category' => $val, 'Challenge.status' => '1');
+					 else
+						 $condition  =  array('Challenge.status' => '1');
+				 }
+				 break;
+			case 'search':
+				 $condition   =  array('OR'  =>  
+					 array(  'Challenge.name like'  =>  "%$val%",
+							 'Challenge.badge_title like'  =>  "%$val%",
+							 'Challenge.daily_commitment like'  =>  "%$val%",
+							 'Challenge.why like'  =>  "%$val%",
+							 'Challenge.how like'  =>  "%$val%",
+							 'Challenge.learn_more like'  =>  "%$val%"
+						 ), 'Challenge.status' => '1'
+					 );
+				 break;
+		}
 
-                if($this->getHourMinutes($value['Challenge']['start_date'],$value['Challenge']['end_date']))
+		return $condition;
+	}
+	
+	/**
+	 * fetching the challenge value related to the conditions
+	 * @param array $conditions
+	 * @return array challenge array
+	 */
+	public function getValue($conditions)
+	{
+		return $this->find('all', array('fields'=>array('Challenge.*,badgecombo.comboimg,difficulty.decal,difficulty.title,categorie.id,categorie.title'),
+				'joins' => array(
+					array(
+						'table' => 'badgecombos',
+						'alias' => 'badgecombo',
+						'type' => 'inner',
+						'foreignKey' => false,
+						'conditions'=> array('badgecombo.id = Challenge.badge_color')
+					),
+					array(
+						'table' => 'difficulties',
+						'alias' => 'difficulty',
+						'type' => 'inner',
+						'foreignKey' => false,
+						'conditions'=> array(
+							'difficulty.id = Challenge.difficulty'
+						)
+					),
+					array(
+						'table' => 'categories',
+						'alias' => 'categorie',
+						'type' => 'inner',
+						'foreignKey' => false,
+						'conditions'=> array(
+							'categorie.id = Challenge.child_category'
+						)
+					)
+				),
+				'conditions' => $conditions
+			)
+		);
+	}
+	
+	/**
+	 * creating the challenge html part
+	 * @param array $challenges challenge array
+	 * @return string challenge html wil return
+	 */
+	public function getHtml($challenges)
+	{
+		$host_challenge_status  =   array(0,1,4,6);
+		$return_html    =   '';
+
+		foreach ($challenges as $key => $value) 
+		{
+			App::import('Model', 'Userchallenge');
+			$Userchallenge = new Userchallenge();
+			$get_host   =   $Userchallenge->getHostArray($value['Challenge']['id']);
+			//echo "<pre>";print_r($get_host);exit;
+			
+			if($this->session_user_id == '')
+				$anchor =   '<strong class="title" style="line-height:1;"><a href="javascript:Loginuser();" style="cursor:pointer;"/>';
+			else
+				$anchor =   '<strong class="title"><a href="'.Router::url('/host_challenge_step1/'.$value['Challenge']['permalink'], true).'" style="cursor:pointer;"/>';
+			
+	$fullurl = Router::url('/', true);
+			$class  =   'class="column-holder"';
+			if(count($get_host) > 1)
+					$class  =   'class="column-holder multi"';
+			$return_html    .=   '<div '.$class.' id="challenge_individual_'.$value['Challenge']['id'].'">
+									<article class="column">
+									<div class="visual-block">
+										<img src="'.$fullurl.'img/challengeuploads/cropped/cropped'.$value['Challenge']['hero_image'].'" width="710" height="249" alt="image description" class="bg">
+										<figure><a href="'.Router::url('/discover/'.$value['Challenge']['permalink'], true).'" style="cursor:pointer;"><img class="alignleft" src="'.$fullurl.'img/challengeuploads/'.$value['Challenge']['hero_image'].'" width="324" height="219" alt="image description"></a></figure>';
+			$notification_time_div      =   '';
+			if(count($get_host) == 0)
+			{
+				$return_html    .=   $anchor;
+				if($this->session_user_id == '')
+					$return_html    .=   'Login to ';
+				$return_html    .=   'Host This.</a></strong>';
+			}
+			else
+			{
+				$participant_host   =   $Userchallenge->getParticipantsArray(array('Userchallenge.user_challenge_status in (6,1)', 'Userchallenge.user_challenge_hostid' =>$get_host[0]['Userchallenge']['user_id'], 'Userchallenge.group_id' =>$get_host[0]['Userchallenge']['group_id']));
+				$return_html        .=   '<div class="about">
+											<div class="about-holder">
+											<div class="person-info">
+												<a href="#"><img height="101" width="100" alt="image description" src="'.$fullurl.'img/useruploads/'.$get_host[0]['user']['user_profile_picture'].'"></a>
+												<dl>
+												<dt>'.ucfirst($get_host[0]['user']['user_firstname']).'</dt>
+												<dd>Host</dd>
+												<dt>+'.count($participant_host).'</dt>
+												<dd>Participants</dd>
+												</dl>
+											</div>
+											<div class="persons-list"><ul>';
+
+				if($arr =   $this->getHourMinutes($get_host[0]['Userchallenge']['started_date'],'','hour'))
+				{
+					if($arr['days'] == 0 && $arr['hour'] <= 3)
+					{
+						$notification_time_div    =   '<div class="notification" style="display:block;background: url(\''.$fullurl.'images/ico-44.png\') no-repeat scroll 0 0 #8C1400;">
+							<p>Starts in '.$this->getHourMinutes($get_host[0]['Userchallenge']['started_date'],'','').'. Join The Challenge!</p>
+						</div>';
+					}
+				}
+				
+				for($ps=0;$ps<count($participant_host);$ps++)
+				{
+					$return_html    .=   '<li><a href="#"><img height="50" width="50" alt="image description" src="'.$fullurl.'img/useruploads/'.$participant_host[$ps]['user']['user_profile_picture'].'"></a></li>';
+				}
+				$return_html    .=   '</ul></div></div></div>';
+			}
+				
+		   $return_html    .=   '<span class="label blue"></span>
+									</div>
+									<a href="'.Router::url('/discover/'.$value['Challenge']['permalink'], true).'" class="more" style="background: url(\''.$fullurl.'img/badgecolor/'.$value['badgecombo']['comboimg'].'\');cursor:pointer;">
+									<div class="desctiption">
+										<div class="more" style="background: url(\''.$fullurl.'img/badgecolor/'.$value['badgecombo']['comboimg'].'\');cursor:pointer;">more</div>
+										<div class="txt">
+												<h2>'.$value['Challenge']['name'].'</h2>
+												<p>'.$value['Challenge']['why'].'</p>
+										</div>
+									</div>
+									</a>
+									<ul class="meta">
+										<li>In <a onclick="showChallenge(this,\'child\',\'\',\''.$value['categorie']['id'].'\')" href="javascript:void(0);">'.$value['categorie']['title'].'</a></li>
+										<li class="difficulty easy"><span>'.$value['difficulty']['title'].' Difficulty</span></li>
+										<li class="people"><span>60 Finished This</span></li>
+										<li class="points increase"><span>0 Points</span></li>
+									</ul>'.$notification_time_div.'</article>';
+
+			if(count($get_host) > 1)
+			{
+				$return_html    .=   '<div class="open-block">
+	<span class="opener">
+			<a href="#" class="open">'.(count($get_host) - 1).' More Like This</a>
+			<a href="#" class="close">Close</a>
+	</span>
+	<div class="slide" style="display: block;">
+			<div class="host-block">
+					<div class="host-this">
+							<h2>Host This</h2>
+							<a href="javascript:void(0);" onclick="pickAHost(\''.$value["Challenge"]["id"].'\',\'\',\''.$value["Challenge"]["permalink"].'\')"><img height="114" width="113" alt="image description" src="images/img-42.png"></a>
+					</div>
+					<span class="or">or</span>
+					<div class="multi-host">
+							<h2>Pick Host</h2><ul>';
+				for($ld=0;$ld<count($get_host);$ld++) 
+				{
+					if($ld != 0)
+					{
+						$paricipants_arr    =   $Userchallenge->getParticipantsArray(array('Userchallenge.user_challenge_status in (6,1)', 'Userchallenge.user_challenge_hostid' =>$get_host[$ld]['Userchallenge']['user_id'], 'Userchallenge.group_id' =>$get_host[$ld]['Userchallenge']['group_id']));
+						$return_html    .=   '<li><a href="javascript:void(0)" onclick="pickAHost(\''.$value["Challenge"]["id"].'\',\''.$get_host[$ld]['user']["id"].'\',\''.$value["Challenge"]["permalink"].'\')"><img height="101" width="100" alt="image description" src="'.$fullurl.'img/useruploads/'.$get_host[$ld]['user']['user_profile_picture'].'" ><span class="overlay"><strong class="number">+'.count($paricipants_arr).'</strong> Participants</span>';
+						//. '<span class="time"></span></a></li>';
+						if($arr = $this->getHourMinutes($get_host[$ld]['Userchallenge']['started_date'],'','hour'))
+						{
+							if($arr['days'] == 0 && $arr['hour'] <= 3)
+							{
+								$return_html    .=   '<span class="time"></span>';
+							}	
+						}
+						$return_html    .=   '</a></li>';
+					}
+				}
+				
+			$return_html    .=   '
+							</ul>
+					</div>
+			</div>
+	</div>
+</div>';
+			}
+			$return_html    .=   '</div>';
+		}
+		
+		return $return_html;
+	}
+	
+	public function getChallenge($status,$login_id)
+	{
+		$fullurl            =   Router::url('/', true);
+		$chlnge_status      =   ($status=='active')?'(1)':'(0,6)';
+		$person_list_class  =   ($status=='active')?'persons-list':'persons-list inner';
+		App::import('Model', 'Userchallenge');
+		$Userchallenge      =   new Userchallenge();
+		$challenges_host    =   $Userchallenge->getChallengeHostArray(array('Userchallenge.user_challenge_status in '.$chlnge_status.'','Userchallenge.user_id' => $login_id));
+		
+		$html               =   '';
+		
+		foreach ($challenges_host as $key => $value) 
+		{
+			//getting the coming challenge host
+			$challenge_host_arr =   $Userchallenge->getChallengeHostArray(array('Userchallenge.user_challenge_status in '.$chlnge_status.'','Userchallenge.challenge_id' => $value['Userchallenge']['challenge_id'],'Userchallenge.group_id' => $value['Userchallenge']['group_id'],'Userchallenge.user_challenge_hostid is null'));
+
+			//getting the coming challenge participants
+			$paricipants_arr    =   $Userchallenge->getParticipantsArray(array('Userchallenge.user_challenge_status in '.$chlnge_status.'', 'Userchallenge.user_challenge_hostid' =>$value['Userchallenge']['user_id'], 'Userchallenge.group_id' =>$value['Userchallenge']['group_id']));
+
+			//checking the login person is the host of coming challenge
+			$name   =   'Myself';
+			if($login_id != $challenge_host_arr[0]['user']['id'])
+				$name   =   $challenge_host_arr[0]['user']['user_firstname'];
+				
+			$html       .=   '<article class="column">
+								<div class="visual-block">
+								<img height="249" width="960" class="bg" alt="image description" src="'.$fullurl.'img/challengeuploads/cropped/cropped'.$value['challenge']['hero_image'].'">
+								<figure><img height="219" width="324" alt="image description" class="alignleft" src="'.$fullurl.'img/challengeuploads/'.$value['challenge']['hero_image'].'"></figure>
+								<div class="about"><div class="about-holder">
+								<div class="person-info">
+									<a href="javascript:void(0);">
+										<img height="101" width="100" alt="image description" src="'.$fullurl.'img/useruploads/'.$challenge_host_arr[0]['user']['user_profile_picture'].'">
+									</a>
+									<dl>
+										<dt>'.$name.'</dt>
+										<dd>Host</dd>
+										<dt>+'.count($paricipants_arr).'</dt>
+										<dd><a href="javascript:void(0);">Participants</a></dd>
+									</dl>
+								</div>
+
+								<div class="'.$person_list_class.'">
+								<ul>';
+			
+			foreach ($paricipants_arr as $key1 => $value1)
+			{
+				
+				$html       .=   '<li><a href="javascript:void(0);"><img height="50" width="50" alt="image description" src="'.$fullurl.'img/useruploads/'.$value1['user']['user_profile_picture'].'"><span class="overlay" style="opacity: 0;"></span></a></li>';
+			}
+
+			$html       .=   '</ul></div>';
+			$flag       =   0;//checking weather the noteblock need or not
+			//checking the weather the challenge is active or waiting and give the join condition for login person if he is a participant of this challenge
+			foreach ($paricipants_arr as $key1 => $value1)
+			{
+				if($status  !=  'active' && $value1['Userchallenge']['user_challenge_hostid'] && $value1['Userchallenge']['user_challenge_hostid'] != $login_id && $value1['Userchallenge']['user_id'] == $login_id)
+				{
+					$flag       =   1;
+					$html       .=   '<div class="join-block">
+									<h2>Join?</h2>
+									<ul>
+											<li><a class="join" href="javascript:void(0);" onclick="changeNotification(\'agree\',\''.$value1['Userchallenge']['id'].'\')">join<em class="mask" style="opacity: 0;"></em></a></li>
+											<li><a class="reject" href="javascript:void(0);" onclick="changeNotification(\'reject\',\''.$value1['Userchallenge']['id'].'\')">reject<em class="mask" style="opacity: 0;"></em></a></li>
+									</ul>
+							</div>';
+					break;
+				}
+			}
+			
+			$html       .=   '</div></div>';
+			if($flag == 1)
+			{
+				$html       .=   '<div class="note-block">
+									<div class="holder">
+										<p>You have a new challenge invitation!</p>
+										<a class="close" href="#">close</a>
+									</div>
+								</div>';
+			}
+			else
+			{
+				$end        =   date("Y-m-d H:i:s",strtotime($value['Userchallenge']['user_challenge_finished_date']));
+				$now        =   date("Y-m-d H:i:s");
+				
+				$diff   =   strtotime($end) - strtotime($now);
+				if($diff > 0)
+				{
+					$date1      =   date_create($end);
+					$date2      =   date_create($now);
+					$diff1      =   date_diff($date2,$date1);
+
+					if($diff1->days >= 10)
+						$html       .=   '<div class="note-block">
+											<div class="holder">
+												<p>This challenge ends soon - You can do it!</p>
+												<a class="close" href="#">close</a>
+											</div>
+										</div>';
+				}
+			}
+
+			$html       .=   '</div><div class="desctiption"><div class="days">';
+			
+			if($status  !=  'active')
+			{
+				$arr        =   $this->getHourMinutes($value['Userchallenge']['started_date'],'','hour');
+				$string = "";
+				if($arr['days']!="0")
+					$string = $arr['days']." DAYS";
+				else if($arr['hour']!="0")
+					$string = $arr['hour']." HOURS";
+				else if($arr['minutes']!="0")
+					$string = $arr['minutes']." MIN";	
+				$html       .=   '<div class="time-block">
+									<span>STARTS IN '.$string.'</span>
+								</div>';
+			}
+			else
+			{
+				$arr        =   $this->getHourMinutes($value['Userchallenge']['user_challenge_finished_date'],'','hour');
+				$html       .=   '<div class="holder">
+									<span>DAYS LEFT</span>
+									<strong class="number">'.$arr['days'].'</strong>
+								</div>';
+			}
+					
+			
+			$html       .=   '</div>
+							<ul class="info">
+									<li><span class="difficulty '.$value['Userchallenge']['user_challenge_finished_date'].'">'.$value['Userchallenge']['user_challenge_finished_date'].' Difficulty</span></li>
+									<li><span class="points">'.$value['Userchallenge']['user_challenge_point'].' Points</span></li>
+									<li>In <a href="#">'.$value['category']['title'].'</a></li>
+							</ul>
+							<div class="txt">
+									<h2>'.$value['challenge']['name'].'</h2>
+									<p>'.$value['challenge']['learn_more'].'</p>
+							</div>
+						</div>
+						<footer class="calendar">
+							<em class="date">'.date('M d',strtotime($value['Userchallenge']['started_date'])).' - '.date('M d',strtotime($value['Userchallenge']['user_challenge_finished_date'])).' </em>
+						</footer>
+					</article>';
+		}
+
+            return $html;
+        }
+        
+        public function getEndedChallenge($login_id)
+        {
+            App::import('Model', 'Userchallenge');
+            $Userchallenge      =   new Userchallenge();
+            //echo $this->getFinishedChallenges($login_id,$Userchallenge);
+            //echo $this->getFailedChallenges($login_id,$Userchallenge);exit;
+            return '<div class="two-columns-section">'.$this->getFinishedChallenges($login_id,$Userchallenge).$this->getFailedChallenges($login_id,$Userchallenge).'</div>';
+        }
+        
+        public function getFinishedChallenges($login_id,$Userchallenge)
+        {
+            $fullurl            =   Router::url('/', true);
+            $challenges_host    =   $Userchallenge->getChallengeHostArray(array('Userchallenge.user_challenge_status' => '2','Userchallenge.user_id' => $login_id));
+            $html               =   '';
+            
+            if(count($challenges_host) > 0)
+            {
+                $html               .=   '<div class="column-section alignleft ajax-holder ajax-loading same-height-left" style="min-height: 1725px;">
+                                        <h2>Finished Challenges</h2>';
+                
+                foreach ($challenges_host as $key => $value)
                 {
-                    $return_html    .=   '<div class="notification">
-                        <p>Starts in '.$this->getHourMinutes($value['Challenge']['start_date'],$value['Challenge']['end_date']).'. Join The Challenge!</p>
-                    </div>';
+                    $html               .=   '<article class="column">
+                                                <div class="desctiption">
+                                                        <div class="txt">
+                                                                <h2>'.$value['challenge']['name'].'</h2>
+                                                                <p>'.$value['challenge']['learn_more'].'</p>
+                                                        </div>
+                                                        <div class="days green">
+                                                                <div class="holder">
+                                                                        <span>'.date('M',strtotime($value['Userchallenge']['user_challenge_finished_date'])).'</span>
+                                                                        <strong class="number">'.date('d',strtotime($value['Userchallenge']['user_challenge_finished_date'])).'</strong>
+                                                                </div>
+                                                        </div>
+                                                        <span class="points green">Points Earned <strong class="number">'.$value['Userchallenge']['user_challenge_point'].' pts.</strong></span>
+                                                        <span class="label green" style="background:url(\''.$fullurl.'img/diffuploads/'.$value['difficulty']['decal'].'\')"></span>
+                                                        <span class="stamp"></span>
+                                                </div>
+                                                <footer class="share-block">
+                                                        <a class="again" href="'.Router::url('/host_challenge_step1/'.$value['challenge']['permalink'], true).'">Go Again</a>
+                                                        <span class="share">Share</span>
+                                                        <ul class="share-this">
+                                                                <li><a class="facebook" href="#">facebook</a></li>
+                                                                <li><a class="twitter" href="#">twitter</a></li>
+                                                                <li><a class="email" href="#">email</a></li>
+                                                        </ul>
+                                                </footer>
+                                        </article>';
                 }
-
-                $return_html    .=   '</article></div>';
+                
+                $html               .=   '</div>';
             }
-            
-            return $return_html;
+
+            return $html;
         }
         
+        public function getFailedChallenges($login_id,$Userchallenge)
+        {
+            $fullurl            =   Router::url('/', true);
+            $challenges_host    =   $Userchallenge->getChallengeHostArray(array('Userchallenge.user_challenge_status' => '3','Userchallenge.user_id' => $login_id));
+            $html               =   '';
+
+            if(count($challenges_host) > 0)
+            {
+                $html               .=   '<div class="column-section alignleft ajax-holder ajax-loading same-height-left" style="min-height: 1725px;">
+                                        <h2>Failed Challenges</h2>';
+                
+                foreach ($challenges_host as $key => $value)
+                {
+                    $html               .=   '<article class="column failed">
+                                            <div class="desctiption">
+                                                    <div class="txt">
+                                                            <h2>'.$value['challenge']['name'].'</h2>
+                                                            <p>'.$value['challenge']['learn_more'].'</p>
+                                                    </div>
+                                                    <div class="days">
+                                                            <div class="holder">
+                                                                    <span>'.date('M',strtotime($value['Userchallenge']['user_challenge_finished_date'])).'</span>
+                                                                    <strong class="number">'.date('d',strtotime($value['Userchallenge']['user_challenge_finished_date'])).'</strong>
+                                                            </div>
+                                                    </div>
+                                                    <span class="points green">Points Earned <strong class="number">'.$value['Userchallenge']['user_challenge_point'].' pts.</strong></span>
+                                                    <span class="label" style="background:url(\''.$fullurl.'img/diffuploads/'.$value['difficulty']['decal'].'\')"></span>
+                                            </div>
+                                            <footer class="share-block">
+                                                    <a class="again" href="'.Router::url('/host_challenge_step1/'.$value['challenge']['permalink'], true).'">Retry</a>
+                                            </footer>
+                                        </article>';
+                }
+                
+                $html               .=   '</div>';
+            }
+
+            return $html;
+        }
         /**
          * 
          * @param string $from parent,child,search
          * @param integer|null $val may be parent id, child id, serch keyword, null 
          * @param integer|null $parent parent id or null
+         * @param integer|null $login_user_id login user id stored in the session
          * @return string challenge html creation and return back
          */
-        public function createCallenge($from, $val, $parent)
+        public function createCallenge($from, $val, $parent, $login_user_id)
         {
+            $this->session_user_id    =   $login_user_id;
             return $this->getHtml($this->getValue($this->getConditions($from,$val,$parent)));
         }
         
@@ -174,7 +522,7 @@ class Challenge extends AppModel
 	*/
 	public function searchUser($search_keyword)
 	{
-	   return  $this->find('all', array(
+	    return  $this->find('all', array(
 			'conditions' => array('OR'  =>  
 			   array(  'name like'  =>  "%$search_keyword%",
 					   'badge_title like'  =>  "%$search_keyword%",
@@ -221,142 +569,45 @@ class Challenge extends AppModel
 	    return $category; 
 	}
 	
-	function getChallengeDiscover($lifestyle,$category,$searchkey,$limit,$active_user="",$difficulty,$start=0)
-	{		
-		$cond = "Challenge.challenge_active=1 ";
-		
-		if($lifestyle>0)
-			$cond .= "AND Challenge.challenge_lifestyle = '".$lifestyle."'";	
-			
-		if($category>0)
-			$cond .= " AND Challenge.category_id = '".$category."'";
-		
-		if($difficulty!="")
-			$cond .= " AND Challenge.challenge_difficulty = '".$difficulty."'";
-			
-		if($searchkey!="")
+	function getHourMinutes($from,$to,$need='')
+	{
+		$from   =   date("Y-m-d H:i:s",strtotime($from));
+		$now    =   date("Y-m-d H:i:s");
+		$diff   =   strtotime($from) - strtotime($now);
+
+		if ( $diff >= 0 ) 
 		{
-			$filter_val = "\"%".$searchkey."%\"";
-			$cond .= " AND (challenge_title LIKE ".$filter_val." OR challenge_description LIKE ".$filter_val." OR challenge_what LIKE ".$filter_val." OR challenge_why LIKE ".$filter_val." OR challenge_how LIKE ".$filter_val." OR challenge_tags LIKE ".$filter_val.")";
-		}	
-	
-		$options = array(
-					'conditions' => array($cond),
-					/*'fields'=>array('Challenge.*, Challenge.challenge_likes+Challenge.challenge_points as displayorder'),*/
-					'fields'=>array('Challenge.*'),
-					'order'=> array('Challenge.challenge_likes DESC'),
-					'limit' => $start.','.$limit
-					);
-		$this->recursive = -1;
-		$challenges_base = $this->find('all', $options);
-		//print_r($challenges_base);
-		$challenge = array();
-		
-		$i=0;
-		
-		foreach($challenges_base as $ch_record)
-		{
-			//echo "id-".$ch_record['Challenge']['id']."<br/>"; 
-			//base details
-			$challenge[$i]['challenge_id'] = $ch_record['Challenge']['id']; 
-			$challenge[$i]['challenge_title'] = $ch_record['Challenge']['challenge_title']; 
-			$challenge[$i]['challenge_description'] = $ch_record['Challenge']['challenge_description']; 
-			$challenge[$i]['challenge_permalink'] = $ch_record['Challenge']['challenge_permalink']; 
-			$challenge[$i]['challenge_difficulty'] = $ch_record['Challenge']['challenge_difficulty'];			
-			$challenge[$i]['challenge_image'] = $ch_record['Challenge']['challenge_image']; 
-			$challenge[$i]['challenge_points'] = $ch_record['Challenge']['challenge_points']; 
-			$challenge[$i]['challenge_likes'] = $ch_record['Challenge']['challenge_likes']; 
-			$challenge[$i]['challenge_what'] = $ch_record['Challenge']['challenge_what']; 
-			$challenge[$i]['challenge_lifestyle'] = $ch_record['Challenge']['challenge_lifestyle']; 
-			$challenge[$i]['challenge_category'] = $ch_record['Challenge']['category_id']; 
-			
-			//$challenge[$i] = $ch_record['Challenge'];
-			$challenge[$i]['category_name'] = $this -> getCategoryName($ch_record['Challenge']['category_id']);
-			$challenge[$i]['finished_count_participants'] = $this->Userchallenge->getFinishedCount($ch_record['Challenge']['id']);
-			$hostArr = $this->Userchallenge->getMainHost($ch_record['Challenge']['id']);
-			$challenge[$i]['main_host_starts_in'] = "0";
-			//sj modified on 26June2013 to display hosts that are in waiting status. prev was in active status
-			if(!empty($hostArr))
+			$date1  =   date_create($from);
+			$date2  =   date_create($now);
+			$diff1  =   date_diff($date2,$date1);
+
+			if($need)
 			{
-				$challenge[$i]['main_host_fbid'] = $hostArr[0]['User']['user_fbid'];
-				$challenge[$i]['main_host_id'] = $hostArr[0]['Userchallenge']['user_id'];
-				$challenge[$i]['main_host_name'] = $hostArr[0]['User']['user_username'];
-				$challenge[$i]['main_host_photo'] = $hostArr[0]['User']['user_profile_picture'];				
-				$challenge[$i]['group_id'] = $hostArr[0]['Userchallenge']['group_id'];				
-				$challenge[$i]['main_host_participants'] = $this->Userchallenge->getMainHostParticipants($ch_record['Challenge']['id'],$challenge[$i]['main_host_id'],$challenge[$i]['group_id']);
-				$challenge[$i]['main_host_participants_count'] = $this->Userchallenge->getParticipantsCount($ch_record['Challenge']['id'],$challenge[$i]['main_host_id'],$challenge[$i]['group_id']);
-				$challenge[$i]['main_host_started_date'] = $hostArr[0]['Userchallenge']['started_date'];
-				//$challenge[$i]['main_host_started_date_iso'] = $hostArr[0]['Userchallenge']['started_date_iso'];
-				$challenge[$i]['main_host_starts_in'] = "0"; 
-				if($hostArr[0]['Userchallenge']['started_date'] != '0000-00-00')
-				{ 
-								 $userchallengstartdate=$hostArr[0]['Userchallenge']['started_date_iso'];
-								 $diff = $this -> getDateDifferenceToStartChallenge($userchallengstartdate);
-								 
-							$challenge[$i]['main_host_starts_in'] = $diff; 
-							
+				switch ($need) {
+					case 'hour':
+						$return_arr =   array('days' => $diff1->days, 'hour' => $diff1->h, 'minutes' => $diff1->i);
+						break;
 				}
+				return  $return_arr;
 			}
 			else
 			{
-				$challenge[$i]['main_host_id'] = "";
-				$challenge[$i]['main_host_name'] = "";
-				$challenge[$i]['main_host_photo'] = "";				
-				$challenge[$i]['main_host_participants'] = "";
-				$challenge[$i]['main_host_participants_count'] = 0;
-				$challenge[$i]['main_host_started_date'] = "0000-00-00";
-				$challenge[$i]['main_host_starts_in'] = "0"; 
+				if($diff1->h != 0)
+					return $diff1->h." hour ".$diff1->i." minutes";
+				else
+					return $diff1->i." minutes";
 			}
-			
-			$challenge[$i]['available_hosts'] = $this->Userchallenge->getAvailableHosts($ch_record['Challenge']['id'],$active_user,1);
-			
-			//echo "user:".$active_user;
-			//check user is already playing this challenge. If not set 'host this' provision
-			if(isset($active_user))
-			{
-				$challenge[$i]['host_mode'] = $this->getHostMode($challenge[$i]['challenge_permalink'], $active_user);
-				//set datas for hostthis popup module
-				$challenge[$i]['host_challenge_result_values'] = $this->getHostDetails($challenge[$i]['challenge_permalink'], $active_user);
-			}
-			else
-				$challenge[$i]['host_mode'] = "";
-		
-			$i++;
-			
 		}
-		return $challenge;
+		else
+		{
+			return '';
+		}
 	}
-        
-        function getHourMinutes($from,$to)
-        {
-            $now    =   date("Y-m-d h:i:s A");
-
-            $to      =   date('Y-m-d', strtotime($to));
-
-
-
-            $dtA = new DateTime($from);
-            $dtB = new DateTime(date('Y-m-d').' 00:00:00');
-
-            if ( $dtA >= $dtB ) 
-            {
-              $start_date = new DateTime($now);
-                $since_start = $start_date->diff(new DateTime($to.' 11:59:59 PM'));
-                $since_start->days;
-                $since_start->y;
-                $since_start->m;
-                $since_start->d;
-                $since_start->h;
-                $since_start->i;
-                $since_start->s;
-
-                if($since_start->h != 0)
-                    return $since_start->h." hour ".$since_start->i." minutes";
-                else
-                    return $since_start->i." minutes";
-            }
-            else
-                return '';
-        }
+	
+	function getChallengeByPermalink($permalink)
+	{
+		$challengesinfo = $this->find('all',array('conditions'=>array('permalink'=>$permalink)));
+		return $challengesinfo;
+	}
 }
 ?>

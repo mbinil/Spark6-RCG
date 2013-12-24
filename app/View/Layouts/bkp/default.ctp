@@ -41,6 +41,9 @@
 	echo $this->Html->css('prettify');
 	echo $this->Html->css('flat-ui');
 	echo $this->Html->css('all');
+	if($this->Session->read("username")=='' && $this->action != "index") {
+		echo $this->Html->css('reference');
+	}
 	echo $this->Html->css('newstyles');
 			
 	/*Data table & pagination*/
@@ -54,13 +57,16 @@
 	echo $this->fetch('css');
 	echo $this->fetch('script');
 ?>
+<script type="text/javascript" src="//use.typekit.net/jgg4bxu.js"></script>
+<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 </head>
 <body>
 <!--<div id="container">-->
+<?php if($this->Session->read("username")!='' || $this->action == "index") { ?>
 <header id="header">
   <div class="header-holder">
     <div class="navbar navbar-inverse">
-      <div class="navbar-header"> <a href="<?php echo Router::url('/', true); ?>" class="navbar-brand"></a> </div>
+      <div class="navbar-header"><a href="<?php echo Router::url('/admin/', true); ?>" class="navbar-brand"></a></div>
       <div class="navbar-collapse collapse navbar-collapse-03">
         <ul class="nav navbar-nav">
           <li><a href="<?php echo Router::url('/admin/home', true); ?>">Dashboard</a> </li>
@@ -78,34 +84,102 @@
             </ul>-->
           </li>
         </ul>
-        <!-- /nav -->
-        <?php if($this->Session->read("username")!='') { ?>
-<div style="float:right;"> 
-		<ul class="nav navbar-nav" style="padding:0px !important;">
-          <li> <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            <div style="margin: 0 0 0 5px;float:left;"><?php if($this->Session->read("usericon")!='') { ?><img src="<?php echo Router::url('/', true); ?>img/adminuseruploads/<?php echo $this->Session->read("usericon"); ?>" alt="" class="image_aline" width="44" height="44"/> <?php } ?></div>
-            <div style="margin: 9px 0 0 10px;float:left;"><?php echo $this->Session->read("useremail"); ?></div>
-            <div style="margin: 16px 0 0 5px;float:left;"><b class="caret"></b></div>
-            </a>
-			<ul style="margin-left:20px;margin-top:-21px;padding-left:10px !important;padding-top:22px !important;">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Settings</a></li>
-              <li class="divider"></li>
-              <li><?php echo $this->html->link("Logout",array("action"=>"../admin/logout")); ?></li>
-            </ul>
-          </li>
-        </ul>
-        <!-- /nav -->
-</div>
-        <?php } ?>
+		<?php if($this->action != "index") { ?>
+		<div style="float:right;"> 
+			<ul class="nav navbar-nav" style="padding:0px !important;">
+			  <li> <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+				<div style="margin: 0 0 0 5px;float:left;"><?php if($this->Session->read("usericon")!='') { ?><img src="<?php echo Router::url('/', true); ?>img/adminuseruploads/<?php echo $this->Session->read("usericon"); ?>" alt="" class="image_aline" width="44" height="44"/> <?php } ?></div>
+				<div style="margin: 9px 0 0 10px;float:left;"><?php echo $this->Session->read("useremail"); ?></div>
+				<div style="margin: 16px 0 0 5px;float:left;"><b class="caret"></b></div>
+				</a>
+				<ul style="margin-left:20px;margin-top:-21px;padding-left:10px !important;padding-top:22px !important;">
+				  <li><a href="#">Action</a></li>
+				  <li><a href="#">Settings</a></li>
+				  <li class="divider"></li>
+				  <li><?php echo $this->html->link("Logout",array("action"=>"../admin/logout")); ?></li>
+				</ul>
+			  </li>
+			</ul>
+		</div>
+		<?php } ?>
+	  </div>
+    </div>
+  </div>
+</header>	
+<?php } else { ?>
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script>
+/**
+ * Calling the parent category dialogue...
+ */
+function Loginuser()
+{
+	$( "#dialog-loginuser" ).dialog({
+		height: 250,
+		width:  390,
+		title: "Returning? Sign in!!",
+		modal: true
+	});
+}
+</script>
+<header id="header">
+  <div class="header-holder">
+    <div class="navbar navbar-inverse">
+      <div class="navbar-header"><a href="<?php echo Router::url('/', true); ?>" class="navbar-brand2"></a></div>
+      <div class="navbar-collapse collapse navbar-collapse-03">		
+		<ul class="nav navbar-nav">
+          	<li><a href="<?php echo Router::url('/discover', true); ?>">Discover</a></li>
+			<li><a href="<?php echo Router::url('/', true); ?>">My Challenges</a></li>
+		</ul>		
+		<!-- search-form -->
+		<?php //echo $this->Form->create("Challenge",array('controller'=>'challenges','action'=>'index',"id"=>"searchform","name"=>"searchform",'class'=>'search-form')); ?>
+		<span class='search-form'>
+                <fieldset>
+			<?php if(!isset($searchkey)) { $searchkey = ''; }
+			echo $this->Form->input(" ",array("type"=>"text","value"=>$searchkey,"placeholder"=>"Search challenges","id"=>"txtSearch", "name"=>"txtSearch", "onkeyup" => "showChallenge(this,'search',event,'')")); ?>
+			<div class="submit"><input type="submit" value="Search"></div>
+		</fieldset>
+                </span>
+		<?php //echo $this->Form->end(); ?>
+		<?php if($this->Session->read("session_user_id")=="") { ?>
+		<div id="logindiv">
+			<div style="float: left; margin: 0px 10px 0px 0px;">
+			<a href="<?php echo Router::url('/registration_step1', true); ?>">
+			<div class="btn_next" style="width:135px;">
+			  <div class="btn btn-primary btn-block">Create Account</div>
+			</div>
+			</a>
+			</div>
+			<div style="margin: 0px; font-size: 13px; line-height: normal;">returning?<br /><a style="text-decoration:none;cursor:pointer;" href="javascript:Loginuser();">Sign in</a></div>
+		</div>
+		<?php } else { ?>
+		<!-- login block -->
+		<div class="login-block" id="loginblock" style="display:block;">
+			<!-- user info -->
+			<div class="info">
+				<div class="notification">0</div>	
+				<div id="profile_pic" class="alignright"><img src="<?php echo Router::url('/img/useruploads/', true); ?><?php echo $activeuserinfo[0]['User']['user_profile_picture']; ?>" border="0" width="50" /></div>					
+			</div>
+			<!-- dropdown -->
+			<div class="dropdown">
+				<ul id="drop-menu" class="drop-nav">
+					<li><?php echo $this->Html->link('Manage Account',array('controller'=>'users','action'=>'manage_account_step1')); ?></li>
+					<li><?php echo $this->Html->link('View Profile',array('controller'=>'users','action'=>'view_profile')); ?></li>
+					<li><?php echo $this->Html->link('Logout',array('controller'=>'users','action'=>'logout')); ?></li>
+				</ul>
+				<?php echo $this->element('slidedown_challenge_list'); ?>
+			</div>
+		</div>
+		<?php } ?>
       </div>
       <!--/.navbar-collapse -->
     </div>
   </div>
 </header>
+<?php } ?>  
 <!--Container start-->
-
-<div class="container">
+<div class="container" <?php if($this->Session->read("username")!='' && $this->action != "index") { ?>style="width:1080px;padding: 15px 0 0;"<?php } else { ?>style="width:100%;" <?php } ?>>
 <?php if($this->Session->read("username")!='' && $this->action != "challengeaddstep1" &&$this->action != "challengeeditstep1" && $this->action != "challengeaddstep2" &&$this->action != "challengeeditstep2" && $this->action != "challengeaddstep3" &&$this->action != "challengeeditstep3" && $this->action != "challengeaddstep4" &&$this->action != "challengeeditstep4" && $this->action != "challengeaddstep5" &&$this->action != "challengeeditstep5" && $this->action !="difficultyaddstep1"&& $this->action !="difficultyaddstep2" && $this->action !="difficultyaddstep3" && $this->action !="difficultyeditstep1"&& $this->action !="difficultyeditstep2"&& $this->action !="difficultyeditstep3"&&$this->action!="categoryparentadd"&&$this->action!="categoryparentedit"&&$this->action!="categorychildadd"&&$this->action!="categorychildedit"&&$this->action!="user_edit"&&$this->action!="adminuser_add"&&$this->action!="adminuser_edit") { ?>
   <div class="sitemap_nav">
     <ul class="breadcrumb">
@@ -158,7 +232,8 @@
     </ul>
   </div>
   <div class="search_fieald_commen">
-    <input type="search" class="form-control" placeholder="Search" id="search-query-1">
+      <input type="text" class="form-control" placeholder="Search" id="search-query-1" onkeyup="uniformSearch(event,this)"/>
+      <input type="hidden" name="common_base_path" id="common_base_path" value="<?php echo Router::url('/admin/', true); ?>"/>
   </div>
   <div class="clear"></div>
   <hr/>
@@ -191,6 +266,11 @@
   <!--right said end-->
 </div>
 <!--Container end-->
+<?php if($this->Session->read("username")!='') { ?>
 <div id="footer">All rights reserved. &copy; 2013</div>
+<?php } ?>
+<div id="dialog-loginuser" style="display: none;" >
+    <?php echo $this->element('loginuser'); ?>
+</div>
 </body>
 </html>

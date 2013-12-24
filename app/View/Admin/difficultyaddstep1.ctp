@@ -8,12 +8,12 @@ function checkavail(val)
 	$.ajax({  //Make the Ajax Request
 		type: "POST",  
 		url: "ajax_checkavail",
-		data: "checkavail="+val+"&mode=Difficulty",  //data
+		data: "checkavail="+val+"&mode=Difficulty&flag=add",  //data
 		success: function(response) {
 			if(response=='1')
 			{
-                                $('#message_span').html('Difficulty title already exist!!');
-                                $('#alert_div').show();
+				$('#message_span').html('Difficulty title already exist!!');
+				$('#alert_div').show();
 				$("#difftitle").css("border-color", "red");
 			}
 		} 

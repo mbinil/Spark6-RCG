@@ -5,6 +5,15 @@ function showChallenge(ob,from,evt,id)
     {
         case 'parent':
                         $('#parenthiddn').val(id);
+                        
+                        $('li.parent_class').each(function(){
+                            $(this).find('a').attr('class','');
+                        });
+                        if(!id)
+                            $('#all_li_id').attr('class','active');
+                        else
+                            $(ob).attr('class','active');
+                        
                         data_arr    =   getResult('from=parent&val='+id+'&parent=').split('@#@');
                         if(data_arr[0] == 1)
                         {
@@ -14,6 +23,11 @@ function showChallenge(ob,from,evt,id)
                         }
                         break;
         case 'child':
+                        $('.child_class li').each(function(){
+                            $(this).attr('class','');
+                        });
+                        $(ob).parent().attr('class','active');
+                        
                         data_arr    =   getResult('from=child&val='+id+'&parent='+$('#parenthiddn').val()).split('@#@');
                         if(data_arr[0] == 1)
                         {
@@ -25,7 +39,7 @@ function showChallenge(ob,from,evt,id)
                         var charCode        =   (evt.which) ? evt.which : event.keyCode
                         var search_keyword  =   $(ob).val();
 
-                        if(charCode == 13 || search_keyword)
+                        if(charCode == 13 || search_keyword.length > 2)
                         {
                             data_arr    =   getResult('from=search&val='+search_keyword+'&parent=').split('@#@');
                             if(data_arr[0] == 1)
@@ -53,4 +67,41 @@ function getResult(data)
     });
     
     return return_data;
+}
+
+function pickAHost(challenge_id,user_id,permalink)
+{
+    $.ajax({
+            type: "POST",  
+            url: 'ajax_pick_a_host',
+            data: "challenge_id="+challenge_id+"&user_id="+user_id,
+            async:false,
+            success: function(response) {
+                if(response == 2)
+                {
+                    $('#message_span_discover').html('Already you are active in this challenge!!');
+                    $('#alert_div_discover').show();
+                }
+                else if(response == 0)
+                {
+                    $('#message_span_discover').html('Some error occured while inserting the values!!');
+                    $('#alert_div_discover').show();                    
+                }
+                else if(response == 3)
+                {
+                    $( "#dialog_host_this" ).dialog({
+                        height: 840,
+                        width:  1025,
+                        title:'Host This',
+                        modal: true
+                    });
+                    
+                    $('#challenge_id').val(permalink);
+                }
+                else
+                {
+                    window.location = "discover";
+                }
+            } 
+    });
 }

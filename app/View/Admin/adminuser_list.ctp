@@ -29,9 +29,12 @@ if(isset($success[1])) {
     <button class="close fui-cross" data-dismiss="alert" type="button"></button>
     <?php echo $msg; ?> </div>
   <?php }?>
-  <div class="btn_allUser" style="float:left; margin:7px 0 0 550px;position: absolute;"> <a href="adminuser_add" class="btn btn-primary btn-block" style="width:200px;background-color:#3498DB;">+ New Admin</a> </div>
+  <div class="btn_allUser" style="float:left; margin:3px 0 0 550px;position: absolute;"> <a href="adminuser_add" class="btn btn-primary btn-block" style="width:200px;background-color:#3498DB;">+ New Admin</a> </div>
   <div class="clear"></div>
   <div class="table-responsive">
+<?php if(isset($adminusers) && empty($adminusers)){ ?>
+<div class="row-fluid"><div class="span6"></div><div class="span6"><div class="search_fieald" id="example_filter"><label><input type="text" class="form-control" id="search-query-1" placeholder="Search" aria-controls="example"></label></div></div></div>
+<?php } ?>
     <table class="table table-bordered" id="example">
       <thead>
         <tr>

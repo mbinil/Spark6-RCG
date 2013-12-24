@@ -74,14 +74,14 @@ function just() {
 		</div>-->
       </div>         
 <div style="float:right; width:30%; margin-left:20px;">
-    <div style="background-color:#EEEEEE;border-radius:100px;height:200px;margin:20px 60px 10px; background:url('../../img/badgedesign/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; ?>');" id="child_image_div"></div>;
-    <div id="badge_color_image_div" style="position: absolute; <?php if(isset($newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename'])) { ?>background:url('../../img/badgecolor/<?php echo $newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename']; ?>');<?php } else { ?>background-color:#AAAAAA; <?php } ?>border-radius: 100px; width: 150px; height: 150px; margin: -206px 0 0 86px;">
+    <div style="background-color:#EEEEEE;border-radius:100px;height:200px;margin:20px 60px 10px; background:url('<?php echo Router::url('/', true); ?>img/badgedesign/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; ?>');" id="child_image_div"></div>;
+    <div id="badge_color_image_div" style="position: absolute; <?php if(isset($newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename'])) { ?>background:url('<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo $newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename']; ?>');<?php } else { ?>background-color:#AAAAAA; <?php } ?>border-radius: 100px; width: 150px; height: 150px; margin: -206px 0 0 86px;">
     </div>
     <div id="parent_image_div" style="position: absolute; margin: -181px 0 0 109px;">
-        <img width="100" src="../../img/catuploads/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngparentimagename']; ?>">
+        <img width="100" src="<?php echo Router::url('/', true); ?>img/catuploads/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngparentimagename']; ?>">
     </div>
     <div id="difficulty_image_div" style="position: absolute; margin: -107px 0 0 175px">
-        <img width="33" src="../../img/diffuploads/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngdifficultyimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']; ?>">
+        <img width="33" src="<?php echo Router::url('/', true); ?>img/diffuploads/<?php if(isset($newchallengeinfo[0]['Challenge']['chalngdifficultyimagename'])) echo $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']; ?>">
     </div>
     <div style="color:#666666; text-align:center;" id="badgename"><?php if(isset($newchallengeinfo[0]['Challenge']['badge_title']) && $newchallengeinfo[0]['Challenge']['badge_title']!="") { echo $newchallengeinfo[0]['Challenge']['badge_title']; } else { ?>Badge title<?php  } ?></div>
 </div>

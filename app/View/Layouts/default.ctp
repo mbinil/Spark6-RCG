@@ -130,7 +130,7 @@ function Loginuser()
       <div class="navbar-collapse collapse navbar-collapse-03">		
 		<ul class="nav navbar-nav">
           	<li><a href="<?php echo Router::url('/discover', true); ?>">Discover</a></li>
-			<li><a href="<?php echo Router::url('/', true); ?>">My Challenges</a></li>
+			<li><a href="<?php echo Router::url('/my_challenges', true); ?>">My Challenges</a></li>
 		</ul>		
 		<!-- search-form -->
 		<?php //echo $this->Form->create("Challenge",array('controller'=>'challenges','action'=>'index',"id"=>"searchform","name"=>"searchform",'class'=>'search-form')); ?>
@@ -164,10 +164,11 @@ function Loginuser()
 			<!-- dropdown -->
 			<div class="dropdown">
 				<ul id="drop-menu" class="drop-nav">
-					<li><?php echo $this->Html->link('Manage Account',array('controller'=>'users','action'=>'manage_account')); ?></li>
+					<li><?php echo $this->Html->link('Manage Account',array('controller'=>'users','action'=>'manage_account_step1')); ?></li>
 					<li><?php echo $this->Html->link('View Profile',array('controller'=>'users','action'=>'view_profile')); ?></li>
 					<li><?php echo $this->Html->link('Logout',array('controller'=>'users','action'=>'logout')); ?></li>
 				</ul>
+                                <?php echo $Notification_invities;?>
 				<?php echo $this->element('slidedown_challenge_list'); ?>
 			</div>
 		</div>

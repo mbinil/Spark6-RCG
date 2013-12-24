@@ -4,78 +4,81 @@
 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 <script type="text/javascript" src="<?php echo Router::url('/app/webroot/color_pick/jscolor/jscolor.js',true); ?>"></script>
 <script type="text/javascript">
-    function badgecombo(img,id)
-    {
-        $('#badgecombo').html('<img src="../../img/badgecolor/'+img+'" border="0" style="border-radius:100px; width:200px;" />');
-        $('#comboimg').val(img);
-        $('#badgecolor_hidden').val(id);
-    }
-    /*Field validation on blur of an input element*/
-    function validateFieldcheck(id,val)
-    {
-		if(val == "" || val.length < 3)
-		{
-			$("#"+id).css("border-color", "red");
-		}
-		else
-		{
-			$("#"+id).css("border-color", "#BDC3C7");
-		}
-    }
+function badgecombo(img,id)
+{
+	var baseurl = $('#baseurl').val();
+	$('#badgecombo').html('<img src="'+baseurl+'img/badgecolor/'+img+'" border="0" style="border-radius:100px; width:200px;" />');
+	$('#comboimg').val(img);
+	$('#badgecolor_hidden').val(id);
+}
+/*Field validation on blur of an input element*/
+function validateFieldcheck(id,val)
+{
+	if(val == "" || val.length < 3)
+	{
+		$("#"+id).css("border-color", "red");
+	}
+	else
+	{
+		$("#"+id).css("border-color", "#BDC3C7");
+	}
+}
 
-    function getDialogue()
-    {
-		$( "#dialog-modal" ).dialog({
-		  height: 240,
-		  width:  485,
-		  modal: true
-		});
-    }
+function getDialogue()
+{
+	$( "#dialog-modal" ).dialog({
+	  height: 240,
+	  width:  485,
+	  modal: true
+	});
+}
 
-    function getClose()
-    {
-		$( "#dialog-modal" ).dialog('close');
+function getClose()
+{
+	var baseurl = $('#baseurl').val();
+	$( "#dialog-modal" ).dialog('close');
+	$.ajax({  //Make the Ajax Request
+		type: "POST",  
+		url: baseurl+"ajax_createimage",
+		data: "val="+$('#color_code').val()+"&gradient=0",
+		async: false,
+		success: function(response) {
+			var data    =   new Array();
+			data        =   response.split('@#&');
+			if(data[0] != 0)
+			{
+				var div =  '<div style="float:left;margin:5px;"><div style="position: absolute; margin-left:55px; visibility: hidden;" id="'+data[1]+'"><a href="Javascript:deletebadgecombo(\''+data[1]+'\',\''+data[2]+'\');" style="margin:0px;"><img src="'+baseurl+'img/remove.png" border="0" /></a></div><a href="Javascript:badgecombo(\''+data[0]+'\',\''+data[1]+'\');" onmouseover="Javascript:showdeletecombo(\''+data[1]+'\');" onmouseout="Javascript:hidedeletecombo(\''+data[1]+'\');"><img src="'+baseurl+'img/badgecolor/'+data[0]+'" border="0" style="border-radius:100px; width:75px;" /></a></div>'; 
+				$( ".image_listing" ).append(div);
+			}
+		} 
+	});
+}
+function showdeletecombo(id)
+{
+	$("#"+id).css("visibility","visible");
+}
+function hidedeletecombo(id)
+{
+	$("#"+id).css("visibility","visible");
+}
+function deletebadgecombo(id,val)
+{
+	var baseurl = $('#baseurl').val();
+	var checkstr =  confirm('Are you sure you want to delete this badge color?');
+	if(checkstr == true){
 		$.ajax({  //Make the Ajax Request
 			type: "POST",  
-			url: "../ajax_createimage",
-			data: "val="+$('#color_code').val()+"&gradient=0",
-			async: false,
+			url: baseurl+"badgecombo_delete",
+			data: "id="+id+'&comboimg='+val+'&folder=badgecolor',  //data
 			success: function(response) {
-				var data    =   new Array();
-				data        =   response.split('@#&');
-				if(data[0] != 0)
+				if(response=='1')
 				{
-					var div =  '<div style="float:left;margin:5px;"><div style="position: absolute; margin-left:55px; visibility: hidden;" id="'+data[1]+'"><a href="Javascript:deletebadgecombo(\''+data[1]+'\',\''+data[2]+'\');" style="margin:0px;"><img src="../../img/remove.png" border="0" /></a></div><a href="Javascript:badgecombo(\''+data[0]+'\',\''+data[1]+'\');" onmouseover="Javascript:showdeletecombo(\''+data[1]+'\');" onmouseout="Javascript:hidedeletecombo(\''+data[1]+'\');"><img src="../../img/badgecolor/'+data[0]+'" border="0" style="border-radius:100px; width:75px;" /></a></div>'; 
-					$( ".image_listing" ).append(div);
+					$('#'+id).parent().remove()
 				}
 			} 
 		});
-    }
-    function showdeletecombo(id)
-    {
-        $("#"+id).css("visibility","visible");
-    }
-    function hidedeletecombo(id)
-    {
-        $("#"+id).css("visibility","visible");
-    }
-    function deletebadgecombo(id,val)
-    {
-        var checkstr =  confirm('Are you sure you want to delete this badge color?');
-        if(checkstr == true){
-            $.ajax({  //Make the Ajax Request
-				type: "POST",  
-				url: "../badgecombo_delete",
-				data: "id="+id+'&comboimg='+val+'&folder=badgecolor',  //data
-				success: function(response) {
-					if(response=='1')
-					{
-						$('#'+id).parent().remove()
-					}
-				} 
-			});
-        }
-    }
+	}
+}
 </script>
 <!--Right said start-->
 <div class="sitemap_nav" style="width:100%;">
@@ -102,6 +105,7 @@
   </div>
 <!--------------------------------------->
   <!--discrption-->
+  <input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
   <input type="hidden" id="challengeid" value="<?php echo $newchallengeinfo[0]['Challenge']['id']; ?>" />
   <div class="Difficulty_step1" style="width:100%; float:left;">
   	<?php if($newchallengeinfo[0]['Challenge']['hero_image']!=''){ ?>
@@ -137,7 +141,7 @@
     <div style="margin:50px 0 0 0;">Badge Color:</div>
     <div style="width:85%;" align="center">
       <div id="badgecolor" style="margin: 10px 0px; height: 235px;">
-        <div id="badgecombo" style="float: left;border: 2px dashed #999999 !important;"> <img src="../../img/badgecolor/<?php echo (count($selectedbadgecombo) > 0)?$selectedbadgecombo:'Spaceship.png'; ?>" border="0" style="border-radius:100px; width:200px;" /> </div>
+        <div id="badgecombo" style="float: left;border: 2px dashed #999999 !important;"> <img src="<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo (count($selectedbadgecombo) > 0)?$selectedbadgecombo:'Spaceship.png'; ?>" border="0" style="border-radius:100px; width:200px;" /> </div>
         <div style="float: left; position: absolute; margin: 210px 0px 0px; width: 205px; text-align: center;"><?php echo $newchallengeinfo[0]['Challenge']['badge_title'];?></div>
         <div style="float:left;margin:55px 0 25px 15px;width: 60%;" align="left" class="image_listing">
           <?php if(count($badgecombos) > 0) { ?>
@@ -145,8 +149,8 @@
           <div style="float:left;margin:5px;">
             <div style="position: absolute; margin-left:66px; visibility: visible;" id="<?php echo $badgecinfo['Badgecombo']['id']; ?>">
               <?php $imgname = substr($badgecinfo['Badgecombo']['comboimg'], 0, -4); ?>
-              <a href="Javascript:deletebadgecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>','<?php echo $imgname; ?>');" style="margin:0px;"><img src="../../img/remove.png" border="0" /></a> </div>
-            <a href="Javascript:badgecombo('<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>','<?php echo $badgecinfo['Badgecombo']['id']; ?>');" onmouseover="Javascript:showdeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');" onmouseout="Javascript:hidedeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');"><img src="../../img/badgecolor/<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>" border="0" style="border-radius:100px; width:75px;" /></a> </div>
+              <a href="Javascript:deletebadgecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>','<?php echo $imgname; ?>');" style="margin:0px;"><img src="<?php echo Router::url('/', true); ?>img/remove.png" border="0" /></a> </div>
+            <a href="Javascript:badgecombo('<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>','<?php echo $badgecinfo['Badgecombo']['id']; ?>');" onmouseover="Javascript:showdeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');" onmouseout="Javascript:hidedeletecombo('<?php echo $badgecinfo['Badgecombo']['id']; ?>');"><img src="<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo $badgecinfo['Badgecombo']['comboimg']; ?>" border="0" style="border-radius:100px; width:75px;" /></a> </div>
           <?php } ?>
           <?php } ?>
         </div>

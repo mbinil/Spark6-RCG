@@ -24,7 +24,7 @@
 <input type="hidden" value="<?php echo $diffinfo[0]['Difficulty']['id']; ?>" id="diffid">
 <?php if($diffinfo[0]['Difficulty']['decal']!=''){ ?>
 <div style="position: absolute; margin: 39px 0px 0px 0px;">
-<img src="<?php echo "../../img/diffuploads/".$diffinfo[0]['Difficulty']['decal']; ?>" width="120" height="120" alt="<?php echo $diffinfo[0]['Difficulty']['title']; ?>" style="background-color:#999999;" />
+<img src="<?php echo Router::url('/', true)."img/diffuploads/".$diffinfo[0]['Difficulty']['decal']; ?>" width="120" height="120" alt="<?php echo $diffinfo[0]['Difficulty']['title']; ?>" style="background-color:#999999;" />
 </div>
 <?php } ?>
 <div class="Difficulty_step1" style="width:65%; float:left;">

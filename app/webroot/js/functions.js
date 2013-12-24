@@ -14,9 +14,23 @@ function uniformSearch(evt,ob)
         window.location = url+"searchresult/"+search_keyword;
     }
 }
+
+function changeNotification(need,id)
+{
+    $.ajax({  //Make the Ajax Request
+            type: "POST",  
+            url: "ajax_change_invitation",
+            data: "need="+need+"&id="+id,  //data
+            async:false,
+            success: function(response) {
+                alert(response);
+            } 
+    });
+}
 /*Fetching values from step1 form. Storing to session array and sending to step2*/
 function gottostep2()
 {
+        var baseurl =   $('#baseurl').val();
 	var difftitle = $.trim($("#difftitle").val());
 	var diffdesp = $.trim($("#diffdesp").val());
         var step = $("#step").val();
@@ -34,21 +48,6 @@ function gottostep2()
 	}
 	else
 	{
-                $.ajax({  //Make the Ajax Request
-                        type: "POST",  
-                        url: "ajax_checkavail",
-                        data: "checkavail="+difftitle+"&mode=Difficulty",  //data
-                        async:false,
-                        success: function(response) {
-                                if(response=='1')
-                                {
-                                        $('#message_span').html('Difficulty title already exist!!');
-                                        $('#alert_div').show();
-                                        $("#difftitle").css("border-color", "red");
-                                        return_flag    =   2;
-                                }
-                        } 
-                });
 		$("#diffdesp").css("border-color", "#BDC3C7");
 	}
 	if(difftitle=="" || difftitle.length < 3)
@@ -63,9 +62,24 @@ function gottostep2()
 	}
 	else
 	{
+                $.ajax({  //Make the Ajax Request
+                            type: "POST",  
+                            url: baseurl+"admin/ajax_checkavail",
+                            data: "checkavail="+difftitle+"&mode=Difficulty&flag=add",  //data
+                            async:false,
+                            success: function(response) {
+                                    if(response=='1')
+                                    {
+                                            $('#message_span').html('Difficulty title already exist!!');
+                                            $('#alert_div').show();
+                                            $("#difftitle").css("border-color", "red");
+                                            return_flag    =   2;
+                                    }
+                            } 
+                });
 		$("#difftitle").css("border-color", "#BDC3C7");
 	}
-	if(difftitle.length > 2 && diffdesp.length > 2)
+	if(difftitle.length > 2 && diffdesp.length > 2 && return_flag ==   0)
 	{
 		$("#difftitle").css("border-color", "#BDC3C7");
 		$("#diffdesp").css("border-color", "#BDC3C7");
@@ -89,6 +103,7 @@ function gottostep2()
 /*Editing step 1 and sending the session array to step2*/
 function editstep2()
 {
+        var baseurl =   $('#baseurl').val();
 	var diffid = $('#diffid').val();
 	var difftitle = $.trim($("#difftitle").val());
 	var diffdesp = $.trim($("#diffdesp").val());
@@ -104,11 +119,40 @@ function editstep2()
 		return_flag    =   1;			
 		$("#diffdesp").css("border-color", "red");
 	}
-	else
+        else
 	{
 		$("#diffdesp").css("border-color", "#BDC3C7");
 	}
-	if(diffdesp.length > 2)
+        if(difftitle=="" || difftitle.length < 3)
+	{
+		if(!difftitle)
+			$('#message_span').html('Please enter a difficulty title!!');
+		else if(difftitle.length < 3)
+			$('#message_span').html('Difficulty title must be more than 3 characters!!');
+		$('#alert_div').show();
+		return_flag    =   1;			
+		$("#difftitle").css("border-color", "red");
+	}
+        else
+	{
+                $.ajax({  //Make the Ajax Request
+                            type: "POST",  
+                            url: baseurl+"admin/ajax_checkavail",
+                            data: "checkavail="+difftitle+"&mode=Difficulty&flag=edit&edit_id="+diffid,  //data
+                            async:false,
+                            success: function(response) {
+                                    if(response=='1')
+                                    {
+                                            $('#message_span').html('Difficulty title already exist!!');
+                                            $('#alert_div').show();
+                                            $("#difftitle").css("border-color", "red");
+                                            return_flag    =   2;
+                                    }
+                            } 
+                });
+		$("#difftitle").css("border-color", "#BDC3C7");
+	}
+	if(diffdesp.length > 2 && return_flag ==   0)
 	{
 		$("#diffdesp").css("border-color", "#BDC3C7");
 		if(return_flag == 0)
@@ -1348,7 +1392,7 @@ function gottochallengestep3()
 	var chalngending                =   getDateFormat($('#datepicker-to').datepicker('getDate'));
         var step                        =   $('#step').val();
         var return_flag                 =   0;
-	
+
         if(chalngparentchild == '')
         {
             $('#message_span').html('Select a child category!!');
@@ -1556,7 +1600,7 @@ function challengeeditstep5()
 /**
  * validation for the last tab Image & Color in challenge  section
  */
-function challemgeSave()
+function challengeSave()
 {
     var fileuploaded    =   $("#fileuploaded").val();
     var badgecolor      =   $("#comboimg").val();
@@ -1985,4 +2029,95 @@ function submitLoginuser()
 			} 
 		});
 	}
+}
+
+/*--------------*/
+/*Manage Account*/
+/*--------------*/
+
+function ajax_manage_account_step1()
+{
+	var reslt=regFieldcheck();
+	if(reslt!=false)
+	{
+		var fname= $("#firstname").val();
+		var lname= $("#lastname").val();
+		var email= $("#youremail").val();
+		var pass= $("#new_password").val();
+		var objk	=	document.getElementsByName('chalngwhosets[]');
+		if(objk[0].checked==true)
+		{
+			var gender= document.getElementsByName('chalngwhosets[]')[0].value;
+		}
+		else
+		{
+			var gender= document.getElementsByName('chalngwhosets[]')[1].value;
+		}
+		var ebay_buz_unit= $("#unit_info").val();
+		var ebay_buz_loc= $("#loc_info").val();
+		if(document.getElementsByName('emailnot[]')[0].checked==true)
+		{
+			var email_noti= document.getElementsByName('emailnot[]')[0].value;
+		}
+		else
+		{
+			var email_noti= document.getElementsByName('emailnot[]')[1].value;
+		}
+		$.ajax({  //Make the Ajax Request
+			type: "POST",  
+			url: "users/ajax_manage_account_step1",
+			data: "fname="+fname+"&lname="+lname+"&email="+email+"&pass="+pass+"&gender="+gender+"&ebay_buz_unit="+ebay_buz_unit+"&ebay_buz_loc="+ebay_buz_loc+"&email_noti="+email_noti,  //data
+			success: function(response) {
+				if(response=='1')
+				{
+					window.location = "manage_account_step2";
+				}
+			}
+		});
+	} 
+}
+
+function ajax_manage_account_step2 ()
+{
+	var reslt=regstep2Fieldcheck();
+	if(reslt!=false)
+	{
+		var grd_year= $("#grd_year").val();
+		var grd_level= $("#grd_level").val();
+		var grd_scl= $("#grd_scl").val();
+		var mult_sel= $("#mult_sel").val();
+		var sub_cat=  $("#mult_"+mult_sel).val();
+		
+		$.ajax({  //Make the Ajax Request
+			type: "POST",  
+			url: "users/ajax_manage_account_step2",
+			data: "grd_year="+grd_year+"&grd_level="+grd_level+"&grd_scl="+grd_scl+"&mult_sel="+mult_sel+"&sub_cat="+sub_cat,  //data
+			success: function(response) {
+				if(response=='1')
+				{
+					window.location = "manage_account_step3";
+				}
+			}
+		});
+	}
+}
+
+function ajax_manage_account_step3()
+{
+	var hobby= document.getElementsByClassName("tagsinput")[0].value;
+	var reslt=regstep3Fieldcheck();
+	if(reslt!=false)
+	{
+		$.ajax({  //Make the Ajax Request
+			type: "POST",  
+			url: "users/ajax_manage_account_step3",
+			data: "hobby="+hobby,  //data
+			success: function(response) {
+				if(response=='1')
+				{
+					window.location = "view_profile";
+				}
+			}
+		});
+	}	
 }

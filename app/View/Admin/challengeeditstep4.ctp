@@ -9,9 +9,9 @@ function badgenamechange(val)
 function selectedpcat(id,cnt,image)
 {
 	deselectedpcat();
-        $('#difficulty_image_div').html('<img src="../../img/diffuploads/'+image+'" width="33" />');
-        $('#difficultyimagename').val(image);
-        
+	var baseurl = $('#baseurl').val();
+	$('#difficulty_image_div').html('<img src="'+baseurl+'img/diffuploads/'+image+'" width="33" />');
+	$('#difficultyimagename').val(image);
 	$('#difficultylist #chaldiff').val(id);
 	$('#difficultylist #diffpoints'+id).css('color','#e65320');
 	$('#difficultylist #difftitle'+id).css('color','#333333');
@@ -54,10 +54,11 @@ function getMessageClose()
 {
     if($.trim($('#message_name').val()))
     {
+		var baseurl = $('#baseurl').val();
         $( "#dialog-modal" ).dialog('close');
         $.ajax({  //Make the Ajax Request
             type: "POST",  
-            url: "../ajax_createmessage",
+            url: baseurl+"ajax_createmessage",
             data: "message="+$('#message_name').val(),
             async: false,
             success: function(response) {
@@ -181,6 +182,7 @@ String.prototype.repeat = function(num) {
   </div>
 <!--------------------------------------->
 <!--discrption-->
+<input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
 <input type="hidden" id="challengeid" value="<?php echo $newchallengeinfo[0]['Challenge']['id']; ?>" />
 <div class="Difficulty_step1" style="width:100%; float:left;">
   <div style="margin:10px 0; font-weight:bold; font-size: 18px;">Difficulty:</div>
@@ -192,7 +194,7 @@ if($i==0) { ?>
       <?php } else { ?>
       <div id="<?php echo $diff['Difficulty']['id'];?>" style="margin-top:30px;height:135px;">
         <?php } ?>
-        <a style="width:100%;" href="Javascript:selectedpcat('<?php echo $diff['Difficulty']['id']; ?>','<?php echo $dcount; ?>','<?php echo $diff['Difficulty']['decal']; ?>');"> <span style="width:250px;"><img width="100" border="0" src="../../img/diffuploads/<?php echo $diff['Difficulty']['decal']; ?>" style="background-color:#999999;"></span> </a>
+        <a style="width:100%;" href="Javascript:selectedpcat('<?php echo $diff['Difficulty']['id']; ?>','<?php echo $dcount; ?>','<?php echo $diff['Difficulty']['decal']; ?>');"> <span style="width:250px;"><img width="100" border="0" src="<?php echo Router::url('/', true); ?>img/diffuploads/<?php echo $diff['Difficulty']['decal']; ?>" style="background-color:#999999;"></span> </a>
 		<a style="width:100%;" href="Javascript:selectedpcat('<?php echo $diff['Difficulty']['id']; ?>','<?php echo $dcount; ?>','<?php echo $diff['Difficulty']['decal']; ?>');"><div style="<?php if($newchallengeinfo[0]['Challenge']['difficulty'] == $diff['Difficulty']['id']) { ?>color:#E67E22;<?php } else { ?>color:#999999; <?php } ?>font-size: 48px;font-weight: normal;margin-top: -62px;padding-left: 130px;width: 350px;" id="diffpoints<?php echo $diff['Difficulty']['id']; ?>"><?php echo $diff['Difficulty']['points']; ?></div> </a>
         <a style="width:100%;" href="Javascript:selectedpcat('<?php echo $diff['Difficulty']['id']; ?>','<?php echo $dcount; ?>','<?php echo $diff['Difficulty']['decal']; ?>');"><div style="<?php if($newchallengeinfo[0]['Challenge']['difficulty'] == $diff['Difficulty']['id']) { ?>color:#333333;<?php } else { ?>color:#999999; <?php } ?>margin-top: 45px; padding-left: 0px; width: 100px; text-align: center;" id="difftitle<?php echo $diff['Difficulty']['id']; ?>"><?php echo str_replace('\"', '', $diff['Difficulty']['title']); ?></div> </a>
       </div>
@@ -203,16 +205,14 @@ if($i==0) { ?>
       <?php $i++; $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename'] = $diff['Difficulty']['decal']; } } ?>
       
     </div>
-        
-        
-        <div style="float:right; width:30%; margin-left:20px;">
-        <div id="child_image_div" style="background-color:#EEEEEE;border-radius:100px;height:200px;margin:20px 60px 10px;<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename']) && $newchallengeinfo) { ?> background:url('../../img/badgedesign/<?php echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; ?>');<?php }?>"></div>
-        <div style="position: absolute; <?php if(isset($newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename'])) { ?>background:url('../../img/badgecolor/<?php echo $newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename']; ?>');<?php } else { ?>background-color:#AAAAAA; <?php } ?> border-radius: 100px; width: 150px; height: 150px; margin: -184px 0px 0px 86px;"></div>
+    <div style="float:right; width:30%; margin-left:20px;">
+        <div id="child_image_div" style="background-color:#EEEEEE;border-radius:100px;height:200px;margin:20px 60px 10px;<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename']) && $newchallengeinfo) { ?> background:url('<?php echo Router::url('/', true); ?>img/badgedesign/<?php echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; ?>');<?php }?>"></div>
+        <div style="position: absolute; <?php if(isset($newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename'])) { ?>background:url('<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo $newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename']; ?>');<?php } else { ?>background-color:#AAAAAA; <?php } ?> border-radius: 100px; width: 150px; height: 150px; margin: -184px 0px 0px 86px;"></div>
         <div style="position: absolute; margin: -158px 0 0 110px;" id="parent_image_div" >
-            <?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentimagename']) && $newchallengeinfo) { ?><img src="../../img/catuploads/<?php echo $newchallengeinfo[0]['Challenge']['chalngparentimagename']; ?>" width="100" /> <?php }?>
+            <?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentimagename']) && $newchallengeinfo) { ?><img src="<?php echo Router::url('/', true); ?>img/catuploads/<?php echo $newchallengeinfo[0]['Challenge']['chalngparentimagename']; ?>" width="100" /> <?php }?>
         </div>
         <div style="position: absolute; margin: -84px 0 0 175px;" id="difficulty_image_div" >
-            <?php if(isset($newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']) && $newchallengeinfo) { ?><img src="../../img/diffuploads/<?php echo $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']; ?>" width="33" /> <?php }?>
+            <?php if(isset($newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']) && $newchallengeinfo) { ?><img src="<?php echo Router::url('/', true); ?>img/diffuploads/<?php echo $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']; ?>" width="33" /> <?php }?>
         </div>
         <div style="color:#666666;text-align:center;" id="badgename"><?php echo $newchallengeinfo[0]['Challenge']['badge_title']; ?></div>
         <input type="hidden" id="difficultyimagename" value="<?php if(isset($newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']) && $newchallengeinfo) { echo $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']; } ?>" />

@@ -29,6 +29,9 @@ if(isset($success[1])) {
 <?php }?>
 <div class="clear"></div>
 <div class="table-responsive">
+<?php if(isset($users) && empty($users)){ ?>
+<div class="row-fluid"><div class="span6"></div><div class="span6"><div class="search_fieald" id="example_filter"><label><input type="text" class="form-control" id="search-query-1" placeholder="Search" aria-controls="example"></label></div></div></div>
+<?php } ?>
 	<table class="table table-bordered" id="example">
 		<thead>
 		  <tr>

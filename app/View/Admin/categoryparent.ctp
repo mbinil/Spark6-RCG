@@ -29,11 +29,14 @@ if(isset($success[1])) {
 		<?php echo $msg; ?>
 	</div> 
 <?php unset($_SESSION['parent_category_name']); } ?>
-<div class="btn_allUser" style="float:left; margin:<?php if(isset($categories) && !empty($categories)){ ?>0px<?php } else { ?>-50px<?php } ?> 0 0 550px;position: absolute;">
+<div class="btn_allUser" style="float:left; margin:3px 0 0 550px;position: absolute;">
 	<a href="categoryparentadd" class="btn btn-primary btn-block" style="width:200px;background-color:#3498DB;">+ New Parent</a>
 </div>
 <div class="clear"></div>
 <div class="table-responsive">
+<?php if(isset($categories) && empty($categories)){ ?>
+<div class="row-fluid"><div class="span6"></div><div class="span6"><div class="search_fieald" id="example_filter"><label><input type="text" class="form-control" id="search-query-1" placeholder="Search" aria-controls="example"></label></div></div></div>
+<?php } ?>
 	<table class="table table-bordered" id="example">
 		<thead>
 		  <tr>
@@ -46,7 +49,7 @@ if(isset($success[1])) {
 		<?php if(isset($categories) && !empty($categories)){
 		 foreach($categories as $catinfo) { ?>
 		  <tr>
-			<td><img width="30" height="30" class="image_aline" alt="" src="../img/catuploads/<?php echo $catinfo['Category']['decal']; ?>" style="background-color:#999999;" /> <?php echo str_replace('\"', '', $catinfo['Category']['title']); ?></td>
+			<td><img width="30" height="30" class="image_aline" alt="" src="<?php echo Router::url('/', true); ?>img/catuploads/<?php echo $catinfo['Category']['decal']; ?>" style="background-color:#999999;" /> <?php echo str_replace('\"', '', $catinfo['Category']['title']); ?></td>
 			<td><?php if($catinfo['Category']['status']=="0"){ echo "Inactive"; } else { echo "Active"; } ?></td>
 			<td>
 				<div class="navbar" style="margin-bottom:0 !important;min-height:0 !important;">

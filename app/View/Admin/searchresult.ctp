@@ -27,9 +27,9 @@ $('#search-query-1').val('<?php echo $search_keyword; ?>');
                     <div align="center" class="col-md-5" style="font-weight: bold;">
                         <?php $file_name= $admin_user_details[$i]['Admin']['icon']; 
                             if($file_name && file_exists("img/adminuseruploads/".$file_name)) { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="../../img/adminuseruploads/<?php echo $file_name; ?>" >
+                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="<?php echo Router::url('/', true); ?>img/adminuseruploads/<?php echo $file_name; ?>" >
                         <?php } else { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="../../img/adminuseruploads/no_user_img.png">
+                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="<?php echo Router::url('/', true); ?>img/adminuseruploads/no_user_img.png">
                         <?php } ?>
                         <br/> 
                         <font color="#64a0c8"><?php echo $admin_user_details[$i]['Admin']['admin_firstname']." ".$admin_user_details[$i]['Admin']['admin_lastname']; ?></font>
@@ -71,12 +71,12 @@ $('#search-query-1').val('<?php echo $search_keyword; ?>');
                     <div align="center" class="col-md-5" style="font-weight: bold;">
                         <?php $file_name= $user_details[$i]['User']['user_profile_picture']; 
                             if($file_name) { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="<?php echo $file_name; ?>?type=large" >
+                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="<?php echo Router::url('/img/useruploads/', true); ?><?php echo $file_name; ?>?type=large" >
                         <?php } else { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="../../img/adminuseruploads/no_user_img.png">
+                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="<?php echo Router::url('/', true); ?>img/adminuseruploads/no_user_img.png">
                         <?php } ?>
                         <br/> 
-                        <font color="#64a0c8"><?php echo $user_details[$i]['User']['user_username']; ?></font>
+                        <font color="#64a0c8"><?php echo $user_details[$i]['User']['user_firstname']." ".$user_details[$i]['User']['user_lastname']; ?></font>
                     </div>
                     <div class="col-md-7" style="margin-top: 20px; font-weight: bold;">
                         Level <?php echo $user_details[$i]['User']['user_level']; ?>|<?php echo $user_details[$i]['User']['user_points']; ?> points <br/>
@@ -115,9 +115,9 @@ $('#search-query-1').val('<?php echo $search_keyword; ?>');
                     <div align="center" class="col-md-5" style="font-weight: bold;">
                         <?php $file_name= $challenge_details[$i]['Challenge']['hero_image']; 
                             if($file_name && file_exists("img/challengeuploads/".$file_name)) { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="../../img/challengeuploads/<?php echo $file_name; ?>" >
+                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="<?php echo Router::url('/', true); ?>img/challengeuploads/<?php echo $file_name; ?>" >
                         <?php } else { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="../../img/adminuseruploads/no_user_img.png">
+                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="<?php echo Router::url('/', true); ?>img/adminuseruploads/no_user_img.png">
                         <?php } ?>
                     </div>
                     <div class="col-md-7" style="margin-top: 20px; font-weight: bold;">
@@ -157,9 +157,9 @@ $('#search-query-1').val('<?php echo $search_keyword; ?>');
                     <div align="center" class="col-md-5" style="font-weight: bold;">
                         <?php $file_name= $difficulty_details[$i]['Difficulty']['decal']; 
                             if($file_name && file_exists("img/diffuploads/".$file_name)) { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="../../img/diffuploads/<?php echo $file_name; ?>" >
+                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="<?php echo Router::url('/', true); ?>img/diffuploads/<?php echo $file_name; ?>" >
                         <?php } else { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="../../img/adminuseruploads/no_user_img.png">
+                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="<?php echo Router::url('/', true); ?>img/adminuseruploads/no_user_img.png">
                         <?php } ?>
                     </div>
                     <div class="col-md-7" style="margin-top: 20px; font-weight: bold;">
@@ -199,9 +199,9 @@ $('#search-query-1').val('<?php echo $search_keyword; ?>');
                     <div align="center" class="col-md-5" style="font-weight: bold;">
                         <?php $file_name= $parent_cat_details[$i]['Category']['decal']; 
                             if($file_name && file_exists("img/catuploads/".$file_name)) { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="../../img/catuploads/<?php echo $file_name; ?>" >
+                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="<?php echo Router::url('/', true); ?>img/catuploads/<?php echo $file_name; ?>" >
                         <?php } else { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="../../img/adminuseruploads/no_user_img.png">
+                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="<?php echo Router::url('/', true); ?>img/adminuseruploads/no_user_img.png">
                         <?php } ?>
                     </div>
                     <div class="col-md-7" style="margin-top: 20px; font-weight: bold;">
@@ -240,9 +240,9 @@ $('#search-query-1').val('<?php echo $search_keyword; ?>');
                     <div align="center" class="col-md-5" style="font-weight: bold;">
                         <?php $file_name= $child_cat_details[$i]['Category']['badgecolor']; 
                             if($file_name && file_exists("img/badgedesign/".$file_name)) { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="../../img/badgedesign/<?php echo $file_name; ?>" >
+                                <img width="100" height="100" border="0" style="border-radius: 50px; background-color:#999999;" src="<?php echo Router::url('/', true); ?>img/badgedesign/<?php echo $file_name; ?>" >
                         <?php } else { ?>
-                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="../../img/adminuseruploads/no_user_img.png">
+                                <img width="100" height="100" border="0" style="border-radius: 50px;" src="<?php echo Router::url('/', true); ?>img/adminuseruploads/no_user_img.png">
                         <?php } ?>
                     </div>
                     <div class="col-md-7" style="margin-top: 20px; font-weight: bold;">

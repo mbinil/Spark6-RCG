@@ -42,11 +42,14 @@ if(isset($success[1])) {
 		<?php echo $msg; ?>
 	</div> 
 <?php unset($_SESSION['child_category_name']); } ?>
-<div class="btn_allUser" style="float:left;margin: <?php if(!empty($categories)){ echo "0px"; } else { echo "-50px"; } ?> 0 0 550px;position: absolute;">
+<div class="btn_allUser" style="float:left;margin: 3px 0 0 550px;position: absolute;">
 	<a href="categorychildadd" class="btn btn-primary btn-block" style="width:200px;background-color:#3498DB;">+ New Child</a>
 </div>
 <div class="clear"></div>
 <div class="table-responsive">
+<?php if(isset($categories) && empty($categories)){ ?>
+<div class="row-fluid"><div class="span6"></div><div class="span6"><div class="search_fieald" id="example_filter"><label><input type="text" class="form-control" id="search-query-1" placeholder="Search" aria-controls="example"></label></div></div></div>
+<?php } ?>
 	<table class="table table-bordered" id="example">
 		<thead>
 		  <tr>
@@ -61,12 +64,12 @@ if(isset($success[1])) {
 		 foreach($categories as $catinfo) { ?>
 		  <tr>
 			<td><?php echo str_replace('\"', '', $catinfo['Category']['title']); ?></td>
-			<td style="padding:10px 28px !important;"><a onmouseover="Javascript:showcolorring('colorring<?php echo $catinfo['Category']['id']; ?>');" onmouseout="javascript:hidecolorring('colorring<?php echo $catinfo['Category']['id']; ?>');"><img src="../img/colorring.png" border="0" width="50" /></a>
+			<td style="padding:10px 28px !important;"><a onmouseover="Javascript:showcolorring('colorring<?php echo $catinfo['Category']['id']; ?>');" onmouseout="javascript:hidecolorring('colorring<?php echo $catinfo['Category']['id']; ?>');"><img src="<?php echo Router::url('/', true); ?>img/colorring.png" border="0" width="50" /></a>
 			<div class="tooltip fade top in" style="margin:-156px 0 0 -14.5px; display: none;width:75px;" id="colorring<?php echo $catinfo['Category']['id']; ?>">
 				<span style="position:absolute;margin:6px 0 0 8px;"><font color="white">Ring Color</font></span>
 <div class="tooltip-arrow" style="left:55.3%;"></div>
 <div class="tooltip-inner" style="text-align:left;width:83px; height:86px;">
-<img src="../img/badgedesign/<?php echo $catinfo['Category']['badgecolor']; ?>" border="0" width="83" height="57" style="border-radius:0 0 6px 6px;" />
+<img src="<?php echo Router::url('/', true); ?>img/badgedesign/<?php echo $catinfo['Category']['badgecolor']; ?>" border="0" width="83" height="57" style="border-radius:0 0 6px 6px;" />
 </div>
 			</div></td>
 			<td><?php if($catinfo['Category']['status']=="0"){ echo "Inactive"; } else { echo "Active"; } ?></td>

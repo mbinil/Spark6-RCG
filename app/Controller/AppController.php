@@ -36,7 +36,7 @@ class AppController extends Controller {
 	var $components = array('RequestHandler','Email','Session');
         
 	function beforeRender() {
-		App::import('Model', array('Difficulty','User','Category','Admin','Challenge','Alert'));
+		App::import('Model', array('Difficulty','User','Category','Admin','Challenge','Alert','Userchallenge'));
 		
 		//Current front end logged in user info
 		$active_userid = $this->Session->read("session_user_id");
@@ -77,5 +77,14 @@ class AppController extends Controller {
 		$Alert = new Alert();
 		$AlertCount = $Alert->find('count',array('conditions' => array('status' => true)));
 		$this->set('AlertCount', $AlertCount);
+                
+                
+                //notification for challenge invitation
+                if($this->Session->read("session_user_id"))
+                {
+                    $Userchallenge  =   new Userchallenge();
+                    $this->set('Notification_invities', $Userchallenge->createNotification($this->Session->read("session_user_id")));
+                }
+
    	}
 } 

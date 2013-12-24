@@ -9,10 +9,9 @@ function badgenamechange(val)
 function selectedpcat(id,cnt,image)
 {
 	deselectedpcat();
-        
-        $('#difficulty_image_div').html('<img src="../img/diffuploads/'+image+'" width="33" />');
-        $('#difficultyimagename').val(image);
-        
+	var baseurl = $('#baseurl').val();
+	$('#difficulty_image_div').html('<img src="'+baseurl+'img/diffuploads/'+image+'" width="33" />');
+	$('#difficultyimagename').val(image);
 	$('#difficultylist #chaldiff').val(id);
 	$('#difficultylist #diffpoints'+id).css('color','#e65320');
 	$('#difficultylist #difftitle'+id).css('color','#333333');
@@ -174,6 +173,7 @@ String.prototype.repeat = function(num) {
 <h1>Notifications and Difficulty</h1>
 <h3>How hard is this Challenge and how often must they check in for it?</h3>
 <div class="clear"></div>
+<input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
 <input type="hidden" name="step" value="5" id="step">
 <!----Error message div------------------>
   <div class="alert" id="alert_div" style="background-color: #FF6A6A;border-color: red;color:#FFFFFF;width:700px;display:none;">
@@ -192,7 +192,7 @@ if($i==0) { ?>
       <?php } else { ?>
       <div id="<?php echo $diff['Difficulty']['id'];?>" style="margin-top:30px;height:135px;">
         <?php } ?>
-        <a style="width:100%;" href="Javascript:selectedpcat('<?php echo $diff['Difficulty']['id']; ?>','<?php echo $dcount; ?>','<?php echo $diff['Difficulty']['decal']; ?>');"> <span style="width:250px;"><img width="100" border="0" src="../img/diffuploads/<?php echo $diff['Difficulty']['decal']; ?>" style="background-color:#999999;"></span> </a>
+        <a style="width:100%;" href="Javascript:selectedpcat('<?php echo $diff['Difficulty']['id']; ?>','<?php echo $dcount; ?>','<?php echo $diff['Difficulty']['decal']; ?>');"> <span style="width:250px;"><img width="100" border="0" src="<?php echo Router::url('/', true); ?>img/diffuploads/<?php echo $diff['Difficulty']['decal']; ?>" style="background-color:#999999;"></span> </a>
                 <a style="width:100%;" href="Javascript:selectedpcat('<?php echo $diff['Difficulty']['id']; ?>','<?php echo $dcount; ?>','<?php echo $diff['Difficulty']['decal']; ?>');"><div style="<?php if(isset($newchallengeinfo['difficulty']) && ($newchallengeinfo['difficulty'] == $diff['Difficulty']['id'])) { ?>color:#E67E22;<?php } else { ?>color:#999999;<?php } ?>font-size: 48px;font-weight: normal;margin-top: -62px;padding-left: 130px;width: 350px;" id="diffpoints<?php echo $diff['Difficulty']['id']; ?>"><?php echo $diff['Difficulty']['points']; ?></div> </a>
         <a style="width:100%;" href="Javascript:selectedpcat('<?php echo $diff['Difficulty']['id']; ?>','<?php echo $dcount; ?>','<?php echo $diff['Difficulty']['decal']; ?>');"><div style="<?php if(isset($newchallengeinfo['difficulty']) && ($newchallengeinfo['difficulty'] == $diff['Difficulty']['id'])) { ?>color:#333333;<?php } else { ?>color:#999999;<?php } ?>margin-top: 45px; padding-left: 0px; width: 100px; text-align: center;" id="difftitle<?php echo $diff['Difficulty']['id']; ?>"><?php echo str_replace('\"', '', $diff['Difficulty']['title']); ?></div> </a>
       </div>

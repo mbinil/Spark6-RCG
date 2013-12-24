@@ -4,6 +4,7 @@
 	<button class="close fui-cross" data-dismiss="alert" type="button"></button>
 	Level threshold successfully set.
 </div>
+<div style="height:60px; display:block;" id="blankheight"></div>
 <h1>Levels</h1>
 <h3>This threshold is what users much reach to advance to the next level.</h3>
 <br />
@@ -22,6 +23,7 @@ $(document).ready(function() {
 $("#custom-level").on("spin", function(event, ui) { 
 	//alert(ui.value); 
 	$('#levelalert').css("display","none");
+	$('#blankheight').css("display","block");
 	$.ajax({  //Make the Ajax Request
 		type: "POST",  
 		url: "updatelevelthreshold",
@@ -30,6 +32,7 @@ $("#custom-level").on("spin", function(event, ui) {
 			if(response=='1')
 			{
 				$('#spanthreshold').html(ui.value);
+				$('#blankheight').css("display","none");
 				$('#levelalert').css("display","block");
 			}
 		} 

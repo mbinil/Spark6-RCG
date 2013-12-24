@@ -14,6 +14,26 @@ function validateFieldcheck(id,val)
 		$("#"+id).css("border-color", "#BDC3C7");
 	}
 }
+
+function checkavail(ob)
+{
+    
+	var val     =   $(ob).val();
+	var baseurl =   $('#baseurl').val();
+	$.ajax({  //Make the Ajax Request
+		type: "POST",  
+		url: baseurl+"admin/ajax_checkavail",
+		data: "checkavail="+val+"&mode=Difficulty&flag=edit&edit_id="+$('#diffid').val(),  //data
+		success: function(response) {
+			if(response=='1')
+			{
+				$("#difftitle").css("border-color", "red");
+				$('#message_span').html('Difficulty title already exist!!');
+				$('#alert_div').show();
+			}
+		} 
+	});
+}
 </script>
 <div class="sitemap_nav">
     <ul class="nav nav-pills">
@@ -38,13 +58,14 @@ function validateFieldcheck(id,val)
     <span id="message_span"></span>	
   </div>
 <!--------------------------------------->
+<input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
 <!--discrption-->   
 <div class="Difficulty_step1" style="width:65%; float:left;">
 <div class="discrption_label">Title:</div>
 <div class="discrption_label_right">e.g "Hard"</div>
 <div class="clear"></div>
 <input type="hidden" value="<?php echo $diffinfo[0]['Difficulty']['id']; ?>" id="diffid">
-<input type="text" value="<?php echo str_replace('\"', '', $diffinfo[0]['Difficulty']['title']); ?>" placeholder="Difficulty title" class="form-control input-sm" id="difftitle" onblur="javascript:validateFieldcheck(this.id,this.value);" disabled="disabled" style="color:#666666;">
+<input type="text" onchange="javascript:checkavail(this);" value="<?php echo str_replace('\"', '', $diffinfo[0]['Difficulty']['title']); ?>" placeholder="Difficulty title" class="form-control input-sm" id="difftitle" onblur="javascript:validateFieldcheck(this.id,this.value);" >
 <div class="discrption_label">Description:</div>
 <div class="discrption_label_right">e.g "The user works on this for at least 2 hours every day"</div>
 <div class="clear"></div>

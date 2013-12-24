@@ -19,11 +19,14 @@ if(isset($success[1])) {
 		<?php echo $msg; ?>
 	</div> 
 <?php unset($_SESSION['difficulty_name']); } ?>
-<div class="btn_allUser" style="float:left; margin:7px 0 0 550px;position: absolute;">
+<div class="btn_allUser" style="float:left; margin:3px 0 0 550px;position: absolute;">
 	<a href="difficultyaddstep1" class="btn btn-primary btn-block" style="width:200px;background-color:#3498DB;">+ New Difficulty type</a>
 </div>
 <div class="clear"></div>
 <div class="table-responsive">
+    <?php if(isset($difficultiestypes) && empty($difficultiestypes)){ ?>
+        <div class="row-fluid"><div class="span6"></div><div class="span6"><div class="search_fieald" id="example_filter"><label><input type="text" class="form-control" id="search-query-1" placeholder="Search" aria-controls="example"></label></div></div></div>
+    <?php } ?>
 	<table class="table table-bordered" id="example">
 		<thead>
 		  <tr>
@@ -39,7 +42,7 @@ if(isset($success[1])) {
 		<?php if(isset($difficultiestypes) && !empty($difficultiestypes)){
 		 foreach($difficultiestypes as $difftypes) { ?>
 		  <tr>
-			<td><img src="<?php echo "../img/diffuploads/".$difftypes['Difficulty']['decal']; ?>" width="60" height="60" alt="<?php echo str_replace('\"', '', $difftypes['Difficulty']['title']); ?>" style="background-color:#999999;" /></td>
+			<td><img src="<?php echo Router::url('/', true)."img/diffuploads/".$difftypes['Difficulty']['decal']; ?>" width="60" height="60" alt="<?php echo str_replace('\"', '', $difftypes['Difficulty']['title']); ?>" style="background-color:#999999;" /></td>
 			<td><?php echo str_replace('\"', '', $difftypes['Difficulty']['title']); ?></td>
 			<td><?php echo $difftypes['Difficulty']['points']; ?></td>
 			<td><?php echo stripslashes($difftypes['Difficulty']['description']); ?></td>
