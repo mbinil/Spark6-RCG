@@ -153,5 +153,29 @@ class User extends AppModel
 				)
 			);
 		}
+		
+		 public function getTags()
+		{
+			$user_detail = $this->find('all',array('order' => 'User.user_hobbies ASC'));
+			$array=array();
+			$i=0;
+			foreach($user_detail as $key=>$value)
+			{
+				if($value['User']['user_hobbies'])
+				{
+				$tag_data=explode(',',$value['User']['user_hobbies']);
+				
+				foreach($tag_data as $key1=>$value1)
+			{
+			if(!in_array($value1,$array))
+					{
+					$array[$i]=$value1;$i++;
+					}
+			}
+					
+				}
+			}
+			return json_encode($array);
+		}
 }
 ?>

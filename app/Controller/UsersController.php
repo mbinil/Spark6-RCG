@@ -117,7 +117,15 @@ class UsersController extends AppController {
 	
 	}
 	
-	public function registration_step3() { }
+	public function registration_step3() {
+	
+	  
+			$this->loadModel("User");
+			$tag_detail	=	$this->User->getTags();
+			$this->set('usertags', $tag_detail);
+			
+		
+	 }
 	
 	public function ajax_registration_step3() 
 	{
@@ -168,6 +176,16 @@ class UsersController extends AppController {
 		$result = $this->User->loginchecking($_REQUEST['loginusername'],$_REQUEST['loginpassword']);
 		if(count($result)>0)
 		{
+			$this->Session->delete("session_user_id");
+            $this->Session->delete('username');
+            $this->Session->delete('userid');
+            $this->Session->delete('locateid');
+            $this->Session->delete('loginerror');
+            $this->Session->delete('dispstatus');
+            $this->Session->delete('newdiffinfo');
+            $this->Session->delete('newchallengeinfo');
+            $this->Session->delete('stepinfo');
+			
 			echo "1";
 			$this->Session->write("session_user_id",$result[0]['User']['id']);
 		}
@@ -267,6 +285,9 @@ class UsersController extends AppController {
 			$this->loadModel("User");
 			$Loggeduserinfo = $this->User->GetUserById($this->Session->read("session_user_id"));
 			$this->set('Loggeduserinfo', $Loggeduserinfo);
+			$tag_detail	=	$this->User->getTags();
+			$this->set('usertags', $tag_detail);
+			
 		}
 	}
 	
@@ -297,14 +318,15 @@ class UsersController extends AppController {
 	/*View Profile page*/
 	public function view_profile() 
 	{
-		if($this->Session->read("session_user_id"))
+		if(!isset($_GET['id']))
 		{
 			$userid = $this->Session->read("session_user_id");
 		}
 		else
 		{
-			$userid = "1";
+			$userid = $_GET['id'];
 		}
+		
 		$this->loadModel("User");
 		$Loggeduserinfo = $this->User->GetUserById($userid);
 		$this->set('Loggeduserinfo', $Loggeduserinfo);
@@ -312,8 +334,7 @@ class UsersController extends AppController {
 		$this->loadModel("Challenge");
 		$Challengeinfo = $this->Challenge->getChallenges();
 		
-		$this->set('activechallenge', $Challengeinfo);
-		$this->set('upcomingchallenge', $Challengeinfo);
-		$this->set('completedchallenge', $Challengeinfo);
+		$this->set('userid', $userid);
+		$this->set('challenges', $userid?$this->Challenge->getProfileChallenge($userid):'');
 	}
 }

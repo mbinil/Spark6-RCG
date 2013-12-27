@@ -56,8 +56,9 @@ function getParentCategory()
 function getDialogue()
 {
 	$( "#dialog-modal" ).dialog({
-	  height: 240,
-	  width:  485,
+	  height: 250,
+	  width:  1285,
+          title: "Create badge design",
 	  modal: true
 	});
 }
@@ -71,7 +72,7 @@ function getClose()
 	$.ajax({  //Make the Ajax Request
 	    type: "POST",  
 	    url: "ajax_createimage",
-	    data: "val="+$('#color_code').val()+"&gradient=1",
+	    data: "color1="+$('#color_code1').val()+"&color2="+$('#color_code2').val()+"&color3="+$('#color_code3').val()+"&color4="+$('#color_code4').val()+"&gradient=1",
 	    async: false,
 	    success: function(response) {
                 var data    =   new Array();
@@ -193,7 +194,11 @@ if($i==0) { ?>
 <div id="dialog-modal" style="display: none;" >
   <form method="post">
     Click here:
-    <input class="color" name="color_code" id="color_code" style="width:230px;">
+    <input class="color" name="color_code1" id="color_code1" style="width:230px;" value="">
+    <input class="color" name="color_code2" id="color_code2" style="width:230px;" value="">
+    <input class="color" name="color_code3" id="color_code3" style="width:230px;" value="">
+    <input class="color" name="color_code4" id="color_code4" style="width:230px;" value="">
+    
     <input type="button" name="submit" value="SELECT" onclick="getClose()" style="width:100px;"/>
   </form>
 </div>

@@ -1064,7 +1064,7 @@ h1{
 #two-columns{
 	width:100%;
 	/*padding:0 0 152px;*/
-	padding: 0 0 100px;
+	padding: 25px 0 100px;
 	position:relative;
 	z-index:1;
 }
@@ -2455,13 +2455,13 @@ h1{
 }
 #sidebar.alignright{
 	border:none;
-	padding:20px 0 0 30px;
-	width:220px;
+	padding:0 0 0 30px;
+	width:250px;
 }
 #sidebar.alignright .right-background{
 	border:none;
     padding: 0 10px;
-    width: 220px;
+    width: 235px;
 	background-color:#222;
 	opacity: 0.6;
 	border-radius: 5px 5px 5px 5px;
@@ -2470,19 +2470,19 @@ h1{
 }
 /* social natwotks */
 #sidebar .social-networks{
-	margin:0 0 0 -30px;
+	margin:0 0 0 0;
 	overflow:hidden;
 }
 #sidebar .social-networks ul{
 	border-bottom:1px solid rgba(255,255,255,0.2);
-	margin:0 -27px 0 0;
+	margin:0 0 0 0;
 	padding:28px 0 16px 1px;
 	overflow:hidden;
 }
 #sidebar .social-networks li{
 	float:left;
 	width:46px;
-	margin:0 23px;
+	margin:0 12.5px;
 	text-align:center;
 }
 #sidebar .social-networks a{
@@ -2525,8 +2525,8 @@ h1{
 #sidebar .social-networks .active .number{display:block;}
 #sidebar .info{
 	overflow:hidden;
-	padding:42px 10px 15px 30px;
-	margin:0 0 0 -30px;
+	padding:42px 10px 15px 10px;
+	/*margin:0 0 0 -30px;*/
 	font-size:14px;
 	line-height:16px;
 	color:#fff;
@@ -2536,7 +2536,7 @@ h1{
 #sidebar .info li{
 	overflow:hidden;
 	background:url(../img/icons.png) no-repeat;
-	padding:0 0 0 63px;
+	padding:0 0 0 50px;
 	margin:0 0 32px;
 }
 #sidebar .info .title{
@@ -2544,17 +2544,17 @@ h1{
 	font:300 37px/40px "rooney-web", Arial, Helvetica, sans-serif;
 	margin:0 0 1px;
 }
-#sidebar .info .difficulty.hard{background-position:-6px -877px;}
-#sidebar .info .difficulty.medium{background-position:-6px -777px;}
-#sidebar .info .difficulty.easy{background-position:-6px -822px;}
+#sidebar .info .difficulty.Hard{background-position:-6px -877px;}
+#sidebar .info .difficulty.Medium{background-position:-6px -777px;}
+#sidebar .info .difficulty.Easy{background-position:-6px -822px;}
 #sidebar .info .people{background-position:-6px -931px;}
-#sidebar .info .points{background-position:-6px -983px;}
+#sidebar .info .points{background-position:-6px -983px;float: none; text-align: left; width: 100%;}
 .options{
 	/*padding:30px 0 74px;
 	padding:30px 0 10px;
 	position:relative;
 	margin:0 0 64px 0;*/
-	margin: -163px 0 64px;
+	margin: -160px 0 64px -2px !important;
     padding: 30px 0 10px;
     position: relative;
     width: 230px;

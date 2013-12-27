@@ -30,63 +30,7 @@ $eBayBusinessUnitLoc = Configure::read('eBayBusinessUnitLoc');
 				<div class="clear"></div>
 				<hr/>
 				<div class="clear"></div>
-				<div style="margin:25px 0;">
-					<div style="font-size: 32px; margin: 5px 0px; text-align: left;">Active challenges</div>
-					<div style="margin:15px 0;">
-					<?php if($activechallenge==""){ ?>
-						No challenges to list!!
-					<?php } else { ?>
-						<?php foreach($activechallenge as $chalinfo) { ?>
-							<div style="border: 1px solid #ccc; padding:10px; margin:0 10px 10px 0px; width:48%; float:left; min-height:155px; overflow:hidden;">
-								<div style="margin:0 0 5px 0; color:#0099FF; font-size:20px;"><?php echo $chalinfo['Challenge']['name']; ?></div>
-								<div style="margin:0px;">
-									<div style="margin:5px 10px 0 0; float:left;"><img src="<?php echo Router::url('/img/challengeuploads/', true) . $chalinfo['Challenge']['hero_image']; ?>" border="0" width="100" /></div>
-									<div style="margin:0px;"><?php echo $chalinfo['Challenge']['daily_commitment']; ?></div>
-								</div>
-							</div>
-						<?php } ?>	
-					<?php } ?>
-					</div>
-				</div>
-				<div class="clear"></div>
-				<div style="margin:35px 0;">
-					<div style="font-size: 32px; margin: 5px 0px; text-align: left;">Upcoming challenges</div>
-					<div style="margin:15px 0;">
-					<?php if($upcomingchallenge==""){ ?>
-						No challenges to list!!
-					<?php } else { ?>
-						<?php foreach($activechallenge as $chalinfo) { ?>
-							<div style="border: 1px solid #ccc; padding:10px; margin:0 10px 10px 0px; width:48%; float:left; min-height:155px; overflow:hidden;">
-								<div style="margin:0 0 5px 0; color:#0099FF; font-size:20px;"><?php echo $chalinfo['Challenge']['name']; ?></div>
-								<div style="margin:0px;">
-									<div style="margin:5px 10px 0 0; float:left;"><img src="<?php echo Router::url('/img/challengeuploads/', true) . $chalinfo['Challenge']['hero_image']; ?>" border="0" width="100" /></div>
-									<div style="margin:0px;"><?php echo $chalinfo['Challenge']['daily_commitment']; ?></div>
-								</div>
-							</div>
-						<?php } ?>
-					<?php } ?>
-					</div>
-				</div>
-				<div class="clear"></div>
-				<div style="margin:35px 0;">
-					<div style="font-size: 32px; margin: 5px 0px; text-align: left;">Completed challenges</div>
-					<div style="margin:15px 0;">
-					<?php if($completedchallenge==""){ ?>
-						No challenges to list!!
-					<?php } else { ?>
-						<?php foreach($activechallenge as $chalinfo) { ?>
-							<div style="border: 1px solid #ccc; padding:10px; margin:0 10px 10px 0px; width:48%; float:left; min-height:155px; overflow:hidden;">
-								<div style="margin:0 0 5px 0; color:#0099FF; font-size:20px;"><?php echo $chalinfo['Challenge']['name']; ?></div>
-								<div style="margin:0px;">
-									<div style="margin:5px 10px 0 0; float:left;"><img src="<?php echo Router::url('/img/challengeuploads/', true) . $chalinfo['Challenge']['hero_image']; ?>" border="0" width="100" /></div>
-									<div style="margin:0px;"><?php echo $chalinfo['Challenge']['daily_commitment']; ?></div>
-								</div>
-							</div>
-						<?php } ?>
-					<?php } ?>
-					</div>
-				</div>
-				<div class="clear"></div>
+				<?php echo $challenges;?>
 			</div>
 		</section>
 		<!-- sidebar -->
@@ -127,7 +71,7 @@ $eBayBusinessUnitLoc = Configure::read('eBayBusinessUnitLoc');
 				<div>Hobbies:</div>
 				<div><?php echo $Loggeduserinfo[0]['User']['user_hobbies']; ?></div>
 			</div>
-			<?php if($this->Session->read("session_user_id")){ ?>
+			<?php if($this->Session->read("session_user_id") && $this->Session->read("session_user_id") == $userid){ ?>
 			<div class="clear"></div>
 			<div style="margin:15px 0; width: 219px;">
 				<div><a href="<?php echo Router::url('/manage_account_step1', true); ?>" style="cursor:pointer; font-size:14px;">Edit this info</a></div>

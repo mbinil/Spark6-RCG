@@ -15,6 +15,11 @@ class ChallengesController extends AppController
 
 	public function discover() 
 	{
+		if($this->Session->read("username"))
+		{
+			$this->redirect('/');
+		}
+		
 		//  getting the parent category and child category here
 		$this->loadModel('Category');
 		$this->set('parent_category',$this->Category->getParentCategories());
@@ -67,8 +72,19 @@ class ChallengesController extends AppController
         
 	public function challenge_details($challenge_permalink=NULL) {
 		$this->loadModel('Challenge');
-		$challenge_info = $this->Challenge->getChallengeByPermalink($challenge_permalink);
+		$challenge_info = $this->Challenge->getChallengeByPermalink(array('permalink'=>$challenge_permalink));
+
 		$this->set('challenge_info',$challenge_info);
+                
+                $this->loadModel('Userchallenge');
+                //echo "<pre>";print_r($this->Userchallenge->getHostArray($challenge_info[0]['Challenge']['id']));
+                $available_host =   $this->Userchallenge->getHostArray($challenge_info[0]['Challenge']['id']);
+		$this->set('available_host',$available_host);
+
+                if(count($available_host) > 0)
+                    $this->set('starts_in',$this->Challenge->getHourMinutes($available_host[0]['Userchallenge']['started_date'],'','hour'));
+                else
+                    $this->set('starts_in','');
 	}
 	
 	public function my_challenges() 

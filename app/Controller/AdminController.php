@@ -63,6 +63,16 @@ class AdminController extends AppController
 		$count=count($userloginresult);
 		if($count > 0)
 		{
+			$this->Session->delete("session_user_id");
+            $this->Session->delete('username');
+            $this->Session->delete('userid');
+            $this->Session->delete('locateid');
+            $this->Session->delete('loginerror');
+            $this->Session->delete('dispstatus');
+            $this->Session->delete('newdiffinfo');
+            $this->Session->delete('newchallengeinfo');
+            $this->Session->delete('stepinfo');
+			
 			$userrowarray=$userloginresult[0]['Admin'];
 			$this->Session->write("username",$username);
 			$this->Session->write("userid",$userrowarray["id"]);
@@ -863,7 +873,8 @@ class AdminController extends AppController
 	{
 		// A list of permitted file extensions
 		$allowed = array('png', 'jpeg', 'jpg');
-		$output_dir = WWW_ROOT."img/challengeuploads/";
+		//$output_dir = WWW_ROOT."img/challengeuploads/";
+		$newloc = WWW_ROOT."img/challengeuploads/";
 		$random_num =   $_POST['image_rand_num'];
 		if(isset($_FILES['upl']) && $_FILES['upl']['error'] == 0)
 		{
@@ -879,7 +890,7 @@ class AdminController extends AppController
 				$newfilename    =   $random_num . $_FILES["upl"]["name"];
 
 				//move_uploaded_file($file,$output_dir.$newfilename);
-				if(!move_uploaded_file($file,$output_dir.$newfilename)){
+				if(!move_uploaded_file($file,$newloc.$newfilename)){
 					$this->Session->write("file_upload_error_message","Error occured while resizing the image");exit;
 				}
 				else
@@ -893,15 +904,72 @@ class AdminController extends AppController
 					$height                 =   480;
 					$newcroppedfilename     =   'cropped'.$newfilename;
 					$backgroundimagename    =   "cropped/" . $newcroppedfilename;
+					$blurgroundimagename    =   "blur/" . $newcroppedfilename;
 
-					if(!$this->PImage->resizeImage('resizeCrop', $newfilename, $output_dir, $backgroundimagename, $width,$height,true, 100))
-					{
-						$this->Session->write("file_upload_error_message","Error occured while resizing the image");exit;
-					}
-					else
-					{
-						echo '{"status":"success"}';exit;
-					}
+                                        
+                                        
+//                                        $file=$_FILES["challenge_image"]["tmp_name"]; 
+//                                        $randomno=rand();
+//                                        $oldfilename=$_FILES["challenge_image"]["name"];
+//                                        //$newfilename=$randomno . $_FILES["challenge_image"]["name"];
+//                                        //$newloc=WWW_ROOT . 'uploads/';$output_dir
+//                                        $newlocfilename=WWW_ROOT . 'uploads/' .  $newfilename;
+//                                        move_uploaded_file($file,$newlocfilename);
+//                                        $newcroppedfilename="cropped" . $randomno . $_FILES["challenge_image"]["name"];
+//                                        $newcroppedlocfilename=WWW_ROOT . 'uploads/' . 'cropped/' .  $newfilename;
+//                                        $newsmallfilename="small" . $randomno . $_FILES["challenge_image"]["name"]; 
+//                                        $newsmalllocfilename=WWW_ROOT . 'uploads/' . 'small/' .  $newfilename;
+//                                        $backgroundbluredimagetakenloc=WWW_ROOT . 'uploads/small/';
+//                                        $backgroundimagename="background" . $randomno . $_FILES["challenge_image"]["name"]; 
+//                                        $backgroundimagelocfilename=WWW_ROOT . 'uploads/' . 'background/' .  $newfilename;
+                                        
+                                        
+                                        // creating cropped image
+                                        $width=710;
+                                            $height=249;
+                                            $croppedimagename="cropped/cropped" . $newfilename;
+                                        if($this->PImage->resizeImage('resize', $newfilename,  $newloc, $croppedimagename, $width))
+                                            {
+                                              // e('Image resized!);
+                                            }
+
+
+
+                                            // creating very small image
+                                            $width=350;
+                                            $height=350;
+                                            $verysmallimagename="verysmall" . $newfilename;
+                                        if($this->PImage->resizeImage('resizeCrop', $newfilename,  $newloc, $verysmallimagename, $width,$height))
+                                            {
+                                              // e('Image resized!);
+                                            }
+
+
+
+                                            // creating background image
+                                        $width=710;
+                                            $height=249;
+                                            $backgroundimagename="background/" . $newfilename;
+                                            $backgroungimgloc=$newloc;
+                                     //   if($this->PImage->resizeImage('resize', $newfilename, $backgroundbluredimagetakenloc, $backgroundimagename, $width))
+                                        if($this->PImage->resizeImage('resizeCrop', $verysmallimagename, $newloc, $backgroundimagename, $width,$height,true))
+                                            {
+                                              // e('Image resized!);
+                                            }
+                                        
+                                            unlink($newloc.$verysmallimagename);
+                                        echo '{"status":"success"}';exit;
+//					if(!$this->PImage->resizeImage('resizeCrop', $newfilename, $output_dir, $backgroundimagename, $width,$height,true, 100, false, false))
+//					{
+//                                            if(!$this->PImage->resizeImage('resizeCrop', $newfilename, $output_dir, $blurgroundimagename, $width,$height,true, 100, false, true))
+//                                            {
+//						$this->Session->write("file_upload_error_message","Error occured while resizing the image");exit;
+//                                            }
+//					}
+//					else
+//					{
+//						echo '{"status":"success"}';exit;
+//					}
 				}
 			}
 		}
@@ -1178,17 +1246,20 @@ class AdminController extends AppController
 	public function ajax_createimage()
 	{
 
-		$color_val                      =   $this->_hex2rgb($_POST['val']);
+		$color_val1                      =   $this->_hex2rgb($_POST['color1']);
+		$color_val2                      =   $this->_hex2rgb($_POST['color2']);
+		$color_val3                      =   $this->_hex2rgb($_POST['color3']);
+		$color_val4                      =   $this->_hex2rgb($_POST['color4']);
 		$newchildcatinfo['gradient']    =   $_POST['gradient'];
 		$destination                    =   ($_POST['gradient'] == '1')?'badgedesign':'badgecolor';
 		
 		// Create a 55x30 image
 		$im = imagecreate(200, 200);
-		$red = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
-		$red1 = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
-		$red2 = imagecolorallocate($im, $color_val[0], $color_val[1], $color_val[2]);     //SELECTED COLOUR
-		$red3 = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
-		$red4 = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
+		$red = imagecolorallocate($im, $color_val1[0], $color_val1[1], $color_val1[2]);
+		$red1 = imagecolorallocate($im, $color_val2[0], $color_val2[1], $color_val2[2]);
+		$red2 = imagecolorallocate($im, $color_val3[0], $color_val3[1], $color_val3[2]);     //SELECTED COLOUR
+		$red3 = imagecolorallocate($im, $color_val4[0], $color_val4[1], $color_val4[2]);
+		//$red4 = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
 		$black = imagecolorallocate($im, 0, 0, 0);
 
 		// Make the background transparent
@@ -1581,6 +1652,10 @@ class AdminController extends AppController
 		if($this->Session->read("username") != "")
 		{
 			$this->loadModel("Category");
+			$this->loadModel("Challenge");
+			$Challengetag_detail	=	$this->Challenge->getTags();
+		
+			$this->set('challengetags', $Challengetag_detail);
 		}
 		else
 		{
@@ -1607,6 +1682,8 @@ class AdminController extends AppController
 			{
 				$this->loadModel("Challenge");
 				$this->Session->write("newchallengeinfo",$this->Session->read("newchallengeinfo")); 
+				$Challengetag_detail	=	$this->Challenge->getTags();
+				$this->set('challengetags', $Challengetag_detail);
 			}
 		}
 		else

@@ -110,7 +110,7 @@ class Challenge extends AppModel
 					array(
 						'table' => 'categories',
 						'alias' => 'categorie',
-						'type' => 'inner',
+						'type' => 'left',
 						'foreignKey' => false,
 						'conditions'=> array(
 							'categorie.id = Challenge.child_category'
@@ -151,7 +151,7 @@ class Challenge extends AppModel
 			$return_html    .=   '<div '.$class.' id="challenge_individual_'.$value['Challenge']['id'].'">
 									<article class="column">
 									<div class="visual-block">
-										<img src="'.$fullurl.'img/challengeuploads/cropped/cropped'.$value['Challenge']['hero_image'].'" width="710" height="249" alt="image description" class="bg">
+										<img src="'.$fullurl.'img/challengeuploads/background/'.$value['Challenge']['hero_image'].'" width="710" height="249" alt="image description" class="bg">
 										<figure><a href="'.Router::url('/discover/'.$value['Challenge']['permalink'], true).'" style="cursor:pointer;"><img class="alignleft" src="'.$fullurl.'img/challengeuploads/'.$value['Challenge']['hero_image'].'" width="324" height="219" alt="image description"></a></figure>';
 			$notification_time_div      =   '';
 			if(count($get_host) == 0)
@@ -285,7 +285,7 @@ class Challenge extends AppModel
 				
 			$html       .=   '<article class="column">
 								<div class="visual-block">
-								<img height="249" width="960" class="bg" alt="image description" src="'.$fullurl.'img/challengeuploads/cropped/cropped'.$value['challenge']['hero_image'].'">
+								<img height="249" width="960" class="bg" alt="image description" src="'.$fullurl.'img/challengeuploads/background/'.$value['challenge']['hero_image'].'">
 								<figure><img height="219" width="324" alt="image description" class="alignleft" src="'.$fullurl.'img/challengeuploads/'.$value['challenge']['hero_image'].'"></figure>
 								<div class="about"><div class="about-holder">
 								<div class="person-info">
@@ -410,8 +410,6 @@ class Challenge extends AppModel
         {
             App::import('Model', 'Userchallenge');
             $Userchallenge      =   new Userchallenge();
-            //echo $this->getFinishedChallenges($login_id,$Userchallenge);
-            //echo $this->getFailedChallenges($login_id,$Userchallenge);exit;
             return '<div class="two-columns-section">'.$this->getFinishedChallenges($login_id,$Userchallenge).$this->getFailedChallenges($login_id,$Userchallenge).'</div>';
         }
         
@@ -501,6 +499,63 @@ class Challenge extends AppModel
 
             return $html;
         }
+        
+        /**
+         * getting the active, upcoming, completed challenges
+         * @param integer $user_id user id
+         * @return string html of active, upcoming, completed challenges
+         */
+        public function getProfileChallenge($user_id)
+        {
+            App::import('Model', 'Userchallenge');
+            $Userchallenge          =   new Userchallenge();
+            return $this->getProfileHtml($Userchallenge->getChallengeHostArray(array('Userchallenge.user_challenge_status' => '1','Userchallenge.user_id' => $user_id)), 'Active').$this->getProfileHtml($Userchallenge->getChallengeHostArray(array('Userchallenge.user_challenge_status in (0,6)','Userchallenge.user_id' => $user_id)), 'Upcoming').$this->getProfileHtml($Userchallenge->getChallengeHostArray(array('Userchallenge.user_challenge_status' => '2','Userchallenge.user_id' => $user_id)), 'Completed');
+            
+        }
+        
+        /**
+         * creating the html of active, upcoming, completed challenges
+         * @param array|null $array active, upcoming, completed challenges array
+         * @param string $status which challenge coming
+         * @return string created html of active, upcoming, completed challenges
+         */
+        public function getProfileHtml($array, $status)
+        {
+            $fullurl    =   Router::url('/', true);
+            $html       =   "";
+            if(count($array) > 0)
+            {
+                $html   .=  '<div style="margin:25px 0;">
+					<div style="font-size: 32px; margin: 5px 0px; text-align: left;">'.$status.' challenges</div>
+					<div style="margin:15px 0;">';
+                foreach ($array as $key => $value)
+                {
+                    $html   .=   '<div style="border: 1px solid #ccc; padding:10px; margin:0 10px 10px 0px; width:48%; float:left; min-height:155px; overflow:hidden;">
+                                                    <div style="margin:0 0 5px 0; color:#0099FF; font-size:20px;">'.$value['challenge']['name'].'</div>
+                                                    <div style="margin:0px;">
+                                                            <div style="margin:5px 10px 0 0; float:left;"><img src="'.$fullurl.'img/challengeuploads/'.$value['challenge']['hero_image'].'" border="0" width="100" /></div>
+                                                            <div style="margin:0px;">'.$value['challenge']['daily_commitment'].'</div>
+                                                    </div>
+                                            </div>';
+                }
+                
+                $html   .=  '</div></div>';
+            }
+            else
+            {
+                $html   .=   '<div style="margin:25px 0;">
+					<div style="font-size: 32px; margin: 5px 0px; text-align: left;">'.$status.' challenges</div>
+					<div style="margin:15px 0;">
+						No challenges to list!!
+					</div>
+				</div>';
+            }
+            
+            $html   .=   '<div class="clear"></div>';
+            
+            return $html;
+        }
+            
         /**
          * 
          * @param string $from parent,child,search
@@ -604,10 +659,52 @@ class Challenge extends AppModel
 		}
 	}
 	
-	function getChallengeByPermalink($permalink)
+	function getChallengeByPermalink($condition)
 	{
-		$challengesinfo = $this->find('all',array('conditions'=>array('permalink'=>$permalink)));
-		return $challengesinfo;
+		return $this->find('all',array('fields'=>array('Challenge.*,difficulty.title,difficulty.decal,category.id,category.title'),
+                                                            'joins' => array(
+                                                                                array(
+                                                                                    'table' => 'difficulties',
+                                                                                    'alias' => 'difficulty',
+                                                                                    'type' => 'inner',
+                                                                                    'foreignKey' => false,
+                                                                                    'conditions'=> array('difficulty.id = Challenge.difficulty')
+                                                                                ),
+                                                                                array(
+                                                                                    'table' => 'categories',
+                                                                                    'alias' => 'category',
+                                                                                    'type' => 'left',
+                                                                                    'foreignKey' => false,
+                                                                                    'conditions'=> array('category.id = Challenge.child_category')
+                                                                                )
+                                                                            ),
+                                                            'conditions'=>$condition
+                                                    )
+                                        );
+	}
+	
+	public function getTags()
+	{
+		$challenge_detail = $this->find('all',array('order' => 'Challenge.tags ASC'));
+		$array=array();
+		$i=0;
+		foreach($challenge_detail as $key=>$value)
+		{
+			if($value['Challenge']['tags'])
+			{
+			$tag_data=explode(',',$value['Challenge']['tags']);
+				
+			foreach($tag_data as $key1=>$value1)
+		{
+		if(!in_array($value1,$array))
+				{
+				$array[$i]=$value1;$i++;
+				}
+		}
+					
+			}
+		}
+		return json_encode($array);
 	}
 }
 ?>

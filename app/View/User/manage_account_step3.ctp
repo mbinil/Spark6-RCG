@@ -3,10 +3,14 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.3.2/select2.js"></script>
 <?php /*?><script type="text/javascript" src="<?php echo Router::url('../js/autoapp.js',true); ?>"></script>
 <?php */?>
+<link rel="stylesheet" type="text/css" href="<?php echo Router::url('../css/bootstrap-tokenfield.css',true); ?>">
+
+
+<script type="text/javascript" src="<?php echo Router::url('../js/bootstrap-tokenfield.js',true); ?>"></script>
 <script type="text/javascript">
 function regstep3Fieldcheck()
 {
-	if(document.getElementsByClassName("tagsinput")[0].value=="")
+	if(document.getElementById("demo-input-free-tagging").value=="")
 	{
 		$(".tagsinput").css("border-color", "red");
 		$('#message_span').html('Enter your hobbies!!');
@@ -16,7 +20,7 @@ function regstep3Fieldcheck()
 }
 function hoby_fn()
 {
-	if(document.getElementsByClassName("tagsinput")[0].value!="")
+	if(document.getElementById("demo-input-free-tagging").value!="")
 	{
 		$(".tagsinput").css("border-color", "#BDC3C7");
 		$('#alert_div').hide();
@@ -58,7 +62,7 @@ function hoby_fn()
       <div style="width:65%; float:left;">
 	  	<div style="margin:10px 0; font-weight:bold; font-size: 18px;">Related Challenge Tags:</div>
         <div id="tagsinput">
-            <input name="tagsinput" class="tagsinput" value="<?php if(isset($Loggeduserinfo[0]['User']['user_hobbies'])) { echo $Loggeduserinfo[0]['User']['user_hobbies'];} ?>" onblur="hoby_fn()" />
+            <input name="tagsinput" value="<?php if(isset($Loggeduserinfo[0]['User']['user_hobbies'])) { echo $Loggeduserinfo[0]['User']['user_hobbies'];} ?>" onblur="hoby_fn()"  id="demo-input-free-tagging"/>
             <input type="hidden" id="challengetagWord" name="challengetagWord" value="" />
         </div>
 		<!--<div class="multisel editors">
@@ -76,3 +80,15 @@ function hoby_fn()
 		<br /> 
 	</div>
 </div>
+<script type="text/javascript">
+        $(document).ready(function() {
+		$('#demo-input-free-tagging').tokenfield({
+  autocomplete: {
+    source: <?php echo $usertags; ?>,
+    delay: 100
+  },
+  showAutocompleteOnFocus: true
+})
+           
+        });
+        </script>

@@ -27,8 +27,12 @@ function degree_fn(val)
 }
 </script>
 <!-- jQuery File Upload Dependencies -->
-<?php //$Loggeduserinfo[0]['User'] = $this->Session->read("newreginfo"); ?>
-<?php //print_r($Loggeduserinfo); ?>
+<?php $Loggeduserinfo[0]['User'] = $this->Session->read("newreginfo"); ?>
+<?php// print_r($Loggeduserinfo); ?>
+<?php 
+//$reg_array = $this->Session->read("newreginfo");
+//print_r($reg_array);
+?>
 <div id="main">       
 	<div id="userreg">  
 		<div class="sitemap_nav" style="margin-top:20px;width:100%; ">
@@ -109,9 +113,10 @@ function degree_fn(val)
 					<select name="mult_Agriculture" id="mult_Agriculture" multiple="multiple" style="font-size:14px; width:100%; display:none;">
 					<?php } ?>
 					<optgroup label="Agriculture">
-					<option value="Agricultural Business" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && $Loggeduserinfo[0]['User']['user_grd_cat']=='Agricultural Business' ) { ?> selected="selected" <?php } ?>>Agricultural Business</option>
-					<option value="Agricultural Business & Technology" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && $Loggeduserinfo[0]['User']['user_grd_cat']=='Agricultural Business & Technology' ) { ?> selected="selected" <?php } ?>>Agricultural Business & Technology</option>
-					<option value="Agricultural Economics" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && $Loggeduserinfo[0]['User']['user_grd_cat']=='Agricultural Economics' ) { ?> selected="selected" <?php } ?>>Agricultural Economics</option>
+
+					<option value="Agricultural Business" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) &&  in_array("Agricultural Business",explode(',',$Loggeduserinfo[0]['User']['user_grd_cat'])) ) { ?> selected="selected" <?php } ?>>Agricultural Business</option>
+					<option value="Agricultural Technology" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) &&  in_array("Agricultural Technology",explode(',',$Loggeduserinfo[0]['User']['user_grd_cat']))) { ?> selected="selected" <?php } ?>>Agricultural Business & Technology</option>
+					<option value="Agricultural Economics" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) &&  in_array("Agricultural Economics",explode(',',$Loggeduserinfo[0]['User']['user_grd_cat']))) { ?> selected="selected" <?php } ?>>Agricultural Economics</option>
 					 </optgroup>
 					</select>
 					<?php if(isset($Loggeduserinfo[0]['User']['user_grd_degree']) && $Loggeduserinfo[0]['User']['user_grd_degree']=='Architecture' ) { ?>
@@ -121,20 +126,20 @@ function degree_fn(val)
 					<?php } ?>
 					
 					<optgroup label="Architecture and Planning">
-					<option value="Architecture 1" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && $Loggeduserinfo[0]['User']['user_grd_cat']=='Architecture 1' ) { ?> selected="selected" <?php } ?>>Architecture 1</option>
-					<option value="Architecture 2" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && $Loggeduserinfo[0]['User']['user_grd_cat']=='Architecture 2' ) { ?> selected="selected" <?php } ?>>Architecture 2</option>
-					<option value="Architecture 3" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && $Loggeduserinfo[0]['User']['user_grd_cat']=='Architecture 3' ) { ?> selected="selected" <?php } ?>>Architecture 3</option>
+					<option value="Architecture 1" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && in_array("Architecture 1",explode(',',$Loggeduserinfo[0]['User']['user_grd_cat']))) { ?> selected="selected" <?php } ?>>Architecture 1</option>
+					<option value="Architecture 2" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && in_array("Architecture 2",explode(',',$Loggeduserinfo[0]['User']['user_grd_cat']))) { ?> selected="selected" <?php } ?>>Architecture 2</option>
+					<option value="Architecture 3" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) &&  in_array("Architecture 3",explode(',',$Loggeduserinfo[0]['User']['user_grd_cat'])) ) { ?> selected="selected" <?php } ?>>Architecture 3</option>
 					 </optgroup>
 					</select>
-					<?php if(isset($Loggeduserinfo[0]['User']['mult_sel']) && $Loggeduserinfo[0]['User']['mult_sel']=='Arts' ) { ?>
+					<?php if(isset($Loggeduserinfo[0]['User']['user_grd_degree']) && $Loggeduserinfo[0]['User']['user_grd_degree']=='Arts' ) { ?>
 					<select name="mult_Arts" id="mult_Arts" multiple="multiple" style="font-size:14px;width:100%;">
 					<?php } else { ?>
 					<select name="mult_Arts" id="mult_Arts" multiple="multiple" style="font-size:14px;width:100%; display:none;">
 					<?php } ?>
 					<optgroup label="Arts">
-					<option value="Arts 1" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && $Loggeduserinfo[0]['User']['user_grd_cat']=='Arts 1' ) { ?> selected="selected" <?php } ?>>Arts 1</option>
-					<option value="Arts 2" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && $Loggeduserinfo[0]['User']['user_grd_cat']=='Arts 2' ) { ?> selected="selected" <?php } ?>>Arts 2</option>
-					<option value="Arts 3" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && $Loggeduserinfo[0]['User']['user_grd_cat']=='Arts 3' ) { ?> selected="selected" <?php } ?>>Arts 3</option>
+					<option value="Arts 1" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && in_array("Arts 1",explode(',',$Loggeduserinfo[0]['User']['user_grd_cat']))) { ?> selected="selected" <?php } ?>>Arts 1</option>
+					<option value="Arts 2" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) && in_array("Arts 2",explode(',',$Loggeduserinfo[0]['User']['user_grd_cat'])) ) { ?> selected="selected" <?php } ?>>Arts 2</option>
+					<option value="Arts 3" <?php if(isset($Loggeduserinfo[0]['User']['user_grd_cat']) &&  in_array("Arts 3",explode(',',$Loggeduserinfo[0]['User']['user_grd_cat']))) { ?> selected="selected" <?php } ?>>Arts 3</option>
 					 </optgroup>
 					</select>
 					</div>

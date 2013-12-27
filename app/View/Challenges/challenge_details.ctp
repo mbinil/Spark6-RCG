@@ -6,6 +6,7 @@
 }
 </style>
 <?php
+$fullurl = Router::url('/', true);
 //echo "<pre>";print_r($challenge_info);echo "</pre>";
 if(isset($hostsavemessage) && $hostsavemessage!='')
 { 
@@ -60,7 +61,7 @@ $(document).ready(function(){
 });
 </script>
 <div class="visual">
-	<img alt="image description" src="<?php echo Router::url('/img/challengeuploads/', true) . $challenge_info[0]['Challenge']['hero_image']; ?>">
+	<img alt="image description" src="<?php echo Router::url('/img/challengeuploads/background/', true) . $challenge_info[0]['Challenge']['hero_image']; ?>">
 </div>
 <div id="main">
 	<!-- two columns block -->
@@ -78,7 +79,7 @@ $(document).ready(function(){
 				<figure class="image-holder">
 					<img src="<?php echo Router::url('/img/challengeuploads/', true) . $challenge_info[0]['Challenge']['hero_image']; ?>" width="710" height="480" alt="image description">
 					<figcaption class="txt">
-						<span class="note">In <a onclick="#" style="cursor:pointer;"><?php echo $challenge_info[0]['Challenge']['parent_category']; ?> Lifestyle</a></span>
+						<span class="note">In <a onclick="#" style="cursor:pointer;"><?php echo $challenge_info[0]['category']['title']; ?> Lifestyle</a></span>
 						<p><?php echo $challenge_info[0]['Challenge']['daily_commitment']; ?></p>
 					</figcaption>
 				</figure>
@@ -179,11 +180,11 @@ $(document).ready(function(){
 				</div>
 				<a id="FBcomments"></a>
 				<!-- comments block -->
-				<div class="section" style="display:none;">
+				<div class="section">
 					<h2>Comments</h2>
 					<div class="comments-placeholder">
-					<fb:comments-count href="<?php echo $site_url ?>challenges/<?php echo $challenge_info[0]['Challenge']['challenge_permalink']; ?>" /></fb:comments-count> Comments		
-					<div class="fb-comments" data-href="<?php echo $site_url ?>challenges/<?php echo $challenge_info[0]['Challenge']['challenge_permalink']; ?>" data-notify="true" data-num-posts="10"></div>	
+					<fb:comments-count href="<?php echo Router::url('/', true) ."discover/". $challenge_info[0]['Challenge']['permalink']; ?>" /></fb:comments-count> Comments		
+					<div class="fb-comments" data-href="<?php echo Router::url('/', true) ."discover/". $challenge_info[0]['Challenge']['permalink']; ?>" data-notify="true" data-num-posts="10"></div>	
 					</div>
 				</div>
 			</div>
@@ -194,20 +195,21 @@ $(document).ready(function(){
 			<!-- social networks -->
 			<div class="social-networks">
 			<?php $url = ((!empty($_SERVER['HTTPS'])) ? "https://": "http://" ) . $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
-			$json = file_get_contents("http://api.sharedcount.com/?url=" . rawurlencode($url));
-			$counts = json_decode($json, true);
-			$twitter_count = $counts["Twitter"];
+			$json           =   file_get_contents("http://api.sharedcount.com/?url=" . rawurlencode($url));
+			$counts         =   json_decode($json, true);
+			$twitter_count  =   $counts["Twitter"];
+                        $imagehue       =   "White";
 			?>
 				<ul>
-					<li <?php if($imagehue=="White") { ?>id="Whitefacebook"<?php } else { ?>id="Blackfacebook"<?php } ?>>
+					<li id="Whitefacebook">
 						<a href="javascript:postLike('<?php echo $challenge_info[0]['Challenge']['permalink']; ?>');" class="facebook" id="facebookhref"><em>facebook</em></a>
 						<span class="number"><?php //echo $challenge_info[0]['Challenge']['challenge_likes']; ?></span>
 					</li>
-					<li <?php if($imagehue=="White") { ?>id="Whitetwitter"<?php } else { ?>id="Blacktwitter"<?php } ?>>
+					<li id="Whitetwitter">
 						<a href="https://twitter.com/share?url=<?php echo $url; ?>" id="twitterhref" target="blank" class="twitter" data-lang="en" ><em>twitter</em></a>
 						<span class="number"><?php echo $twitter_count; ?></span>
 					</li>
-					<li <?php if($imagehue=="White") { ?>id="Whitecomments"<?php } else { ?>id="Blackcomments"<?php } ?>>
+					<li id="Whitecomments">
 						<a data-animation="fade" style="cursor:pointer;" class="comments" onclick="fbcomments()"><em>comments</em></a>
 						<span class="number"><fb:comments-count href="<?php echo $site_url ?>discover/<?php echo $challenge_info[0]['Challenge']['permalink']; ?>" /></fb:comments-count></span>
 					</li>
@@ -216,116 +218,71 @@ $(document).ready(function(){
 			</div>
 			<!-- info -->
 			<ul class="info">
-				<?php if($difficulty[$challenge_info[0]['Challenge']['difficulty']] == '3') 
-				{
-					$diff = 'hard';
-				}
-				else if($difficulty[$challenge_info[0]['Challenge']['difficulty']] == '2')
-				{
-					$diff = 'medium';
-				}
-				else
-				{
-					$diff = 'easy';
-				} ?>
-				<li class="difficulty <?php echo $diff; ?>">
-					<strong class="title"><?php echo  $difficulty[$challenge_info[0]['Challenge']['difficulty']];?></strong>
+				<li class="difficulty <?php echo $challenge_info[0]['difficulty']['title']; ?>">
+					<strong class="title"><?php echo  $challenge_info[0]['difficulty']['title'];?></strong>
 					<p>Level of Difficulty </p>
 				</li>
 				<li class="people">
-					<strong class="title">00<?php //echo $challenge_info[0]['Challenge']['finished_count_participants']; ?></strong>
+					<strong class="title">0<?php //echo $challenge_info[0]['Challenge']['finished_count_participants']; ?></strong>
 					<p>People Finished This</p>
 				</li>
 				<li class="points">
-					<strong class="title">100<?php //echo $challenge_info[0]['Challenge']['challenge_points']; ?></strong>
+					<strong class="title">0<?php //echo $challenge_info[0]['Challenge']['challenge_points']; ?></strong>
 					<p>Points Value </p>
 				</li>
 			</ul>
 			<div style="height:30px;"></div>
 			</div>
-			<div class="options">
+			<div class="options" style="margin: -153px 0 64px -9px;">
 				<ul>
-				<?php 				
-				if($this->Session->read("session_user_id") == 0) {
-				$redirect_url = $site_url.'discover/'.$challenge_info[0]['Challenge']['permalink'];
-				 ?>
-					<li><a href="#" data-default="#ffffff" data-hover="#fa7000" onClick="FB.login(function(response) { });">Login Host This</a></li>
-					<li><a href="#" data-default="#ffffff" data-hover="#fa7000" onClick="FB.login(function(response) { });">Login Pick Host</a></li>
-				<?php
-				} 
-				else 
-				{ 
-					
-					if($host_mode=="add")
-					 { ?>
-						<li><a onClick="getHostPopup('add','<?=$challenge_info[0]['Challenge']['permalink']?>','challenge_details')" style="cursor:pointer;">Host This</a></li>
-					<?php } else if($host_mode=="edit") { ?>
-					<li><a onClick="getHostPopup('edit','<?=$challenge_info[0]['Challenge']['permalink']?>','challenge_details')" style="cursor:pointer;">Edit</a></li>
-					<?php } else if($host_mode=="invite") { ?>	
-					<li><a onClick="getHostPopup('invite','<?=$challenge_info[0]['Challenge']['permalink']?>','challenge_details')" style="cursor:pointer;">Invite Friends</a></li>
-					<?php } else  { ?>	
-					<li><a >Host This</a></li><?php } ?>
-					<li>
-					<?php if($host_mode!='none') { ?>					
-					<a onclick="PickHostPopup('<?php echo $host_mode; ?>','<?php echo $challenge_info[0]['Challenge']['permalink']; ?>','challenge_details')" data-reveal-id="pickHostModel" data-animation="fade" data-default="#ffffff" data-hover="#fa7000" style="cursor:pointer;">Pick Host</a>
-					<?php } else { ?>
-					<a href="" data-reveal-id="CommonWarningMSG" data-animation="fade" style="cursor:pointer;" onclick="CommonWarningMSG('Pick')">Pick Host</a>
-					<?php } ?>
-					</li>								
-				<?php } ?>
-				</ul>
+<?php if($this->Session->read("session_user_id") == 0) { ?>
+                                    <li><a href="javascript:Loginuser();" data-default="#ffffff" data-hover="#fa7000">Login Host This</a></li>
+                                    <li><a href="javascript:Loginuser();" data-default="#ffffff" data-hover="#fa7000">Login Pick Host</a></li>
+<?php } else { ?>
+                                    <li><a href="<?php echo Router::url('/host_challenge_step1/'.$challenge_info[0]['Challenge']['permalink'], true); ?>" data-default="#ffffff" data-hover="#fa7000">Host This</a></li>
+                                    <li><a href="<?php echo Router::url('/host_challenge_step1/'.$challenge_info[0]['Challenge']['permalink'], true); ?>" data-default="#ffffff" data-hover="#fa7000">Pick Host</a></li>
+<?php }?>
+                                </ul>
+				
 				<span class="or">or</span>
 			</div>
 			<!-- hosts info -->
 			<section class="side-block">
 				<h2>Available Hosts</h2>
-				<?php 
-				$hosts_count = count($challenge_info[0]['Challenge']['available_hosts']);
-				if(isset($challenge_info[0]['Challenge']['available_hosts']) && ($hosts_count > 1))
-				{ ?>					
-				<div class="multi-host" style="display:block;">
-				<ul>
-				<?php for($j=0;$j<$hosts_count;$j++) { ?>
-																
-					<li><div class="crop"><a href="http://www.facebook.com/<?php echo $challenge_info[0]['Challenge']['available_hosts'][$j]['host_fbid']; ?>" target="_blank"><img src="<?php echo $challenge_info[0]['Challenge']['available_hosts'][$j]['host_picture']; ?>?type=normal"  alt="<?php echo $challenge_info[0]['Challenge']['available_hosts'][$j]['host_name']; ?>"  /><span class="overlay"><strong class="number">+ <?php echo $challenge_info[0]['Challenge']['available_hosts'][$j]['host_participant_count']; ?></strong> Participants</span><span class="time"></span></a></div></li>
-				<?php } ?>
-				</ul>
-				</div>
-				  <?php } 
-					else if(isset($challenge_info[0]['Challenge']['available_hosts']) && ($hosts_count == 1)){  ?>
-						<div class="single-host">
-							<div class="host-block">								
-								<figure class="image-holder">
-									<div class="crop">
-									<a href="http://www.facebook.com/<?php echo $challenge_info[0]['Challenge']['available_hosts'][0]['host_fbid']; ?>" target="_blank"><img src="<?php echo $challenge_info[0]['Challenge']['available_hosts'][0]['host_picture']; ?>?type=normal"  alt="<?php echo $challenge_info[0]['Challenge']['available_hosts'][0]['host_name']; ?>"></a></div>
-								</figure>
-								<div class="txt">
-									<strong class="name"><?php echo $challenge_info[0]['Challenge']['available_hosts'][0]['host_name']; ?></strong>
-								</div>
-							</div>
-							<div class="persons-list">
-								<div style="float:left;">
-									<ul style="width: 205px;">
-									<?php										
-									if(isset($challenge_info[0]['Challenge']['available_hosts'][0]['host_participants']))
-									{ 
-										foreach($challenge_info[0]['Challenge']['available_hosts'][0]['host_participants'] as $participants)
-										{
-									?>										
-									<li><a href="http://www.facebook.com/<?php echo $participants['User']['user_fbid']; ?>" target="_blank"><img src="<?php echo $participants['User']['user_profile_picture']; ?>?type=square"  alt="<?php echo $participants['User']['user_username']; ?>"></a></li>
-									<?php
-									 }										
-									} ?>
-									</ul>
-								</div>
-								<div>						
-									<br/><p><?php echo count($challenge_info[0]['Challenge']['available_hosts'][0]['host_participants']); ?> participants in this challenge.</p>
-								</div>
-							</div>
-						</div>	
-					<?php } ?>
+<?php 
+$hosts_count = count($available_host);
+if($hosts_count > 0) { ?>
+                                <div class="single-host">
+                                    <div class="host-block">
+                                            <figure class="image-holder">
+                                                    <a href="#"><img height="101" width="100" alt="image description" src="<?php echo $fullurl;?>img/useruploads/<?php echo $available_host[0]['user']['user_profile_picture'];?>"></a>
+                                            </figure>
+                                            <div class="txt">
+                                                    <strong class="name"><?php echo $available_host[0]['user']['user_firstname'];?></strong>
+                                            </div>
+                                    </div>
+<?php if($starts_in) { ?>
+                                    <div class="note">
+                                            <p>Starts in :<?php echo $starts_in['minutes'];?> minutes</p>
+                                    </div>
+<?php } if($hosts_count > 1) {?>
+                                    <div class="persons-list">
+                                        <ul>
+<?php for($j=1;$j<$hosts_count;$j++) { ?>
+                                <li><a href="#"><img height="50" width="50" alt="image description" src="<?php echo $fullurl;?>img/useruploads/<?php echo $available_host[$j]['user']['user_profile_picture'];?>"></a></li>
+
+    
+<?php } ?>
+                    
+                                        </ul>
+                                        <p><?php echo $hosts_count;?> participants in this challenge</p>
+                                </div>
+<?php } ?>
+                            </div>
+<?php } ?>
 			</section>
 			<!-- friends list -->
+      <!--
 			<section class="side-block">
 				<h2>My Friends</h2>
 				<div class="persons-list">
@@ -360,6 +317,7 @@ $(document).ready(function(){
 					</div>
 				</div>
 			</section>
+      -->
 		</aside>
 	</div>
 </div>

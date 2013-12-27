@@ -8,6 +8,9 @@
     {
 		var baseurl = $('#baseurl').val();
         $('#badgecombo').html('<img src="'+baseurl+'img/badgecolor/'+img+'" border="0" style="border-radius:100px; width:200px;" />');
+		$('#badge_image_div').css('background-color','');
+		$('#badge_image_div').css('background','url(\''+baseurl+'img/badgecolor/'+img+'\')');
+		
         $('#comboimg').val(img);
         $('#badgecolor_hidden').val(id);
     }
@@ -111,7 +114,7 @@
 		<div class="clear">&nbsp;</div>
 		<div class="discrption_label_right" style="margin:0 360px 0 0;">710 * 480 .png or .jpeg</div>
 		<!--drag & drop starting here-->
-			<form id="upload" method="post" action="challenge_uploads" enctype="multipart/form-data">
+			<form id="upload" method="post" action="challenge_uploads" enctype="multipart/form-data" style="width:710px;float:left;">
 				<input type="hidden" name="controller_action" id="controller_action" value="add" />
 				<input type="hidden" name="fileuploaded_session_name" id="fileuploaded_session_name" value="challenge_add_file_upload_name" />
 				<input type="hidden" name="fileuploaded" id="fileuploaded" />
@@ -128,6 +131,24 @@
 				<!-- The file uploads will be shown here -->
 				</ul>
 			</form>
+			<div style="float:left; width:30%; margin-left:20px;">
+		<div style="border-radius:100px;height:200px;margin:16px 60px 10px; <?php if(isset($newchallengeinfo['chalngparentchildimagename']) && $newchallengeinfo['chalngparentchildimagename']) { ?>background:url('../img/badgedesign/<?php echo $newchallengeinfo['chalngparentchildimagename']; ?>'); <?php } else { ?>background-color:#EEEEEE;<?php } ?>" id="child_image_div"></div>
+		
+			<div id="badge_image_div" style="position: absolute; background-color:#AAAAAA; border-radius: 100px; width: 150px; height: 150px; margin: -184px 0 0 86px;"></div>
+		<div id="parent_image_div" style="position: absolute; margin: -157px 0 0 109px;">
+		<?php if(isset($newchallengeinfo['chalngparentimagename'])) { ?>
+			<img width="100" src="../img/catuploads/<?php echo $newchallengeinfo['chalngparentimagename']; ?>">
+		<?php } ?>
+		</div>
+		
+		<div id="difficulty_image_div" style="position: absolute; margin: -83px 0 0 175px">
+		<?php if(isset($newchallengeinfo['chalngdifficultyimagename'])) { ?>
+			<img width="33" src="../img/diffuploads/<?php echo $newchallengeinfo['chalngdifficultyimagename']; ?>">    
+		<?php } ?>
+		</div>
+		<input type="hidden" id="difficultyimagename" value="<?php if(isset($newchallengeinfo['chalngdifficultyimagename']) && $newchallengeinfo) { echo $newchallengeinfo['chalngdifficultyimagename']; } ?>" />
+		<div style="color:#666666; text-align:center;" id="badgename"><?php echo $newchallengeinfo['badge_title']; ?></div>
+  </div>
 		<!--drag & drop ends here-->
 		<div class="clear"></div>
 		<hr/>

@@ -187,14 +187,14 @@ class PImageComponent extends Component
 						//$amount_of_blur = 280;
 						//$amount_of_blur = 290;
 					//	$amount_of_blur = 200;
-//						$amount_of_blur = 180;
-//						for($i=0; $i<=$amount_of_blur; $i++)
-//						{
-//						   imagefilter($oldImage,IMG_FILTER_GAUSSIAN_BLUR);NO NEED....
-//						}
+						$amount_of_blur = 180;
+						for($i=0; $i<=$amount_of_blur; $i++)
+						{
+						   imagefilter($oldImage,IMG_FILTER_GAUSSIAN_BLUR);
+						}
 					//	imagefilter($oldImage, IMG_FILTER_BRIGHTNESS, 100);
 					//	imagefilter($oldImage, IMG_FILTER_BRIGHTNESS, 90);
-//						imagefilter($oldImage, IMG_FILTER_BRIGHTNESS, 80);
+						imagefilter($oldImage, IMG_FILTER_BRIGHTNESS, 80);
 						//imagejpeg($oldImage);
 						//imagedestroy($oldImage);
 				}

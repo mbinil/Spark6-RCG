@@ -3,9 +3,13 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Router::url('../css/autostyle.css',true); ?>">
 <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.3.2/select2.js"></script>
 <script type="text/javascript" src="<?php echo Router::url('../js/autoapp.js',true); ?>"></script><?php */?>
+<?php
+echo $this->Html->css('bootstrap-tokenfield.css');
+echo $this->Html->script('bootstrap-tokenfield.js');
+?>
 <script type="text/javascript">
 function just() {
-	document.getElementById("challengetagWord").value = $("#tagsinput .tagsinput").val();
+	document.getElementById("challengetagWord").value = $("#demo-input-free-tagging").val();
 }
 </script>
 <style>
@@ -68,7 +72,7 @@ function just() {
 	<div style="width:100%;">
       <div style="width:65%; float:left;">
 	  	<div style="margin:10px 0; font-weight:bold; font-size: 18px;">Related Challenge Tags:</div>
-        <div id="tagsinput"><input name="tagsinput" class="tagsinput" value="<?php if($newchallengeinfo[0]['Challenge']['tags']!=''){ echo $newchallengeinfo[0]['Challenge']['tags']; } ?>" /><input type="hidden" id="challengetagWord" name="challengetagWord" value="<?php if($newchallengeinfo[0]['Challenge']['tags']!=''){ echo $newchallengeinfo[0]['Challenge']['tags']; } ?>" /></div>
+        <div id="tagsinput"><input name="tagsinput"  value="<?php if($newchallengeinfo[0]['Challenge']['tags']!=''){ echo $newchallengeinfo[0]['Challenge']['tags']; } ?>" id="demo-input-free-tagging" /><input type="hidden" id="challengetagWord" name="challengetagWord" value="<?php if($newchallengeinfo[0]['Challenge']['tags']!=''){ echo $newchallengeinfo[0]['Challenge']['tags']; } ?>" /></div>
 		<!--<div class="multisel editors">
 		  <div class="xfvvx"></div>
 		</div>-->
@@ -164,3 +168,17 @@ function just() {
   <!--discrption end-->
 </div>
 <!--right said end-->
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<script type="text/javascript">
+        $(document).ready(function() {
+		$('#demo-input-free-tagging').tokenfield({
+  autocomplete: {
+    source: <?php echo $challengetags; ?>,
+    delay: 100
+  },
+  showAutocompleteOnFocus: true
+})
+           
+        });
+        </script>

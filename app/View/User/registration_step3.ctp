@@ -2,14 +2,18 @@
 <link rel="stylesheet" type="text/css" href="<?php echo Router::url('../css/autostyle.css',true); ?>">
 <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.3.2/select2.js"></script>
 <!--<script type="text/javascript" src="<?php echo Router::url('../js/autoapp.js',true); ?>"></script>-->
+<link rel="stylesheet" type="text/css" href="<?php echo Router::url('../css/bootstrap-tokenfield.css',true); ?>">
+
+
+<script type="text/javascript" src="<?php echo Router::url('../js/bootstrap-tokenfield.js',true); ?>"></script>
 <script type="text/javascript">
 /*function just() {
 	document.getElementById("challengetagWord").value = $("#tagsinput .tagsinput").val();
 }*/
 function ajax_reg_step3()
 {
-	//alert(document.getElementsByClassName("tagsinput")[0].value);
-	var hobby= document.getElementsByClassName("tagsinput")[0].value;
+	
+	var hobby= document.getElementById("demo-input-free-tagging").value;
 	var reslt=regstep3Fieldcheck();
 	if(reslt!=false)
 	{
@@ -29,9 +33,9 @@ function ajax_reg_step3()
 }
 function regstep3Fieldcheck()
 {
-if(document.getElementsByClassName("tagsinput")[0].value=="")
+if(document.getElementById("demo-input-free-tagging").value=="")
 {
-$(".tagsinput").css("border-color", "red");
+$("#demo-input-free-tagging").css("border-color", "red");
 				$('#message_span').html('Enter your hobbies!!');
 				$('#alert_div').show();
 				return false;
@@ -39,9 +43,9 @@ $(".tagsinput").css("border-color", "red");
 }
 function hoby_fn()
 {
-if(document.getElementsByClassName("tagsinput")[0].value!="")
+if(document.getElementById("demo-input-free-tagging").value!="")
 {
-$(".tagsinput").css("border-color", "#BDC3C7");
+$("#demo-input-free-tagging").css("border-color", "#BDC3C7");
 $('#alert_div').hide();
 }
 }
@@ -79,7 +83,7 @@ $('#alert_div').hide();
       <div style="width:65%; float:left;">
 	  	<div style="margin:10px 0; font-weight:bold; font-size: 18px;">Related Challenge Tags:</div>
         <div id="tagsinput">
-            <input name="tagsinput" class="tagsinput" value="<?php if(isset($newchallengeinfo['tags'])) { echo $newchallengeinfo['tags'];} ?>" onblur="hoby_fn()" />
+            <input name="tagsinput"  value="<?php if(isset($newchallengeinfo['tags'])) { echo $newchallengeinfo['tags'];} ?>" onblur="hoby_fn()"  id="demo-input-free-tagging"/>
             <input type="hidden" id="challengetagWord" name="challengetagWord" value="" />
         </div>
 		<!--<div class="multisel editors">
@@ -97,3 +101,15 @@ $('#alert_div').hide();
 		<br /> 
 	</div>
 </div>
+<script type="text/javascript">
+        $(document).ready(function() {
+		$('#demo-input-free-tagging').tokenfield({
+  autocomplete: {
+    source: <?php echo $usertags; ?>,
+    delay: 100
+  },
+  showAutocompleteOnFocus: true
+})
+           
+        });
+        </script>

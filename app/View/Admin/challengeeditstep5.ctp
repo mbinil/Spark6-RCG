@@ -8,6 +8,8 @@ function badgecombo(img,id)
 {
 	var baseurl = $('#baseurl').val();
 	$('#badgecombo').html('<img src="'+baseurl+'img/badgecolor/'+img+'" border="0" style="border-radius:100px; width:200px;" />');
+	$('#badge_image_div').css('background-color','');
+	$('#badge_image_div').css('background','url(\''+baseurl+'img/badgecolor/'+img+'\')');
 	$('#comboimg').val(img);
 	$('#badgecolor_hidden').val(id);
 }
@@ -117,7 +119,7 @@ function deletebadgecombo(id,val)
     <div class="clear">&nbsp;</div>
     <div class="discrption_label_right" style="margin:0 360px 0 0;">710 * 480 .png or .jpeg</div>
     <!--drag & drop starting here-->
-    <form id="upload" method="post" action="<?php echo Router::url('/admin/challenge_uploads', true); ?>" enctype="multipart/form-data">
+    <form id="upload" method="post" action="<?php echo Router::url('/admin/challenge_uploads', true); ?>" enctype="multipart/form-data" style="width:710px;float:left;">
         <input type="hidden" name="controller_action" id="controller_action" value="edit" />
 		<input type="hidden" name="fileuploaded_session_name" id="fileuploaded_session_name" value="challenge_add_file_upload_name" />
         <input type="hidden" id="temp_fileuploaded" name="temp_fileuploaded" value="<?php if($newchallengeinfo[0]['Challenge']['hero_image']!=''){ echo $newchallengeinfo[0]['Challenge']['hero_image']; } ?>"/>
@@ -134,6 +136,19 @@ function deletebadgecombo(id,val)
         <!-- The file uploads will be shown here -->
       </ul>
     </form>
+	<div style="float:left; width:30%; margin-left:20px;">
+        <div id="child_image_div" style="background-color:#EEEEEE;border-radius:100px;height:200px;margin:-50px 60px 10px;<?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename']) && $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']) { ?> background:url('<?php echo Router::url('/', true); ?>img/badgedesign/<?php echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; ?>');<?php }?>"></div>
+        <div id="badge_image_div" style="position: absolute; <?php if(isset($newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename'])) { ?>background:url('<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo $newchallengeinfo[0]['Challenge']['chalngbadgecolorimagename']; ?>');<?php } else { ?>background-color:#AAAAAA; <?php } ?> border-radius: 100px; width: 150px; height: 150px; margin: -184px 0px 0px 86px;"></div>
+        <div style="position: absolute; margin: -158px 0 0 110px;" id="parent_image_div" >
+            <?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentimagename']) && $newchallengeinfo) { ?><img src="<?php echo Router::url('/', true); ?>img/catuploads/<?php echo $newchallengeinfo[0]['Challenge']['chalngparentimagename']; ?>" width="100" /> <?php }?>
+        </div>
+        <div style="position: absolute; margin: -84px 0 0 175px;" id="difficulty_image_div" >
+            <?php if(isset($newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']) && $newchallengeinfo) { ?><img src="<?php echo Router::url('/', true); ?>img/diffuploads/<?php echo $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']; ?>" width="33" /> <?php }?>
+        </div>
+        <div style="color:#666666;text-align:center;" id="badgename"><?php echo $newchallengeinfo[0]['Challenge']['badge_title']; ?></div>
+        <input type="hidden" id="difficultyimagename" value="<?php if(isset($newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']) && $newchallengeinfo) { echo $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename']; } ?>" />
+      </div>
+        
     <!--drag & drop ends here-->
     <div class="clear"></div>
     <hr/>

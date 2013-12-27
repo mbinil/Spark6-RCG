@@ -19,11 +19,12 @@ function changeNotification(need,id)
 {
     $.ajax({  //Make the Ajax Request
             type: "POST",  
-            url: "ajax_change_invitation",
+            url: "admin/ajax_change_invitation",
             data: "need="+need+"&id="+id,  //data
             async:false,
             success: function(response) {
-                alert(response);
+                if(response == 1)
+					window.location	=	'discover';
             } 
     });
 }
@@ -1602,45 +1603,53 @@ function challengeeditstep5()
  */
 function challengeSave()
 {
+	alert("1");
     var fileuploaded    =   $("#fileuploaded").val();
     var badgecolor      =   $("#comboimg").val();
     var badgecolor_id   =   $("#badgecolor_hidden").val();
     if(fileuploaded=="")
     {
-            $("#drop").attr('style',"width:705px;height:150px; border: 2px dashed #FF0000 !important;");
-            $('#message_span').html('Hero image is required!!');
-            $('#alert_div').show();
+		alert("2");
+		$("#drop").attr('style',"width:705px;height:150px; border: 2px dashed #FF0000 !important;");
+		$('#message_span').html('Hero image is required!!');
+		$('#alert_div').show();
     }
     else
     {
+		alert("3");
         var imgArray = ["png", "jpg", "jpeg"];
         var img_type = fileuploaded.slice(-3);
         var availableimgExt = $.inArray(img_type, imgArray);
         if(availableimgExt < 0)
         {
-                $("#drop").attr('style',"width:105%;height:160px; border: 2px dashed #FF0000 !important;");
-                $('#message_span').html('Hero image must be of type .png or .jpeg!!');
-                $('#alert_div').show();
+			alert("3");
+			$("#drop").attr('style',"width:105%;height:160px; border: 2px dashed #FF0000 !important;");
+			$('#message_span').html('Hero image must be of type .png or .jpeg!!');
+			$('#alert_div').show();
         }
         else
         {
+			alert("4");
             if(!$("#comboimg").val())
             {
+				alert("5");
                 $("#badgecombo").attr('style',"float:left;border: 2px dashed #FF0000 !important;");
                 $('#message_span').html('Badge color is required!!');
                 $('#alert_div').show();
             }
             else
             {
+				alert("6");
                 $.ajax({  //Make the Ajax Request
 					type: "POST",  
 					url: "ajax_challengeadd",
 					data: "hero_image="+fileuploaded+"&badge_color="+badgecolor_id,  //data
 					success: function(response) {
-						if(response=='1')
+						alert(response);
+						/*if(response=='1')
 						{
 							window.location = "challenges?success";
-						}
+						}*/
 					} 
 				});
             }
@@ -2105,7 +2114,7 @@ function ajax_manage_account_step2 ()
 
 function ajax_manage_account_step3()
 {
-	var hobby= document.getElementsByClassName("tagsinput")[0].value;
+	var hobby= document.getElementById("demo-input-free-tagging").value;
 	var reslt=regstep3Fieldcheck();
 	if(reslt!=false)
 	{

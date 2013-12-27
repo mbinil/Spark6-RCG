@@ -117,7 +117,7 @@ class Userchallenge extends AppModel
     public function getChallengeHostArray($condition)
     {
         return $challengesinfo = $this->find('all',array('fields'=>array('Userchallenge.*,user.user_profile_picture,user.user_firstname,user.id,
-            challenge.name,challenge.learn_more,challenge.hero_image,challenge.permalink,difficulty.title,difficulty.decal,category.id,category.title'),
+            challenge.daily_commitment,challenge.name,challenge.learn_more,challenge.daily_commitment,challenge.hero_image,challenge.permalink,difficulty.title,difficulty.decal,category.id,category.title'),
                                                             'joins' => array(
                                                                                 array(
                                                                                     'table' => 'users',
@@ -143,7 +143,7 @@ class Userchallenge extends AppModel
                                                                                 array(
                                                                                     'table' => 'categories',
                                                                                     'alias' => 'category',
-                                                                                    'type' => 'inner',
+                                                                                    'type' => 'left',
                                                                                     'foreignKey' => false,
                                                                                     'conditions'=> array('category.id = challenge.child_category')
                                                                                 )

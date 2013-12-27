@@ -44,9 +44,9 @@ class Category extends AppModel
         public function getChildFromParent($id)
         {
             if($id)
-                $condition  =   array('parent != '=>'0','parent'=>$id);
+                $condition  =   array('parent != '=>'0','parent'=>$id,'status'=>'1');
             else
-                $condition  =   array('parent != '=>'0');
+                $condition  =   array('parent != '=>'0','status'=>'1');
             return $this->find('all',array('conditions'=> $condition ));
         }
         
