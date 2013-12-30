@@ -202,7 +202,9 @@ if($i==0) { ?>
           <?php if( $diff['Difficulty']['id'] == $newchallengeinfo[0]['Challenge']['difficulty']) { ?>
             <input type="hidden" value="<?php echo $newchallengeinfo[0]['Challenge']['difficulty']; ?>" id="chaldiff">
             
-      <?php $i++; $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename'] = $diff['Difficulty']['decal']; } } ?>
+      <?php $i++; $newchallengeinfo[0]['Challenge']['chalngdifficultyimagename'] = $diff['Difficulty']['decal']; } else { ?>
+	  <input type="hidden" value="" id="chaldiff">
+<?php } } ?>
       
     </div>
     <div style="float:right; width:30%; margin-left:20px;">

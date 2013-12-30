@@ -60,6 +60,7 @@ function validateFieldcheck(id,val)
     <!--drag & drop starting here-->
     <form id="upload" method="post" action="category_uploads" enctype="multipart/form-data">
       <input type="hidden" name="fileuploaded" id="fileuploaded" />
+	  <input type="hidden" name="draganddropfrom" id="draganddropfrom" value="categoryparent_add" />
       <input type="hidden" name="root_path" id="root_path" value="<?php echo Router::url('/app/webroot/img/catuploads', true); ?>" />
 	  <input type="hidden" name="image_rand_num" id="image_rand_num" value="" />
       <div id="drop" style="background-color: white;width:105%;height:120px;"> <br/>

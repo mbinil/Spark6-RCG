@@ -1412,7 +1412,7 @@ class AdminController extends AppController
 			if(isset($id))
 			{
 				$newchallengeinfo = $this->Session->read('newchallengeinfo');
-				if($id != $newchallengeinfo[0]['Challenge']['id'])
+				if(isset($newchallengeinfo[0]['Challenge']['id']) && ($id != $newchallengeinfo[0]['Challenge']['id']))
 				{
 					$this->Session->delete('newchallengeinfo');
 					unset($_SESSION['newchallengeinfo']);
@@ -1870,10 +1870,14 @@ class AdminController extends AppController
 				$newchallengeinfo = $this->Session->read("newchallengeinfo");
 				$this->loadModel("Badgecombo");
 				$this->set('badgecombos',$this->Badgecombo->getBadgecombos(array('gradient'=>'0')));
-				if($newchallengeinfo[0]['Challenge']['badge_color']!='')
+				$selectedbc = '';
+				if(isset($newchallengeinfo[0]['Challenge']['badge_color']) && $newchallengeinfo[0]['Challenge']['badge_color']!='')
 				{
 					$selectedbandgecombo = $this->Badgecombo->selectedBadgecombo($newchallengeinfo[0]['Challenge']['badge_color']);
-					$selectedbc = $selectedbandgecombo[0]['Badgecombo']['comboimg'];
+					if(isset($selectedbandgecombo[0]['Badgecombo']['comboimg']))
+					{
+						$selectedbc = $selectedbandgecombo[0]['Badgecombo']['comboimg'];
+					}
 				}
 				else
 				{
@@ -1940,10 +1944,10 @@ class AdminController extends AppController
 		if(!empty($newchallengeinfo))
 		{
 		if($newchallengeinfo[0]['Challenge']['host_set_start_date'] == 0)
-                {
-                    $newchallengeinfo[0]['Challenge']['start_date'] =   '';
-                    $newchallengeinfo[0]['Challenge']['end_date']   =   '';
-                }
+		{
+			$newchallengeinfo[0]['Challenge']['start_date'] =   '';
+			$newchallengeinfo[0]['Challenge']['end_date']   =   '';
+		}
 		$newchallengeinfo	=	array("id"	=>	$id,
 			"name" => $newchallengeinfo[0]['Challenge']['name'],
 			"badge_title" => $newchallengeinfo[0]['Challenge']['badge_title'],

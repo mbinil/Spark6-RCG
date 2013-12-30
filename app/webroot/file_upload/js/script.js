@@ -32,13 +32,15 @@ $(function(){
 
             var root_path = $("#root_path").val();
             
-            var tpl = $('<li class="working"><img width="60" height="60" id="dropimagediv"><p style="width:auto !important;"></p><input class="dial" type="text" value="100" data-width="48" data-height="48"'+
-                ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" data-displayInput="1" data-displayPrevious="1" /><span></span></li>');
+            var tpl = $('<li class="working"><img width="60" height="60" id="dropimagediv" style="background-color:#999999;" ><p style="width:auto !important;"></p><input class="dial" type="text" value="100" data-width="48" data-height="48"'+
+                ' data-fgColor="#0788a5" data-readOnly="1" data-bgColor="#3e4043" data-displayInput="1" data-displayPrevious="1" /><span></span><img id="OriginalHiddenimagediv" style="display:none;"></li>');
 
                  
 if(!$('#fileuploaded').val()) {
             // Add the HTML to the UL element
             data.context = tpl.appendTo(ul);
+			if(document.getElementById('draganddropfrom').value == 'challenges_edit' || document.getElementById('draganddropfrom').value == 'challenges_add')
+				document.getElementById('draganddropimagesuccess').value = 0;
 }
 
             // Initialize the knob plugin
@@ -58,26 +60,30 @@ if(!$('#fileuploaded').val()) {
 					url	=	'../ajax_removefilename';
 				else
 					url	=	'ajax_removefilename';
-		disable_second_file_browser =   0;			
-                $.ajax({  //Make the Ajax Request
-			type: "POST",  
-			url: url,
-			data: "file_session_name="+$('#fileuploaded_session_name').val(),  //data
-                        success: function(response) {
-			} 
-		});
-$('#fileuploaded').val('');
+				disable_second_file_browser =   0;			
+						$.ajax({  //Make the Ajax Request
+					type: "POST",  
+					url: url,
+					data: "file_session_name="+$('#fileuploaded_session_name').val(),  //data
+								success: function(response) {
+					} 
+				});
+			if(document.getElementById('draganddropfrom').value == 'challenges_edit')			
+				document.getElementById('draganddropimagesuccess').value = 2;
+			if(document.getElementById('draganddropfrom').value == 'challenges_add')			
+				document.getElementById('draganddropimagesuccess').value = 0;	
+			$('#fileuploaded').val('');
                 tpl.fadeOut(function(){
                     tpl.remove();
                 });
 
             });
-if(!$('#fileuploaded').val()) {
-            // Automatically upload the file once it is added to the queue
-            var jqXHR = data.submit();
-
-            $('#fileuploaded').val(data.files[0].name);
-}
+			if(!$('#fileuploaded').val()) {
+				// Automatically upload the file once it is added to the queue
+				var jqXHR = data.submit();
+	
+				$('#fileuploaded').val(data.files[0].name);
+			}
             
             
         },
@@ -93,7 +99,7 @@ if(!$('#fileuploaded').val()) {
 
             if(progress == 100){
                 data.context.removeClass('working');
-                callFun(data);
+				callFun(data);
             }
         },
 
@@ -141,18 +147,42 @@ if(!$('#fileuploaded').val()) {
 				if($('#image_rand_num').val())
 				{
 						rand_num = $('#image_rand_num').val();
+						
 						document.getElementById("dropimagediv").src = root_path+'/'+rand_num+data.files[0].name;
+						document.getElementById("OriginalHiddenimagediv").src = root_path+'/'+rand_num+data.files[0].name;
 				}
 				else
 				{
 						document.getElementById("dropimagediv").src = root_path+'/'+data.files[0].name;
+						document.getElementById("OriginalHiddenimagediv").src = root_path+'/'+data.files[0].name;
 				}
 			}
 			else 
 			{
-				clearInterval(intId);  
+				clearInterval(intId);
+				
+				document.getElementById('draganddropimagesuccess');
+				
+				var img = document.getElementById('OriginalHiddenimagediv');
+	
+				// Original
+				var width, height;
+				
+				// Display
+				var d_width = img.width;
+				
+				if((document.getElementById('draganddropfrom').value == 'challenges_add' || document.getElementById('draganddropfrom').value == 'challenges_edit') && ( d_width < 1400 || d_width > 3000 ))
+				{
+					document.getElementById('draganddropimagesuccess').value = 1;
+				}
+				else if ( document.getElementById('draganddropfrom').value != '' )
+				{
+					document.getElementById('draganddropimagesuccess').value = 2;	
+				}
 			}
 		}
 	}
+	
+	
 
 });

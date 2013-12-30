@@ -68,6 +68,7 @@ function validateFieldcheck(id,val)
       <input type="hidden" id="temp_fileuploaded" name="temp_fileuploaded" value="<?php echo $pcatinfo[0]['Category']['decal']?$pcatinfo[0]['Category']['decal']:''; ?>"/>
       <input type="hidden" name="root_path" id="root_path" value="<?php echo Router::url('/app/webroot/img/catuploads', true); ?>" />
       <input type="hidden" id="fileuploaded" value="" name="fileuploaded"/>
+	  <input type="hidden" name="draganddropfrom" id="draganddropfrom" value="categoryparent_edit" />
 	  <input type="hidden" name="image_rand_num" id="image_rand_num" value="" />
       <div id="drop" style="background-color: white;width:105%;height:120px;"> <br/>
         <br/>

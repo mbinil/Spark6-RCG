@@ -1273,6 +1273,7 @@ function gottochallengestep2()
 
 function challengeeditstep2()
 {	
+	var baseurl			=   $('#baseurl').val();
 	var challengeid     =   $("#challengeid").val();
 	var challengename   =   $.trim($("#challengename").val());
 	var badgetitle      =   $.trim($("#badgetitle").val());
@@ -1282,29 +1283,28 @@ function challengeeditstep2()
 	var learnmore       =   $.trim($("#learnmore").val());
 	var repeatable      =   $('#repeatable').is(':checked');
 	var status          =   $('#status').is(':checked');
-        var return_flag     =   0;
-        if(learnmore=="" || learnmore.length < 3)
+	var return_flag     =   0;
+	if(learnmore=="" || learnmore.length < 3)
 	{
-                return_flag     =   1;
+        return_flag     =   1;
 		$("#learnmore").css("border-color", "red");
-                if(learnmore=="")
-                    $('#message_span').html('Learn More is required!!');
-                else if(learnmore.length < 3)
-                    $('#message_span').html('Learn More must be minimum 3 characters!!');
-                
-                $('#alert_div').show();
+		if(learnmore=="")
+			$('#message_span').html('Learn More is required!!');
+		else if(learnmore.length < 3)
+			$('#message_span').html('Learn More must be minimum 3 characters!!');
+		
+		$('#alert_div').show();
 	}
-        if(how=="" || how.length < 3)
+    if(how=="" || how.length < 3)
 	{
-                return_flag     =   1;
+        return_flag     =   1;
 		$("#how").css("border-color", "red");
-                
-                if(how=="")
-                    $('#message_span').html('How is required!!');
-                else if(how.length < 3)
-                    $('#message_span').html('How must be minimum 3 characters!!');
-                
-                $('#alert_div').show();
+		if(how=="")
+			$('#message_span').html('How is required!!');
+		else if(how.length < 3)
+			$('#message_span').html('How must be minimum 3 characters!!');
+		
+		$('#alert_div').show();
 	}
         if(why=="" || why.length < 3)
 	{
@@ -1356,12 +1356,12 @@ function challengeeditstep2()
 		$("#learnmore").css("border-color", "#BDC3C7");
 		$.ajax({  //Make the Ajax Request
 			type: "POST",  
-			url: "../ajax_challengeeditstep1",
+			url: baseurl+"admin/ajax_challengeeditstep1",
 			data: "challengeid="+challengeid+"&challengename="+challengename+"&badgetitle="+badgetitle+"&dailycommit="+dailycommit+"&why="+why+"&how="+how+"&learnmore="+learnmore+"&repeatable="+repeatable+"&status="+status,  //data
 			success: function(response) {
 				if(response=='1')
 				{
-					window.location = "../challengeeditstep2/"+challengeid;
+					window.location = baseurl+"admin/challengeeditstep2/"+challengeid;
 				}
 			} 
 		});
@@ -1428,46 +1428,46 @@ function gottochallengestep3()
 /*Fetching values from step2 form. Storing to session array and sending to step3*/
 function challengeeditstep3()
 {	
+	var baseurl			 			= $('#baseurl').val();
 	var challengeid                 =   $("#challengeid").val();
 	var chalngparent                =   $("#chalngparent").val();
 	var chalngparentimagename       =   $("#parent_image_name").val();      //parent image name
 	var chalngparentchildimagename  =   $("#child_image_name").val();       //child image name
-        var chalngparentchild           =   $("#child_category_val").val();
+    var chalngparentchild           =   $("#child_category_val").val();
 	var chalnglen                   =   $("#chalnglen").val();
 	var chalngwhosets               =   $('input:radio[name="chalngwhosets"]:checked').val();
 	var chalngbegining              =   getDateFormat($('#datepicker-from').datepicker('getDate'));
 	var chalngending                =   getDateFormat($('#datepicker-to').datepicker('getDate'));
-        var return_flag                 =   0;
+    var return_flag                 =   0;
         
-        if(chalngparentchild == '')
-        {
-            $('#message_span').html('Select a child category!!');
-            $('#alert_div').show();
-            return_flag =   1;
-        }
+	if(chalngparentchild == '')
+	{
+		$('#message_span').html('Select a child category!!');
+		$('#alert_div').show();
+		return_flag =   1;
+	}
 	if(chalngparent=="")
 	{
             $('#message_span').html('Select a parent category!!');
             $('#alert_div').show();
             return_flag =   1;
 	}
-        
 	else
 	{
-            if(return_flag  ==   0) 
-            {
+		if(return_flag  ==   0) 
+		{
 		$.ajax({  //Make the Ajax Request
 			type: "POST",  
-			url: "../ajax_challengeeditstep2",
+			url: baseurl+"admin/ajax_challengeeditstep2",
 			data: "challengeid="+challengeid+"&chalngparent="+chalngparent+"&chalngparentchild="+chalngparentchild+"&chalngparentimagename="+chalngparentimagename+"&chalngparentchildimagename="+chalngparentchildimagename+"&chalnglen="+chalnglen+"&chalngwhosets="+chalngwhosets+"&chalngbegining="+chalngbegining+"&chalngending="+chalngending,  //data
 			success: function(response) {
 				if(response=='1')
 				{
-					window.location = "../challengeeditstep3/"+challengeid;
+					window.location = baseurl+"admin/challengeeditstep3/"+challengeid;
 				}
 			} 
 		});
-            }
+        }
 	}
 }
 
@@ -1501,24 +1501,25 @@ function gottochallengestep4()
 /*Fetching values from step3 form. Storing to session array and sending to step4*/
 function challengeeditstep4()
 {	
-	var challengeid = $("#challengeid").val();
+	var baseurl			 = $('#baseurl').val();
+	var challengeid 	 = $("#challengeid").val();
 	var challengetagWord = $("#challengetagWord").val();
 	if(challengetagWord=="")
 	{
-                $('#message_span').html('Challenge tag is required!!');
-                $('#alert_div').show();
+		$('#message_span').html('Challenge tag is required!!');
+		$('#alert_div').show();
 		$("#tagsinput div").css("border-color", "red");
 	}
 	else
 	{
 		$.ajax({  //Make the Ajax Request
 			type: "POST",  
-			url: "../ajax_challengeeditstep3",
+			url: baseurl+"admin/ajax_challengeeditstep3",
 			data: "challengeid="+challengeid+"&challengetagWord="+challengetagWord,  //data
 			success: function(response) {
 				if(response=='1')
 				{
-					window.location = "../challengeeditstep4/"+challengeid;
+					window.location = baseurl+"admin/challengeeditstep4/"+challengeid;
 				}
 			} 
 		});
@@ -1565,33 +1566,34 @@ function gottochallengestep5()
 /*Fetching values from step4 form. Storing to session array and sending to step5*/
 function challengeeditstep5()
 {	
+	var baseurl			   			=   $('#baseurl').val();
 	var challengeid                 =   $("#challengeid").val();
 	var chaldiff                    =   $("#chaldiff").val();
 	var prenot                      =   $("#prenot").val();
 	var custnot                     =   $("#custnot").val();
 	var notification_frequency      =   $("#notification_frequency").val();
-        var chalngdifficultyimagename   =   $("#difficultyimagename").val();      //difficulty image name
+    var chalngdifficultyimagename   =   $("#difficultyimagename").val();      //difficulty image name
 	if(prenot=="" && custnot=="")
 	{
 		$('#message_span').html('Select pre-written check-in notification or enter custom check-in notification!!');
-                $('#alert_div').show();
+        $('#alert_div').show();
 		$("#custnot").css("border-color", "red");
 	}
-        if(chaldiff=="")
+    if(chaldiff=="")
 	{
-                $('#message_span').html('Select one of the difficulty!!');
-                $('#alert_div').show();
+		$('#message_span').html('Select one of the difficulty!!');
+		$('#alert_div').show();
 	}
 	if(chaldiff!="" && (prenot!="" || custnot!="") )
 	{
 		$.ajax({  //Make the Ajax Request
 			type: "POST",  
-			url: "../ajax_challengeeditstep4",
+			url: baseurl+"admin/ajax_challengeeditstep4",
 			data: "challengeid="+challengeid+"&chaldiff="+chaldiff+"&chalngdifficultyimagename="+chalngdifficultyimagename+"&pre_notification="+prenot+"&custom_notification="+custnot+"&notification_frequency="+notification_frequency,  //data
 			success: function(response) {
 				if(response=='1')
 				{
-					window.location = "../challengeeditstep5/"+challengeid;
+					window.location = baseurl+"admin/challengeeditstep5/"+challengeid;
 				}
 			} 
 		});
@@ -1603,58 +1605,68 @@ function challengeeditstep5()
  */
 function challengeSave()
 {
-	alert("1");
-    var fileuploaded    =   $("#fileuploaded").val();
-    var badgecolor      =   $("#comboimg").val();
-    var badgecolor_id   =   $("#badgecolor_hidden").val();
-    if(fileuploaded=="")
-    {
-		alert("2");
-		$("#drop").attr('style',"width:705px;height:150px; border: 2px dashed #FF0000 !important;");
-		$('#message_span').html('Hero image is required!!');
-		$('#alert_div').show();
-    }
-    else
-    {
-		alert("3");
-        var imgArray = ["png", "jpg", "jpeg"];
-        var img_type = fileuploaded.slice(-3);
-        var availableimgExt = $.inArray(img_type, imgArray);
-        if(availableimgExt < 0)
-        {
-			alert("3");
-			$("#drop").attr('style',"width:105%;height:160px; border: 2px dashed #FF0000 !important;");
-			$('#message_span').html('Hero image must be of type .png or .jpeg!!');
+	if(document.getElementById('draganddropimagesuccess').value == 2)
+	{
+		var baseurl			=   $('#baseurl').val();
+		var fileuploaded    =   $("#fileuploaded").val();
+		var badgecolor      =   $("#comboimg").val();
+		var badgecolor_id   =   $("#badgecolor_hidden").val();
+		if(fileuploaded=="")
+		{
+			$("#drop").attr('style',"width:705px;height:150px; border: 2px dashed #FF0000 !important;");
+			$('#message_span').html('Hero image is required!!');
 			$('#alert_div').show();
-        }
-        else
-        {
-			alert("4");
-            if(!$("#comboimg").val())
-            {
-				alert("5");
-                $("#badgecombo").attr('style',"float:left;border: 2px dashed #FF0000 !important;");
-                $('#message_span').html('Badge color is required!!');
-                $('#alert_div').show();
-            }
-            else
-            {
-				alert("6");
-                $.ajax({  //Make the Ajax Request
-					type: "POST",  
-					url: "ajax_challengeadd",
-					data: "hero_image="+fileuploaded+"&badge_color="+badgecolor_id,  //data
-					success: function(response) {
-						alert(response);
-						/*if(response=='1')
-						{
-							window.location = "challenges?success";
-						}*/
-					} 
-				});
-            }
-        }
-    }
+		}
+		else
+		{
+			var imgArray = ["png", "jpg", "jpeg"];
+			var img_type = fileuploaded.slice(-3);
+			var availableimgExt = $.inArray(img_type, imgArray);
+			if(availableimgExt < 0)
+			{
+				$("#drop").attr('style',"width:105%;height:160px; border: 2px dashed #FF0000 !important;");
+				$('#message_span').html('Hero image must be of type .png or .jpeg!!');
+				$('#alert_div').show();
+			}
+			else
+			{
+				if(!$("#comboimg").val())
+				{
+					$("#badgecombo").attr('style',"float:left;border: 2px dashed #FF0000 !important;");
+					$('#message_span').html('Badge color is required!!');
+					$('#alert_div').show();
+				}
+				else
+				{
+					$.ajax({  //Make the Ajax Request
+						type: "POST",  
+						url: baseurl+"admin/ajax_challengeadd",
+						data: "hero_image="+fileuploaded+"&badge_color="+badgecolor_id,  //data
+						success: function(response) {
+							if(response=='1')
+							{
+								window.location = baseurl+"admin/challenges?success";
+							}
+						} 
+					});
+				}
+			}
+		}
+	}
+	else if(document.getElementById('draganddropimagesuccess').value == 1)
+	{
+		$('#message_span').html('');
+		$("#drop").attr('style',"width:105%;height:150px; border: 2px dashed #FF0000 !important;");
+		$('#message_span').html('Hero image must be of width between 1400 - 3000!!');
+		$('#alert_div').show();
+	}
+	else if(document.getElementById('draganddropimagesuccess').value == 0)
+	{
+		$('#message_span').html('');
+		$("#drop").attr('style',"width:105%;height:150px; border: 2px dashed #FF0000 !important;");
+		$('#message_span').html('Hero image not uploaded!!');
+		$('#alert_div').show();
+	}
 }
 
 /**
@@ -1662,49 +1674,65 @@ function challengeSave()
  */
 function SaveEditedchallemge()
 {
-
-    var challengeid         =   $("#challengeid").val();
-    var fileuploaded        =   $("#fileuploaded").val();
-    var temp_file			=   $("#fileuploaded").val();
-    var badgecolor          =   $("#comboimg").val();
-    var badgecolor_id       =   $("#badgecolor_hidden").val();
-    fileuploaded            =   fileuploaded?fileuploaded:$("#temp_fileuploaded").val();
-
-    if(fileuploaded != "")
-    {
-        var imgArray = ["png", "jpg", "jpeg"];
-        var img_type = fileuploaded.slice(-3);
-        var availableimgExt = $.inArray(img_type, imgArray);
-        if(availableimgExt < 0)
-        {
-                $("#drop").attr('style',"width:105%;height:150px; border: 2px dashed #FF0000 !important;");
-                $('#message_span').html('Hero image must be of type .png or .jpeg!!');
-                $('#alert_div').show();
-        }
-        else
-        {
-            if(!$("#comboimg").val())
-            {
-                $("#badgecombo").attr('style',"float:left;border: 2px dashed #FF0000 !important;");
-                $('#message_span').html('Badge color is required!!');
-                $('#alert_div').show();
-            }
-            else
-            {
-                $.ajax({  //Make the Ajax Request
-					type: "POST",  
-					url: "../ajax_challengeedit",
-					data: "challengeid="+challengeid+"&hero_image="+fileuploaded+"&badge_color="+badgecolor_id+"&temp_fileuploaded="+temp_file,  //data
-					success: function(response) {
-						if(response=='1')
-						{
-							window.location = "../challenges?success";
-						}
-					} 
-				});
-            }
-        }
-    }
+	if (document.getElementById('draganddropimagesuccess').value == 1)
+	{
+		$('#message_span').html('');
+		$("#drop").attr('style',"width:105%;height:150px; border: 2px dashed #FF0000 !important;");
+		$('#message_span').html('Hero image must be of width between 1400 - 3000!!');
+		$('#alert_div').show();	
+	}
+	else if (document.getElementById('draganddropimagesuccess').value == 0)
+	{
+		$('#message_span').html('');
+		$("#drop").attr('style',"width:105%;height:150px; border: 2px dashed #FF0000 !important;");
+		$('#message_span').html('Hero image not uploaded!!');
+		$('#alert_div').show();
+	}
+	else if (document.getElementById('draganddropimagesuccess').value == 2 && $("#temp_fileuploaded").val()!='')
+	{
+		var baseurl			    =   $('#baseurl').val();
+		var challengeid         =   $("#challengeid").val();
+		var fileuploaded        =   $("#fileuploaded").val();
+		var temp_file			=   $("#fileuploaded").val();
+		var badgecolor          =   $("#comboimg").val();
+		var badgecolor_id       =   $("#badgecolor_hidden").val();
+		fileuploaded            =   fileuploaded?fileuploaded:$("#temp_fileuploaded").val();
+		if(fileuploaded != "")
+		{
+			var imgArray = ["png", "jpg", "jpeg"];
+			var img_type = fileuploaded.slice(-3);
+			var availableimgExt = $.inArray(img_type, imgArray);
+			if(availableimgExt < 0)
+			{
+					$("#drop").attr('style',"width:105%;height:150px; border: 2px dashed #FF0000 !important;");
+					$('#message_span').html('Hero image must be of type .png or .jpeg!!');
+					$('#alert_div').show();
+			}
+			else
+			{
+				if(!$("#comboimg").val())
+				{
+					$("#badgecombo").attr('style',"float:left;border: 2px dashed #FF0000 !important;");
+					$('#message_span').html('Badge color is required!!');
+					$('#alert_div').show();
+				}
+				else
+				{
+					$.ajax({  //Make the Ajax Request
+						type: "POST",  
+						url: baseurl+"admin/ajax_challengeedit",
+						data: "challengeid="+challengeid+"&hero_image="+fileuploaded+"&badge_color="+badgecolor_id+"&temp_fileuploaded="+temp_file,  //data
+						success: function(response) {
+							if(response=='1')
+							{
+								window.location = baseurl+"admin/challenges?success";
+							}
+						} 
+					});
+				}
+			}
+		}
+	}
 }
 
 /*Deleting a challenge*/

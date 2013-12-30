@@ -35,6 +35,7 @@
         <input type="hidden" id="temp_fileuploaded" name="temp_fileuploaded" value="<?php echo $diffinfo[0]['Difficulty']['decal']?$diffinfo[0]['Difficulty']['decal']:''; ?>"/>
         <input type="hidden" name="root_path" id="root_path" value="<?php echo Router::url('/app/webroot/img/diffuploads', true); ?>" />
         <input type="hidden" id="fileuploaded" value="" name="fileuploaded"/>
+		<input type="hidden" name="draganddropfrom" id="draganddropfrom" value="difficulty_edit" />
 		<input type="hidden" name="image_rand_num" id="image_rand_num" value="" />
         <div id="drop" style="background-color: white;width:105%;height:120px;"> <br/>
           <br/>

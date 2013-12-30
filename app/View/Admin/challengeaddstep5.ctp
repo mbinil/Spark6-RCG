@@ -112,9 +112,11 @@
 	<div class="Difficulty_step1" style="width:100%; float:left;">
 		<div class="discrption_label"><h2>Hero Image</h2></div>
 		<div class="clear">&nbsp;</div>
-		<div class="discrption_label_right" style="margin:0 360px 0 0;">710 * 480 .png or .jpeg</div>
+		<div class="discrption_label_right" style="margin:0 360px 0 0;">Image width between 1400 and 3000. (.png or .jpeg)</div>
 		<!--drag & drop starting here-->
 			<form id="upload" method="post" action="challenge_uploads" enctype="multipart/form-data" style="width:710px;float:left;">
+				<input type="hidden" name="draganddropfrom" id="draganddropfrom" value="challenges_add" />
+				<input type="hidden" name="draganddropimagesuccess" id="draganddropimagesuccess" value="0" />
 				<input type="hidden" name="controller_action" id="controller_action" value="add" />
 				<input type="hidden" name="fileuploaded_session_name" id="fileuploaded_session_name" value="challenge_add_file_upload_name" />
 				<input type="hidden" name="fileuploaded" id="fileuploaded" />

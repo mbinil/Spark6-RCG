@@ -1,5 +1,63 @@
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
 <?php if($this->Session->read("session_user_id") !=''){ ?>
+<style>
+.acount-block .acount-info .row .info {
+    float: right;
+    width: 65%;
+}
+.acount-block .acount-info .row dl {
+    float: left;
+    font-size: 14px;
+    line-height: 16px;
+    margin: 0;
+    text-align: center;
+    width: 33%;
+}
+dl dd:nth-child(4n+2), dl dt:nth-child(4n+1) {
+    background: none repeat scroll 0 0 #FFFFFF;
+    width: 100%;
+}
+.acount-details .image-holder {
+    margin: 0 10px 0 0;
+}
+.acount-block .acount-info {
+    font-size: 14px;
+    overflow: hidden;
+    padding: 0;
+}
+.row {
+    margin-left: 20px;
+    margin-right: -15px;
+}
+.awards-list {
+    margin: 0 -5px 0 -25px;
+    overflow: hidden;
+    padding: 23px 0 0;
+}
+.tabs-inner a {
+    padding: 21px 78px 20px;
+}
+.tab-content .column {
+    min-height: inherit;
+    overflow: visible;
+}
+.column .desctiption .days {
+    width: 145px;
+}
+.column .desctiption .points {
+    padding: 30px;
+	width:55%;
+}
+.two-columns-section .column-section.alignleft {
+    padding: 15px;
+}
+.column .about {
+    width: 562px;
+}
+.persons-list {
+    width: 438px;
+}
+</style>
 <script>
 function tabselection(tab)
 {
@@ -18,7 +76,7 @@ function tabselection(tab)
 		<!-- person profile block -->
 		<section class="acount-details">
 			<figure class="image-holder">
-				<div id="myprofilepic"><a href="#" target="_blank"><img src="<?php echo Router::url('/img/useruploads/', true) . $Loggeduserinfo[0]['User']['user_profile_picture']; ?>" border="0" /></a></div>
+				<div id="myprofilepic"><a href="#" target="_blank"><img src="<?php echo Router::url('/img/useruploads/', true) . $Loggeduserinfo[0]['User']['user_profile_picture']; ?>" border="0" width="160" /></a></div>
 			</figure>
 			<div class="acount-info">
 				<div class="row">

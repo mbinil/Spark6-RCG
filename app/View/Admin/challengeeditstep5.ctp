@@ -117,11 +117,13 @@ function deletebadgecombo(id,val)
       <h2>Hero Image</h2>
     </div>
     <div class="clear">&nbsp;</div>
-    <div class="discrption_label_right" style="margin:0 360px 0 0;">710 * 480 .png or .jpeg</div>
+    <div class="discrption_label_right" style="margin:0 360px 0 0;">Image width between 1400 and 3000. (.png or .jpeg)</div>
     <!--drag & drop starting here-->
     <form id="upload" method="post" action="<?php echo Router::url('/admin/challenge_uploads', true); ?>" enctype="multipart/form-data" style="width:710px;float:left;">
         <input type="hidden" name="controller_action" id="controller_action" value="edit" />
 		<input type="hidden" name="fileuploaded_session_name" id="fileuploaded_session_name" value="challenge_add_file_upload_name" />
+		<input type="hidden" name="draganddropfrom" id="draganddropfrom" value="challenges_edit" />
+		<input type="hidden" name="draganddropimagesuccess" id="draganddropimagesuccess" value="2" />
         <input type="hidden" id="temp_fileuploaded" name="temp_fileuploaded" value="<?php if($newchallengeinfo[0]['Challenge']['hero_image']!=''){ echo $newchallengeinfo[0]['Challenge']['hero_image']; } ?>"/>
       <input type="hidden" name="fileuploaded" id="fileuploaded" value=""/>
 	  <input type="hidden" name="image_rand_num" id="image_rand_num" value="<?php echo $image_prepend_random_number; ?>" />
@@ -156,7 +158,7 @@ function deletebadgecombo(id,val)
     <div style="margin:50px 0 0 0;">Badge Color:</div>
     <div style="width:85%;" align="center">
       <div id="badgecolor" style="margin: 10px 0px; height: 235px;">
-        <div id="badgecombo" style="float: left;border: 2px dashed #999999 !important;"> <img src="<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo (count($selectedbadgecombo) > 0)?$selectedbadgecombo:'Spaceship.png'; ?>" border="0" style="border-radius:100px; width:200px;" /> </div>
+        <div id="badgecombo" style="float: left;border: 2px dashed #999999 !important;"> <img src="<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo (!empty($selectedbadgecombo))?$selectedbadgecombo:'Spaceship.png'; ?>" border="0" style="border-radius:100px; width:200px;" /> </div>
         <div style="float: left; position: absolute; margin: 210px 0px 0px; width: 205px; text-align: center;"><?php echo $newchallengeinfo[0]['Challenge']['badge_title'];?></div>
         <div style="float:left;margin:55px 0 25px 15px;width: 60%;" align="left" class="image_listing">
           <?php if(count($badgecombos) > 0) { ?>

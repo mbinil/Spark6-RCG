@@ -67,6 +67,7 @@ function just() {
   </div>
 <!--------------------------------------->
   <!--discrption-->
+  <input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
   <input type="hidden" id="challengeid" value="<?php echo $newchallengeinfo[0]['Challenge']['id']; ?>" />
   <div class="Difficulty_step1" style="width:100%; float:left;">
 	<div style="width:100%;">

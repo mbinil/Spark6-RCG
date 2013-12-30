@@ -108,6 +108,7 @@ function validateFieldcheck(id,val)
         <input type="hidden" id="temp_fileuploaded" name="temp_fileuploaded" value="<?php if($admininfo[0]['Admin']['icon']!=''){ echo $admininfo[0]['Admin']['icon']; } ?>"/>
         <input type="hidden" name="root_path" id="root_path" value="<?php echo Router::url('/app/webroot/img/adminuseruploads', true); ?>" />
         <input type="hidden" id="fileuploaded" value="" name="fileuploaded"/>
+		<input type="hidden" name="draganddropfrom" id="draganddropfrom" value="adminuser_edit" />
 		<input type="hidden" name="image_rand_num" id="image_rand_num" value="" />
         <div id="drop" style="background-color: white;width:105%;height:120px;"> <br/>
           <br/>

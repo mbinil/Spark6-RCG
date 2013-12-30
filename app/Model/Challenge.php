@@ -131,7 +131,6 @@ class Challenge extends AppModel
 	{
 		$host_challenge_status  =   array(0,1,4,6);
 		$return_html    =   '';
-
 		foreach ($challenges as $key => $value) 
 		{
 			App::import('Model', 'Userchallenge');
@@ -139,10 +138,10 @@ class Challenge extends AppModel
 			$get_host   =   $Userchallenge->getHostArray($value['Challenge']['id']);
 			//echo "<pre>";print_r($get_host);exit;
 			
-			if($this->session_user_id == '')
-				$anchor =   '<strong class="title" style="line-height:1;"><a href="javascript:Loginuser();" style="cursor:pointer;"/>';
+			if(empty($this->session_user_id))
+				$anchor =   '<strong class="title" style="line-height:1;"><a href="javascript:Loginuser();" style="cursor:pointer;">';
 			else
-				$anchor =   '<strong class="title"><a href="'.Router::url('/host_challenge_step1/'.$value['Challenge']['permalink'], true).'" style="cursor:pointer;"/>';
+				$anchor =   '<strong class="title"><a href="'.Router::url('/host_challenge_step1/'.$value['Challenge']['permalink'], true).'" style="cursor:pointer;">';
 			
 	$fullurl = Router::url('/', true);
 			$class  =   'class="column-holder"';
@@ -156,10 +155,19 @@ class Challenge extends AppModel
 			$notification_time_div      =   '';
 			if(count($get_host) == 0)
 			{
-				$return_html    .=   $anchor;
-				if($this->session_user_id == '')
-					$return_html    .=   'Login to ';
-				$return_html    .=   'Host This.</a></strong>';
+                            $date_flag  =   1;
+                            $date_val   =   $this->getHourMinutes($value['Challenge']['start_date'],'','');
+                            if($value['Challenge']['start_date'] && $date_val == '')
+                            {
+                                $date_flag  =   0;
+                            }
+                            if($date_flag  ==   1)
+                            {
+                                $return_html    .=   $anchor;
+                                if($this->session_user_id == '')
+                                        $return_html    .=   'Login to ';
+                                $return_html    .=   'Host This.</a></strong>';
+                            }
 			}
 			else
 			{
@@ -285,7 +293,7 @@ class Challenge extends AppModel
 				
 			$html       .=   '<article class="column">
 								<div class="visual-block">
-								<img height="249" width="960" class="bg" alt="image description" src="'.$fullurl.'img/challengeuploads/background/'.$value['challenge']['hero_image'].'">
+								<img height="249" width="918" class="bg" alt="image description" src="'.$fullurl.'img/challengeuploads/background/'.$value['challenge']['hero_image'].'">
 								<figure><img height="219" width="324" alt="image description" class="alignleft" src="'.$fullurl.'img/challengeuploads/'.$value['challenge']['hero_image'].'"></figure>
 								<div class="about"><div class="about-holder">
 								<div class="person-info">
@@ -366,11 +374,12 @@ class Challenge extends AppModel
 			{
 				$arr        =   $this->getHourMinutes($value['Userchallenge']['started_date'],'','hour');
 				$string = "";
-				if($arr['days']!="0")
+				
+				if($arr && $arr['days']!="0")
 					$string = $arr['days']." DAYS";
-				else if($arr['hour']!="0")
+				else if($arr && $arr['hour']!="0")
 					$string = $arr['hour']." HOURS";
-				else if($arr['minutes']!="0")
+				else if($arr && $arr['minutes']!="0")
 					$string = $arr['minutes']." MIN";	
 				$html       .=   '<div class="time-block">
 									<span>STARTS IN '.$string.'</span>
@@ -421,7 +430,7 @@ class Challenge extends AppModel
             
             if(count($challenges_host) > 0)
             {
-                $html               .=   '<div class="column-section alignleft ajax-holder ajax-loading same-height-left" style="min-height: 1725px;">
+                $html               .=   '<div class="column-section alignleft ajax-holder ajax-loading same-height-left" style="min-height: 430px;">
                                         <h2>Finished Challenges</h2>';
                 
                 foreach ($challenges_host as $key => $value)
@@ -468,7 +477,7 @@ class Challenge extends AppModel
 
             if(count($challenges_host) > 0)
             {
-                $html               .=   '<div class="column-section alignleft ajax-holder ajax-loading same-height-left" style="min-height: 1725px;">
+                $html               .=   '<div class="column-section alignleft ajax-holder ajax-loading same-height-left" style="min-height: 430px;">
                                         <h2>Failed Challenges</h2>';
                 
                 foreach ($challenges_host as $key => $value)

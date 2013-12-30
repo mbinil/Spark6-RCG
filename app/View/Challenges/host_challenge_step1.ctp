@@ -1,3 +1,15 @@
+<style>
+.container_left {
+    border-right: none;
+    float: left;
+    padding-right: 15px;
+    width: 100%;
+}
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+</style>
 <?php 
 echo $this->Html->script('host_challenge.js');
 ?>
@@ -29,8 +41,8 @@ echo $this->Html->script('host_challenge.js');
 			</div>
 			<!--------------------------------------->
 			<div class="host_challenge_step1">
-				<div style="margin:0px; width:92%; float:left; border: 2px solid #BDC3C7;">
-                                    <?php echo $user_html;?>
+				<div style="margin:0px; width:100%; float:left; border: 1px solid #EEE;">
+                    <?php echo $user_html;?>
 				</div>
 			</div>
 		</div>   
