@@ -53,39 +53,47 @@ class HomeController extends AppController {
  */
  
 	public function display() {
-
-if(!$this->Session->read("session_user_id") || $this->Session->read('username'))
-{
-		$this->Session->delete("session_user_id");
-		$this->Session->delete('username');
-		$this->Session->delete('userid');
-		$this->Session->delete('locateid');
-		$this->Session->delete('loginerror');
-		$this->Session->delete('dispstatus');
-		$this->Session->delete('newdiffinfo');
-		$this->Session->delete('newchallengeinfo');
-		$this->Session->delete('stepinfo');
-		$this->Session->destroy();
-}
+             
+            $this->loadModel('User');
+            $this->set('active_user_count', $this->User->GetUsers());
+            $this->loadModel('Challenge');
+            $this->set('challenge_taken_count', $this->Challenge->getChallengebyCondition(array('status' => 1)));
+            $this->set('popular_challenge', $this->Challenge->popularChallenges($this->Session->read("session_user_id")));
             
-		$path = func_get_args();
+            if(!$this->Session->read("session_user_id") || $this->Session->read('username'))
+            {
+                            $this->Session->delete("session_user_id");
+                            $this->Session->delete('username');
+                            $this->Session->delete('userid');
+                            $this->Session->delete('locateid');
+                            $this->Session->delete('loginerror');
+                            $this->Session->delete('dispstatus');
+                            $this->Session->delete('newdiffinfo');
+                            $this->Session->delete('newchallengeinfo');
+                            $this->Session->delete('stepinfo');
+                            $this->Session->destroy();
+            }
 
-		$count = count($path);
-		if (!$count) {
-			$this->redirect('/');
-		}
-		$page = $subpage = $title_for_layout = null;
+            $path = func_get_args();
 
-		if (!empty($path[0])) {
-			$page = $path[0];
-		}
-		if (!empty($path[1])) {
-			$subpage = $path[1];
-		}
-		if (!empty($path[$count - 1])) {
-			$title_for_layout = Inflector::humanize($path[$count - 1]);
-		}
-		$this->set(compact('page', 'subpage', 'title_for_layout'));
-		$this->render(implode('/', $path));
+            $count = count($path);
+            if (!$count) {
+                    $this->redirect('/');
+            }
+            $page = $subpage = $title_for_layout = null;
+
+            if (!empty($path[0])) {
+                    $page = $path[0];
+            }
+            if (!empty($path[1])) {
+                    $subpage = $path[1];
+            }
+            if (!empty($path[$count - 1])) {
+                    $title_for_layout = Inflector::humanize($path[$count - 1]);
+            }
+            $this->set(compact('page', 'subpage', 'title_for_layout'));
+            $this->render(implode('/', $path));
+                
+                
 	}
 }

@@ -159,10 +159,10 @@ echo $this->Html->script('host_challenge.js');
 			</select>
 		</div>
 		<div style="margin:10px 0 0 0; width:100%; float:left;">
-			<input type="checkbox" name="check1" id="check1" value="0" onclick="changecheck1(this)" style="margin:12px 10px 0 0;" /><h3>Allow people to invite their friends</h3>
+			<input type="checkbox" name="check1" id="check1" value="0" onclick="changecheck1(this)" style="margin:11px 10px 0 0;" /><h3>Allow people to invite their friends</h3>
 		</div>
 		<div style="margin:0 0 0 0; width:100%; float:left;">
-			<input type="checkbox" name="check2" id="check2" value="0" onclick="changecheck2(this)" style="margin:12px 10px 0 0;" /><h3>Allow anyone to join(will be listed as an Open Challenge)</h3>
+			<input type="checkbox" name="check2" id="check2" value="0" onclick="changecheck2(this)" style="margin:11px 10px 0 0;" /><h3>Allow anyone to join(will be listed as an Open Challenge)</h3>
 		</div>
 	</div>
 </div>

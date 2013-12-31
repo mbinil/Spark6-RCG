@@ -15,6 +15,17 @@ echo $this->Html->script('discover.js');?>
 .tabset .Health .ico {
     background-position: -3px -1494px;
 }
+.column .desctiption {
+    color:#757575;
+}
+.column .desctiption .more {
+	box-shadow:0 0 90px -30px #FFFFFF inset;
+	-moz-box-shadow:0 0 90px -30px #FFFFFF inset;
+    -webkit-box-shadow:0 0 90px -30px #FFFFFF inset;	
+}
+.column .meta img {
+    margin: 0 -30px 0 5px;
+}
 </style>
 <!-- main content block -->
 <div class="container_left" style="width:100% !important; border: 1px solid #fff;">
@@ -48,14 +59,14 @@ echo $this->Html->script('discover.js');?>
                 <!-- tabs navigation -->
                 <nav>
                     <ul class="tabset">
-                        <li class="parent_class" id="all_li_id">
+                        <li class="parent_class" id="all_li_id_0">
 							<a href="javascript:void(0);" onclick="showChallenge(this,'parent','','')" class="active" data-default="#0077c9" data-hover="#ffffff" >
 								<span>All</span>
 								<em class="mask"><strong class="mask-frame"></strong></em>
 							</a>
 						</li>
                         <?php foreach ($parent_category as $key => $value) { ?>
-						<li class="parent_class">
+						<li class="parent_class" id="all_li_id_<?php echo $value['Category']['id']; ?>">
 							<a href="javascript:void(0);" onclick="showChallenge(this,'parent','','<?php echo $value['Category']['id'];?>')" class="<?php echo $value['Category']['title'];?>" data-default="#0077c9" data-hover="#ffffff">
 								<em class="ico"></em>
 								<em class="ico-hover"></em>

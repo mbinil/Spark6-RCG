@@ -4,12 +4,12 @@ function selectUser(user_id)
     if(!$.trim($('#selected_users_list_'+user_id).val()))
     {
         $('#selected_users_list_'+user_id).val(user_id);
-        $('#select_user_div_'+user_id).attr('style', 'margin:5px 2px 5px 5px; width:150px; height:250px; float:left;border: 1px solid #EEE;background-color:#8faf68;');
+        $('#select_user_div_'+user_id).attr('style', 'margin:5px 2px 5px 5px; width:150px; height:250px; float:left;border: 1px solid #CCC;background-color:#8faf68;cursor:pointer;');
     }
     else
     {
         $('#selected_users_list_'+user_id).val('');
-        $('#select_user_div_'+user_id).attr('style', 'margin:5px 2px 5px 5px; width:150px; height:250px; float:left;border: 1px solid #EEE;');
+        $('#select_user_div_'+user_id).attr('style', 'margin:5px 2px 5px 5px; width:150px; height:250px; float:left;border: 1px solid #CCC;cursor:pointer;');
     }
 }
 

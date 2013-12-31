@@ -18,7 +18,19 @@ if(isset($email_status) && $email_status!="")
 }
 
 ?>
-<script language="javascript">
+<script>
+$(document).ready(function(){
+    $(".social-networks ul li").mouseover(
+            function() {
+                    $(this).addClass("active");
+            }
+    );
+    $(".social-networks ul li").mouseout(
+            function() {
+                    $(this).removeClass("active");
+            }
+    );
+});
 function applyFilterAndLoadForm(lifestyle,category)
 {	
 	if(lifestyle!="")
@@ -33,37 +45,36 @@ function updateemailstat()
 	$("#share").val("share_email");
 	document.sharechallengeemail.submit();
 }
-function sendemail()
+
+function showAHost(challenge_id)
 {
-	var challengelink='<?=$site_url?>discover/<?php echo $challenge_info[0]['Challenge']['permalink']?>'; 
-	var msg="I just completed 21 days of  <?php echo $challenge_info[0]['Challenge']['name']?>! I thought this might be a great experience for you as well. Click here " +  challengelink + " and give it a try!";
-	
-	$("#challengemsg").val(msg);
-	$("#share").val("share_email");
-	$("#permalink").val("<?php echo $challenge_info[0]['Challenge']['permalink']?>");
+    var baseurl = $('#baseurl').val();
+    $.ajax({
+            type: "POST",  
+            url: baseurl+'challenges/ajax_show_a_host',
+            data: "challenge_id="+challenge_id,
+            async:false,
+            success: function(response) {
+                var data    =   new Array();
+                data        =   response.split('#@#');
+                if(data[0] == 1)
+                {
+                    $( "#dialog_host_this" ).html(data[1]);
+                    $( "#dialog_host_this" ).dialog({
+                        height: 840,
+                        width:  1025,
+                        title:'Pick Host',
+                        modal: true
+                    });
+                }
+            } 
+    });
 }
-function fbcomments()
-{
-	var commentheight = document.body.scrollHeight-800;
-	window.scrollTo(0,commentheight);
-}
-$(document).ready(function(){
-	$(".social-networks ul li").mouseover(
-		function() {
-			$(this).addClass("active");
-		}
-	);
-	$(".social-networks ul li").mouseout(
-		function() {
-			$(this).removeClass("active");
-		}
-	);
-});
 </script>
 <div class="visual">
 	<img alt="image description" src="<?php echo Router::url('/img/challengeuploads/background/', true) . $challenge_info[0]['Challenge']['hero_image']; ?>">
 </div>
-<div id="main">
+<div id="main"><input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
 	<!-- two columns block -->
 	<div id="two-columns">
 		<!-- content -->
@@ -203,22 +214,23 @@ $(document).ready(function(){
 				<ul>
 					<li id="Whitefacebook">
 						<a href="javascript:postLike('<?php echo $challenge_info[0]['Challenge']['permalink']; ?>');" class="facebook" id="facebookhref"><em>facebook</em></a>
-						<span class="number"><?php //echo $challenge_info[0]['Challenge']['challenge_likes']; ?></span>
+						<span class="number">0</span>
 					</li>
 					<li id="Whitetwitter">
 						<a href="https://twitter.com/share?url=<?php echo $url; ?>" id="twitterhref" target="blank" class="twitter" data-lang="en" ><em>twitter</em></a>
 						<span class="number"><?php echo $twitter_count; ?></span>
 					</li>
 					<li id="Whitecomments">
-						<a data-animation="fade" style="cursor:pointer;" class="comments" onclick="fbcomments()"><em>comments</em></a>
-						<span class="number"><fb:comments-count href="<?php echo $site_url ?>discover/<?php echo $challenge_info[0]['Challenge']['permalink']; ?>" /></fb:comments-count></span>
+						<a data-animation="fade" style="cursor:pointer;" class="comments" href="#FBcomments"><em>comments</em></a>
+						<span class="number">0</span>
 					</li>
 				</ul>
 				<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 			</div>
 			<!-- info -->
 			<ul class="info">
-				<li class="difficulty <?php echo $challenge_info[0]['difficulty']['title']; ?>">
+				<li class="difficulty" style="background:none;">
+					<div style="position: absolute; margin: 4px 0px 0px -55px;"><img src="<?php echo Router::url('/', true) . "img/diffuploads/" . $challenge_info[0]['difficulty']['decal']; ?>" border="0" width="40" /></div>
 					<strong class="title"><?php echo  $challenge_info[0]['difficulty']['title'];?></strong>
 					<p>Level of Difficulty </p>
 				</li>
@@ -235,15 +247,14 @@ $(document).ready(function(){
 			</div>
 			<div class="options" style="margin: -153px 0 64px -9px;">
 				<ul>
-<?php if($this->Session->read("session_user_id") == 0) { ?>
-                                    <li><a href="javascript:Loginuser();" data-default="#ffffff" data-hover="#fa7000">Login Host This</a></li>
-                                    <li><a href="javascript:Loginuser();" data-default="#ffffff" data-hover="#fa7000">Login Pick Host</a></li>
-<?php } else { ?>
-                                    <li><a href="<?php echo Router::url('/host_challenge_step1/'.$challenge_info[0]['Challenge']['permalink'], true); ?>" data-default="#ffffff" data-hover="#fa7000">Host This</a></li>
-                                    <li><a href="<?php echo Router::url('/host_challenge_step1/'.$challenge_info[0]['Challenge']['permalink'], true); ?>" data-default="#ffffff" data-hover="#fa7000">Pick Host</a></li>
-<?php }?>
-                                </ul>
-				
+					<?php if($this->Session->read("session_user_id") == 0) { ?>
+					<li><a href="javascript:Loginuser();" data-default="#ffffff" data-hover="#fa7000">Login Host This</a></li>
+					<li><a href="javascript:Loginuser();" data-default="#ffffff" data-hover="#fa7000">Login Pick Host</a></li>
+					<?php } else { ?>
+					<li><a href="<?php echo Router::url('/host_challenge_step1/'.$challenge_info[0]['Challenge']['permalink'], true); ?>" data-default="#ffffff" data-hover="#fa7000">Host This</a></li>
+					<li><a href="javascript:showAHost('<?php echo $challenge_info[0]['Challenge']['id'];?>');" data-default="#ffffff" data-hover="#fa7000">Pick Host</a></li>
+					<?php }?>
+				</ul>
 				<span class="or">or</span>
 			</div>
 			<!-- hosts info -->
@@ -320,5 +331,9 @@ if($hosts_count > 0) { ?>
       -->
 		</aside>
 	</div>
+</div>
+
+<div id='dialog_host_this' style='display: none;'>
+    
 </div>
 

@@ -90,9 +90,60 @@ class Userchallenge extends AppModel
         }
     }
     
+    /**
+     * Inser participants under a host
+     */
+    public function insertParticipants($login_user_id)
+    {
+        $this->session_user_id  =   $login_user_id;
+        $condition  =   'user_challenge_status not in (2,3)';
+        
+        if($_POST['challenge_id'])
+            $condition  .=   ' and challenge_id = '.$_POST['challenge_id'];
+        if($_POST['user_id'])
+            $condition  .=   ' and user_id = '.$_POST['user_id'];
+        if($_POST['host_group'])
+            $condition  .=   ' and group_id = '.$_POST['host_group'];
+            
+        if($arr =   $this->getDataByCondition($condition))
+        {
+            $insert_array['user_id']                                            =   $this->session_user_id;
+            $insert_array['challenge_id']                                       =   $_POST['challenge_id'];
+            $insert_array['user_challenge_hostid']                              =   $_POST['user_id'];
+
+            $insert_array['user_challenge_status']                              =   0;
+            $insert_array['user_challenge_point']                               =   0;
+            $insert_array['user_challenge_weekly_goal_completion']              =   '';
+            $insert_array['user_challenge_notification_completion']             =   '';
+            $insert_array['user_challenge_added']                               =   date("Y-m-d h:i:s A");
+            $insert_array['started_date']                                       =   $arr[0]['Userchallenge']['started_date'];
+            $insert_array['started_date_iso']                                   =   $arr[0]['Userchallenge']['started_date_iso'];
+            $insert_array['user_challenge_finished_date']                       =   $arr[0]['Userchallenge']['user_challenge_finished_date'];
+            $insert_array['user_challenge_invitedby']                           =   0;
+
+            $insert_array['user_challenge_private']                             =   $arr[0]['Userchallenge']['user_challenge_private'];
+            $insert_array['user_challenge_invitees_invite']                     =   $arr[0]['Userchallenge']['user_challenge_invitees_invite'];
+            $insert_array['user_challenge_daily_total']                         =   0;
+            $insert_array['group_id']                                           =   $arr[0]['Userchallenge']['group_id'];
+
+            if($this->save($insert_array))
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        else
+        {
+            return 0;
+        }
+    }
+    
     public function getHostArray($challenge_id)
     {
-        return $challengesinfo = $this->find('all',array('fields'=>array('Userchallenge.*,user.user_profile_picture,user.user_firstname,user.id'),
+        return $challengesinfo = $this->find('all',array('fields'=>array('Userchallenge.*,user.user_profile_picture,user.user_firstname,user.id,user.user_hobbies'),
                                                             'joins' => array(
                                                                     array(
                                                                         'table' => 'users',

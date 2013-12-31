@@ -44,7 +44,7 @@ if(!$('#fileuploaded').val()) {
 }
 
             // Initialize the knob plugin
-            tpl.find('input').knob();
+            //tpl.find('input').knob();
 
             // Append the file name and file size
             tpl.find('p').text(data.files[0].name)
@@ -139,7 +139,7 @@ if(!$('#fileuploaded').val()) {
 		var intId = setInterval(addDot,1000);
 		function addDot()
 		{
-			if (dotCounter < 5) 
+			if (dotCounter < 3) 
 			{
 				dotCounter++;
 				var root_path 	=   $("#root_path").val();

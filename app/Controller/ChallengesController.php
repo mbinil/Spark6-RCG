@@ -63,6 +63,29 @@ class ChallengesController extends AppController
 		echo $this->Userchallenge->pickAHost($this->Session->read("session_user_id"));exit;
 	}
 	
+        //show the hosts while click on pick a host in challenge details page
+	public function ajax_show_a_host()
+	{
+		$this->loadModel('Challenge');
+		
+                //$host_array =   $this->Challenge->showAHost($_POST['challenge_id'],$this->Session->read("session_user_id"));
+
+                $this->set('show_host_array',$this->Challenge->showAHost($_POST['challenge_id'],$this->Session->read("session_user_id")));
+                $this->set('challenge_id',$_POST['challenge_id']);
+                
+                $html   =   $this->render('element_show_host');
+                                
+		echo "1#@#".$html;exit;
+	}
+        
+        //show the hosts while click on pick a host in challenge details page
+	public function ajax_pick_host()
+	{
+            $this->loadModel('Userchallenge');
+            
+            echo $this->Userchallenge->insertParticipants($this->Session->read("session_user_id"));exit;
+	}
+	
 	//changing the status of challenges in userchallenge in discover page
 	public function ajax_challenge_checking()
 	{
@@ -70,21 +93,21 @@ class ChallengesController extends AppController
 		echo $this->Userchallenge->checkUserChallenge();exit;
 	}
         
-	public function challenge_details($challenge_permalink=NULL) {
+	public function challenge_details($challenge_permalink=NULL) 
+	{
 		$this->loadModel('Challenge');
 		$challenge_info = $this->Challenge->getChallengeByPermalink(array('permalink'=>$challenge_permalink));
-
 		$this->set('challenge_info',$challenge_info);
-                
-                $this->loadModel('Userchallenge');
-                //echo "<pre>";print_r($this->Userchallenge->getHostArray($challenge_info[0]['Challenge']['id']));
-                $available_host =   $this->Userchallenge->getHostArray($challenge_info[0]['Challenge']['id']);
+		
+		$this->loadModel('Userchallenge');
+		//echo "<pre>";print_r($this->Userchallenge->getHostArray($challenge_info[0]['Challenge']['id']));
+		$available_host =   $this->Userchallenge->getHostArray($challenge_info[0]['Challenge']['id']);
 		$this->set('available_host',$available_host);
-
-                if(count($available_host) > 0)
-                    $this->set('starts_in',$this->Challenge->getHourMinutes($available_host[0]['Userchallenge']['started_date'],'','hour'));
-                else
-                    $this->set('starts_in','');
+		
+		if(count($available_host) > 0)
+			$this->set('starts_in',$this->Challenge->getHourMinutes($available_host[0]['Userchallenge']['started_date'],'','hour'));
+		else
+			$this->set('starts_in','');
 	}
 	
 	public function my_challenges() 

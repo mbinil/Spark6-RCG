@@ -10,9 +10,9 @@ function showChallenge(ob,from,evt,id)
 				$(this).find('a').attr('class','');
 			});
 			if(!id)
-				$('#all_li_id a').attr('class','active');
+				$('#all_li_id_0 a').attr('class','active');
 			else
-				$(ob).attr('class','active');
+				$('#all_li_id_'+id+' a').attr('class','active');//$(ob).attr('class','active');
 			
 			data_arr    =   getResult('from=parent&val='+id+'&parent=').split('@#@');
 			if(data_arr[0] == 1)

@@ -1664,7 +1664,7 @@ function challengeSave()
 	{
 		$('#message_span').html('');
 		$("#drop").attr('style',"width:105%;height:150px; border: 2px dashed #FF0000 !important;");
-		$('#message_span').html('Hero image not uploaded!!');
+		$('#message_span').html('Hero image uploading not completed!!');
 		$('#alert_div').show();
 	}
 }
@@ -1685,7 +1685,7 @@ function SaveEditedchallemge()
 	{
 		$('#message_span').html('');
 		$("#drop").attr('style',"width:105%;height:150px; border: 2px dashed #FF0000 !important;");
-		$('#message_span').html('Hero image not uploaded!!');
+		$('#message_span').html('Hero image uploading not completed!!');
 		$('#alert_div').show();
 	}
 	else if (document.getElementById('draganddropimagesuccess').value == 2 && $("#temp_fileuploaded").val()!='')

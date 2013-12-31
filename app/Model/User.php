@@ -8,7 +8,9 @@ class User extends AppModel
             $conditions =   '';
             
             if($this->session_user_id)
-                $conditions =   array('id != '.$this->session_user_id);
+                $conditions =   array('id != '.$this->session_user_id,'user_active' =>1);
+            else
+                $conditions =   array('user_active' =>1);
             
             $usersresult = $this->find('all',array('conditions'=>$conditions,'order' => 'User.id ASC')); 
             $this->session_user_id  =   '';
@@ -80,7 +82,7 @@ class User extends AppModel
                     $user_id    =   $value['User']['id'];
                 }
                 
-                $user_html  .=   '<div onclick="selectUser(\''.$value['User']['id'].'\')" id="select_user_div_'.$value['User']['id'].'" style="margin:5px 2px 5px 5px; width:150px; height:250px; float:left;border: 1px solid #EEE;'.$style.'" class="col-xs-6 col-md-3">
+                $user_html  .=   '<div onclick="selectUser(\''.$value['User']['id'].'\')" id="select_user_div_'.$value['User']['id'].'" style="margin:5px 2px 5px 5px; width:150px; height:250px; float:left;border: 1px solid #CCCCCC;cursor:pointer;'.$style.'" class="col-xs-6 col-md-3">
         <img height="100" width="100" border="0" src="'.$fullurl.'img/useruploads/'.$value['User']['user_profile_picture'].'" alt="Image">
             <input type="hidden" name="selected_users_list[]" id="selected_users_list_'.$value['User']['id'].'" class="selected_users_list_class" value="'.$user_id.'" />
         <br/>
@@ -92,7 +94,8 @@ class User extends AppModel
                 $i++;
             }
             
-            $user_html  .=   '</div>';
+            if($i > 0)
+                $user_html  .=   '</div>';
             
             //echo $user_html;exit;
             return $user_html;
@@ -133,7 +136,7 @@ class User extends AppModel
                                         </div>';
             }
             
-            $user_html  .=   '<div class="col-xs-6 col-md-3" style="float: left; width: 108px; padding: 7px 15px; height: 40px; border: 1px dashed rgb(204, 204, 204); margin: 13px;">
+            $user_html  .=   '<div class="col-xs-6 col-md-3" style="float: left; text-align: center; width: 120px; padding: 7px 15px; height: 40px; border: 1px dashed rgb(204, 204, 204); margin: 13px;">
                             <a href="'.Router::url('/host_challenge_step1/'.$challenge_permlink, true).'" style="cursor:pointer;"/>Invite more</a>
                             </div></div></div></div>';
             
