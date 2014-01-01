@@ -119,10 +119,10 @@ class Category extends AppModel
         {
             $child_category =   $this->getChildFromParent($id);
 
-            $return_html    =   '<ul class="child_class"><li class="active"><a href="javascript:void(0);" onclick="showChallenge(this,\'child\',\'\',\'\')" >All</a></li>';
+            $return_html    =   '<ul class="child_class"><li class="active" id="li_child_0"><a href="javascript:void(0);" onclick="showChallenge(this,\'child\',\'\',\'\')" >All</a></li>';
 
             foreach ($child_category as $key => $value) {
-                        $return_html    .=   '<li class=""><a href="javascript:void(0);" onclick="showChallenge(this,\'child\',\'\',\''.$value['Category']['id'].'\')" >'.$value['Category']['title'].'</a></li>';
+                        $return_html    .=   '<li class="" id="li_child_'.$value['Category']['id'].'"><a href="javascript:void(0);" onclick="showChallenge(this,\'child\',\'\',\''.$value['Category']['id'].'\')" >'.$value['Category']['title'].'</a></li>';
             }
             $return_html    .=   '</ul>';
             

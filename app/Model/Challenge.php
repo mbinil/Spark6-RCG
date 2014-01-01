@@ -36,7 +36,7 @@ class Challenge extends AppModel
 	 * @param integer|null $parent parent id or null
 	 * @return array $condition condition array
 	 */
-	public function getConditions($from, $val, $parent)
+	public function getConditions($from, $val, $parent, $child)
 	{
 		$condition   =   '';
 		switch ($from) 
@@ -67,7 +67,9 @@ class Challenge extends AppModel
 				 }
 				 break;
 			case 'search':
-				 $condition   =  array('OR'  =>  
+                                 if($parent && $child)
+                                 {
+                                     $condition   =  array('Challenge.parent_category' => $parent, 'Challenge.child_category' => $child,'OR'  =>  
 					 array(  'Challenge.name like'  =>  "%$val%",
 							 'Challenge.badge_title like'  =>  "%$val%",
 							 'Challenge.daily_commitment like'  =>  "%$val%",
@@ -76,6 +78,61 @@ class Challenge extends AppModel
 							 'Challenge.learn_more like'  =>  "%$val%"
 						 ), 'Challenge.status' => '1'
 					 );
+                                 }
+                                 else if($parent)
+                                 {
+                                     $condition   =  array('Challenge.parent_category' => $parent,'OR'  =>  
+					 array(  'Challenge.name like'  =>  "%$val%",
+							 'Challenge.badge_title like'  =>  "%$val%",
+							 'Challenge.daily_commitment like'  =>  "%$val%",
+							 'Challenge.why like'  =>  "%$val%",
+							 'Challenge.how like'  =>  "%$val%",
+							 'Challenge.learn_more like'  =>  "%$val%"
+						 ), 'Challenge.status' => '1'
+					 );
+                                 }
+                                 else if($child)
+                                 {
+                                     $condition   =  array('Challenge.child_category' => $child,'OR'  =>  
+					 array(  'Challenge.name like'  =>  "%$val%",
+							 'Challenge.badge_title like'  =>  "%$val%",
+							 'Challenge.daily_commitment like'  =>  "%$val%",
+							 'Challenge.why like'  =>  "%$val%",
+							 'Challenge.how like'  =>  "%$val%",
+							 'Challenge.learn_more like'  =>  "%$val%"
+						 ), 'Challenge.status' => '1'
+					 );
+                                 }
+                                 else
+                                 {
+                                    $condition   =  array('OR'  =>  
+                                            array(  'Challenge.name like'  =>  "%$val%",
+                                                            'Challenge.badge_title like'  =>  "%$val%",
+                                                            'Challenge.daily_commitment like'  =>  "%$val%",
+                                                            'Challenge.why like'  =>  "%$val%",
+                                                            'Challenge.how like'  =>  "%$val%",
+                                                            'Challenge.learn_more like'  =>  "%$val%"
+                                                    ), 'Challenge.status' => '1'
+                                            );
+                                 }
+				 break;
+                        default :
+                                 if($parent && $child)
+                                 {
+                                     $condition   =  array('Challenge.parent_category' => $parent, 'Challenge.child_category' => $child, 'Challenge.status' => '1');
+                                 }
+                                 else if($parent)
+                                 {
+                                     $condition   =  array('Challenge.parent_category' => $parent, 'Challenge.status' => '1');
+                                 }
+                                 else if($child)
+                                 {
+                                     $condition   =  array('Challenge.child_category' => $child, 'Challenge.status' => '1');
+                                 }
+                                 else
+                                 {
+                                    $condition   =  array('Challenge.status' => '1');
+                                 }
 				 break;
 		}
 
@@ -89,7 +146,7 @@ class Challenge extends AppModel
 	 */
 	public function getValue($conditions)
 	{
-		return $this->find('all', array('fields'=>array('Challenge.*,badgecombo.comboimg,difficulty.decal,difficulty.title,categorie.id,categorie.title'),
+		return $this->find('all', array('fields'=>array('Challenge.*,badgecombo.comboimg,difficulty.decal,difficulty.title,categorie.id,categorie.title,categorie.decal'),
 				'joins' => array(
 					array(
 						'table' => 'badgecombos',
@@ -149,6 +206,8 @@ class Challenge extends AppModel
 					$class  =   'class="column-holder multi"';
 			$return_html    .=   '<div '.$class.' id="challenge_individual_'.$value['Challenge']['id'].'">
 									<article class="column">
+									<div style="position: absolute; z-index: 5; margin: 3px 0 0 3px;"><img src="'.$fullurl.'img/catuploads/'.$value['categorie']['decal'].'" border="0" width="22" /></div>
+									<div class="arrow-up" style="background: url(\''.$fullurl.'img/badgecolor/'.$value['badgecombo']['comboimg'].'\');"></div>
 									<div class="visual-block">
 										<img src="'.$fullurl.'img/challengeuploads/background/'.$value['Challenge']['hero_image'].'" width="710" height="249" alt="image description" class="bg">
 										<figure><a href="'.Router::url('/discover/'.$value['Challenge']['permalink'], true).'" style="cursor:pointer;"><img class="alignleft" src="'.$fullurl.'img/challengeuploads/'.$value['Challenge']['hero_image'].'" width="324" height="219" alt="image description"></a></figure>';
@@ -293,40 +352,44 @@ class Challenge extends AppModel
 			$challenge_host_arr =   $Userchallenge->getChallengeHostArray(array('Userchallenge.user_challenge_status in '.$chlnge_status.'','Userchallenge.challenge_id' => $value['Userchallenge']['challenge_id'],'Userchallenge.group_id' => $value['Userchallenge']['group_id'],'Userchallenge.user_challenge_hostid is null'));
 
 			//getting the coming challenge participants
-			$paricipants_arr    =   $Userchallenge->getParticipantsArray(array('Userchallenge.user_challenge_status in '.$chlnge_status.'', 'Userchallenge.user_challenge_hostid' =>$value['Userchallenge']['user_id'], 'Userchallenge.group_id' =>$value['Userchallenge']['group_id']));
+			$paricipants_arr    =   $Userchallenge->getParticipantsArray(array('Userchallenge.user_challenge_status in '.$chlnge_status.'','Userchallenge.challenge_id' => $value['Userchallenge']['challenge_id'], 'Userchallenge.user_challenge_hostid' =>$value['Userchallenge']['user_id'], 'Userchallenge.group_id' =>$value['Userchallenge']['group_id']));
 
 			//checking the login person is the host of coming challenge
 			$name   =   'Myself';
-			if($login_id != $challenge_host_arr[0]['user']['id'])
+			if($challenge_host_arr && $login_id != $challenge_host_arr[0]['user']['id'])
 				$name   =   $challenge_host_arr[0]['user']['user_firstname'];
 				
 			$html       .=   '<article class="column">
 								<div class="visual-block">
+								<div style="position: absolute; z-index: 5; margin:-10px 0 0 -10px;"><img src="'.$fullurl.'img/catuploads/'.$value['category']['decal'].'" border="0" width="25" /></div>
+								<div class="arrow-up" style="background: url(\''.$fullurl.'img/badgecolor/'.$value['badgecombo']['comboimg'].'\');"></div>
 								<img height="249" width="918" class="bg" alt="image description" src="'.$fullurl.'img/challengeuploads/background/'.$value['challenge']['hero_image'].'">
 								<figure><img height="219" width="324" alt="image description" class="alignleft" src="'.$fullurl.'img/challengeuploads/'.$value['challenge']['hero_image'].'"></figure>
-								<div class="about"><div class="about-holder">
-								<div class="person-info">
-									<a href="javascript:void(0);">
-										<img height="101" width="100" alt="image description" src="'.$fullurl.'img/useruploads/'.$challenge_host_arr[0]['user']['user_profile_picture'].'">
-									</a>
-									<dl>
-										<dt>'.$name.'</dt>
-										<dd>Host</dd>
-										<dt>+'.count($paricipants_arr).'</dt>
-										<dd><a href="javascript:void(0);">Participants</a></dd>
-									</dl>
-								</div>
+								<div class="about"><div class="about-holder"><div class="person-info">';
+                        if($challenge_host_arr)
+                        {
+                            $html       .=   '<a href="javascript:void(0);">
+                                                <img height="101" width="100" alt="image description" src="'.$fullurl.'img/useruploads/'.$challenge_host_arr[0]['user']['user_profile_picture'].'">
+                                             </a>
+                                            <dl>
+                                                <dt>'.$name.'</dt>
+                                                <dd>Host</dd>
+                                                <dt>+'.count($paricipants_arr).'</dt>
+                                                <dd><a href="javascript:void(0);">Participants</a></dd>
+                                            </dl>';
+                        }
+                        $html       .=   '</div>';
 
-								<div class="'.$person_list_class.'">
-								<ul>';
-			
-			foreach ($paricipants_arr as $key1 => $value1)
-			{
-				
-				$html       .=   '<li><a href="javascript:void(0);"><img height="50" width="50" alt="image description" src="'.$fullurl.'img/useruploads/'.$value1['user']['user_profile_picture'].'"><span class="overlay" style="opacity: 0;"></span></a></li>';
-			}
+                        $html       .=   '<div class="'.$person_list_class.'">
+                                                                <ul>';
 
-			$html       .=   '</ul></div>';
+                        foreach ($paricipants_arr as $key1 => $value1)
+                        {
+
+                                $html       .=   '<li><a href="javascript:void(0);"><img height="50" width="50" alt="image description" src="'.$fullurl.'img/useruploads/'.$value1['user']['user_profile_picture'].'"><span class="overlay" style="opacity: 0;"></span></a></li>';
+                        }
+
+                        $html       .=   '</ul></div>';
 			$flag       =   0;//checking weather the noteblock need or not
 			//checking the weather the challenge is active or waiting and give the join condition for login person if he is a participant of this challenge
 			foreach ($paricipants_arr as $key1 => $value1)
@@ -408,7 +471,7 @@ class Challenge extends AppModel
 							<ul class="info">
 									<li><span class="difficulty '.$value['Userchallenge']['user_challenge_finished_date'].'">'.$value['Userchallenge']['user_challenge_finished_date'].' Difficulty</span></li>
 									<li><span class="points">'.$value['Userchallenge']['user_challenge_point'].' Points</span></li>
-									<li>In <a href="#">'.$value['category']['title'].'</a></li>
+									<li>In <a href="javascript:void(0);" onclick="showDiscover(\''.$value['category']['id'].'\')">'.$value['category']['title'].'</a></li>
 							</ul>
 							<div class="txt">
 									<h2>'.$value['challenge']['name'].'</h2>
@@ -524,46 +587,62 @@ class Challenge extends AppModel
             App::import('Model', 'Userchallenge');
             $Userchallenge          =   new Userchallenge();
             $fullurl                =   Router::url('/', true);
-            $return_arr             =   $this->find('all',array('fields'=>array('Challenge.*,if( userchallenge.id, count( userchallenge.id ) , "0" ) AS cnt,categorie.*'),
-                                                            'joins'             =>  array(
-                                                                                        array(
-                                                                                            'table'         => 'userchallenges',
-                                                                                            'alias'         => 'userchallenge',
-                                                                                            'type'          => 'left',
-                                                                                            'foreignKey'    => false,
-                                                                                            'conditions'    => array('userchallenge.challenge_id = Challenge.id and userchallenge.user_challenge_status in (0,1,4,6)')
-                                                                                        ),
-                                                                                        array(
-                                                                                            'table' => 'categories',
-                                                                                            'alias' => 'categorie',
-                                                                                            'type' => 'left',
-                                                                                            'foreignKey' => false,
-                                                                                            'conditions'=> array(
-                                                                                                    'categorie.id = Challenge.parent_category'
-                                                                                            )
-                                                                                        )
-                                                                                    ),
-                                                            'conditions'        =>  array('Challenge.status'=>1),
-                                                            'group'             =>  array('Challenge.id'),    
-                                                            'order'             =>  array('cnt DESC'),
-                                                            'limit'             =>  '4'
-                                                    )
-                                        );
+			
+            $return_arr  =   $this->find('all',array('fields'=>array('Challenge.*,if( userchallenge.id, count( userchallenge.id ) , "0" ) AS cnt,categorie.*,badgecombo.comboimg'),
+				'joins'             =>  array(
+					array(
+						'table' => 'badgecombos',
+						'alias' => 'badgecombo',
+						'type' => 'inner',
+						'foreignKey' => false,
+						'conditions'=> array('badgecombo.id = Challenge.badge_color')
+					),
+					array(
+						'table'         => 'userchallenges',
+						'alias'         => 'userchallenge',
+						'type'          => 'left',
+						'foreignKey'    => false,
+						'conditions'    => array('userchallenge.challenge_id = Challenge.id and userchallenge.user_challenge_status in (0,1,4,6)')
+					),
+					array(
+						'table' => 'categories',
+						'alias' => 'categorie',
+						'type' => 'left',
+						'foreignKey' => false,
+						'conditions'=> array(
+								'categorie.id = Challenge.parent_category'
+						)
+					)
+				),
+				'conditions'        =>  array('Challenge.status'=>1),
+				'group'             =>  array('Challenge.id'),    
+				'order'             =>  array('cnt DESC'),
+				'limit'             =>  '4'
+				)
+			);
             $return_html    =   '';
             $i              =   0;
             foreach($return_arr as $key => $value) {
+				if(strlen($value['Challenge']['why']) > 85) {
+					$string = substr($value['Challenge']['why'], 0, 85).'...';
+				}
+				else {
+					$string = $value['Challenge']['why'];
+				}
                 $return_html   .=  '<div class="slide">
 				<div class="column">
+					<div style="position: absolute; z-index: 5; margin: 3px 0 0 3px;"><img src="'.$fullurl.'img/catuploads/'.$value['categorie']['decal'].'" border="0" width="22" /></div>
+					<div class="arrow-up" style="background: url(\''.$fullurl.'img/badgecolor/'.$value['badgecombo']['comboimg'].'\');"></div>
 					<figure class="image-holder">
-						<img height="155" width="230" alt="image description" src="'.$fullurl.'img/challengeuploads/'.$value['Challenge']['hero_image'].'">
+						<a href="'.$fullurl.'discover/'.$value['Challenge']['permalink'].'" style="cursor:pointer;"><img height="155" width="230" alt="image description" src="'.$fullurl.'img/challengeuploads/'.$value['Challenge']['hero_image'].'"></a>
 						<span class="label  orange"></span>
 					</figure>
 					<div class="about">
 						<header class="title">												
-							<h2><a href="'.$fullurl.'discover/'.$value['Challenge']['permalink'].'">'.$value['Challenge']['name'].'</a></h2>
-							<span class="note">In <a style="cursor:pointer;">'.$value['categorie']['title'].'</a></span>
+							<h2><a href="'.$fullurl.'discover/'.$value['Challenge']['permalink'].'" style="cursor:pointer;">'.$value['Challenge']['name'].'</a></h2>
+							<span class="note">In <a style="cursor:pointer;" onclick="showDiscover(\''.$value['categorie']['id'].'\')" >'.$value['categorie']['title'].' Lifestyle</a></span>
 						</header>
-						<p style="min-height:57px;">'.substr($value['Challenge']['why'], 0, 80).'...</p>
+						<p style="min-height:57px;">'.$string.'</p>
 					</div>
 					<ul class="meta">';
                 $host_array =   $Userchallenge->getHostArray($value['Challenge']['id']);
@@ -733,10 +812,10 @@ array('userchallenge.challenge_id = Challenge.id and userchallenge.user_id != '.
          * @param integer|null $login_user_id login user id stored in the session
          * @return string challenge html creation and return back
          */
-        public function createCallenge($from, $val, $parent, $login_user_id)
+        public function createCallenge($from, $val, $parent, $login_user_id, $child)
         {
             $this->session_user_id    =   $login_user_id;
-            return $this->getHtml($this->getValue($this->getConditions($from,$val,$parent)));
+            return $this->getHtml($this->getValue($this->getConditions($from,$val,$parent, $child)));
         }
         
 	/**
@@ -830,26 +909,33 @@ array('userchallenge.challenge_id = Challenge.id and userchallenge.user_id != '.
 	
 	function getChallengeByPermalink($condition)
 	{
-		return $this->find('all',array('fields'=>array('Challenge.*,difficulty.title,difficulty.decal,category.id,category.title'),
-                                                            'joins' => array(
-                                                                                array(
-                                                                                    'table' => 'difficulties',
-                                                                                    'alias' => 'difficulty',
-                                                                                    'type' => 'inner',
-                                                                                    'foreignKey' => false,
-                                                                                    'conditions'=> array('difficulty.id = Challenge.difficulty')
-                                                                                ),
-                                                                                array(
-                                                                                    'table' => 'categories',
-                                                                                    'alias' => 'category',
-                                                                                    'type' => 'left',
-                                                                                    'foreignKey' => false,
-                                                                                    'conditions'=> array('category.id = Challenge.child_category')
-                                                                                )
-                                                                            ),
-                                                            'conditions'=>$condition
-                                                    )
-                                        );
+		return $this->find('all',array('fields'=>array('Challenge.*, difficulty.title, difficulty.decal, category.id, category.title, category.decal, badgecombo.comboimg'),
+			'joins' => array(
+					array(
+						'table' => 'badgecombos',
+						'alias' => 'badgecombo',
+						'type' => 'inner',
+						'foreignKey' => false,
+						'conditions'=> array('badgecombo.id = Challenge.badge_color')
+					),
+					array(
+						'table' => 'difficulties',
+						'alias' => 'difficulty',
+						'type' => 'inner',
+						'foreignKey' => false,
+						'conditions'=> array('difficulty.id = Challenge.difficulty')
+					),
+					array(
+						'table' => 'categories',
+						'alias' => 'category',
+						'type' => 'left',
+						'foreignKey' => false,
+						'conditions'=> array('category.id = Challenge.parent_category')
+					)
+				),
+			'conditions'=>$condition
+			)
+		);
 	}
 	
 	public function getTags()

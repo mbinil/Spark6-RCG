@@ -7,10 +7,28 @@
 }
 .container h2 {
     margin: 0 0 5px;
+	line-height: 1.25;
+}
+#content .cycle-gallery .columns-holder .column, .columns-holder .column {
+    min-height: 432px;
+}
+.columns-holder .column .about {
+    padding: 0 10px 5px 13px;
+}
+.arrow-up {
+    height: 65px;
+    position: absolute;
+    width: 65px;
+    z-index: 3;
+	transform: rotate(45deg);
+	-ms-transform: rotate(45deg); /* IE 9 */
+	-webkit-transform: rotate(45deg); /* Safari and Chrome */
+	margin: -33px 0px 0px -33px;
 }
 </style>
+</style>
 <!-- slideshow -->
-<div class="slideshow">
+<div class="slideshow"><input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
 	<div class="slideset">
 		<!-- slide -->
 		<div class="slide green">
@@ -94,7 +112,7 @@
 		</div>
 	</section>
 	<!-- content section -->
-	<section class="content-block white">
+	<section class="content-block white" style="display:none;">
 		<div class="heading">
 			<a href="#" class="more" style="margin:8px 10px 0 0 !important;">See All Coverage</a>
 			<h2>Proudly featured in</h2>

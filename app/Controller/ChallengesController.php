@@ -19,15 +19,19 @@ class ChallengesController extends AppController
 		{
 			$this->redirect('/');
 		}
+		$session_parent_category    =   $this->Session->read("discover_category");
 		
+                if(!$this->Session->read("discover_category"))
+                    $this->Session->write("discover_category",0);
+                
 		//  getting the parent category and child category here
 		$this->loadModel('Category');
 		$this->set('parent_category',$this->Category->getParentCategories());
-		$this->set('child_category',$this->Category->createChildCategory(''));
+		$this->set('child_category',$this->Category->createChildCategory($session_parent_category));
 
 		//   getting all the challenges here
 		$this->loadModel('Challenge');
-		$this->set('challenges',$this->Challenge->createCallenge('parent','','',$this->Session->read("session_user_id")));
+		$this->set('challenges',$this->Challenge->createCallenge('parent',$session_parent_category,'',$this->Session->read("session_user_id"),''));
 		
 		//for dialogue...
 		//  getting the parent category and child category here
@@ -35,23 +39,50 @@ class ChallengesController extends AppController
 		$session_val = $this->Session->read("hostChallengeInfo")?$this->Session->read("hostChallengeInfo"):'';
 		$this->set('user_html',$this->User->createUser($session_val, $this->Session->read("session_user_id")));
 		$this->set('challenge_id','');
+		$this->set('session_parent_category',$session_parent_category?$session_parent_category:0);
 	}
         
 	public function get_challenge()
 	{
+                $child_cat  =   '';
 		$child  =   '';
 		if($_POST['from'] == 'parent' || $_POST['from'] == 'search')
 		{
 			//  creating the child category here...
 			$this->loadModel('Category');
-			$val    =   ($_POST['from'] == 'search')?'':$_POST['val'];
+			$val    =   ($_POST['from'] == 'search')?$this->Session->read("discover_category"):$_POST['val'];
 			$child  =   $this->Category->createChildCategory($val);
+                        
+                        
+                        if($_POST['from'] == 'parent')
+                        {
+                            $this->Session->write("discover_category",$val?$val:0);
+                            $_POST['val']   =   $this->Session->read("discover_category");
+                        }
+                        if($_POST['from'] == 'search')
+                        {
+                            $this->Session->write("discover_category",$val?$val:$this->Session->read("discover_category"));
+                            $_POST['parent']    =   $this->Session->read("discover_category");
+                            $child_cat          =   $_POST['child'];
+                            $child  =   $this->Category->createChildCategory($_POST['parent']);
+                        }
 		}
+                else if($_POST['from'] == 'child')
+                {
+                    $this->Session->write("discover_category",$_POST['parent']?$_POST['parent']:0);
+                    $_POST['parent']   =   $this->Session->read("discover_category");
+                }
+                else
+                {
+                    $_POST['val']       =   '';
+                    $_POST['parent']    =   $this->Session->read("discover_category");
+                    $child_cat          =   $_POST['child'];
+                }
 
 		//   creating the challenges here...
 		$this->loadModel('Challenge');
-		
-		echo "1"."@#@".$this->Challenge->createCallenge($_POST['from'],$_POST['val'],$_POST['parent'],$this->Session->read("session_user_id"))."@#@".$child;exit();
+		//print_r($_POST);exit;
+		echo "1"."@#@".$this->Challenge->createCallenge($_POST['from'],$_POST['val'],$_POST['parent'],$this->Session->read("session_user_id"),$child_cat)."@#@".$child;exit();
 	}
 
 	//pick a host while click on the image in the pick a host section in challenge display in discover page
@@ -93,8 +124,7 @@ class ChallengesController extends AppController
 		echo $this->Userchallenge->checkUserChallenge();exit;
 	}
         
-	public function challenge_details($challenge_permalink=NULL) 
-	{
+	public function challenge_details($challenge_permalink=NULL) {
 		$this->loadModel('Challenge');
 		$challenge_info = $this->Challenge->getChallengeByPermalink(array('permalink'=>$challenge_permalink));
 		$this->set('challenge_info',$challenge_info);
@@ -108,6 +138,16 @@ class ChallengesController extends AppController
 			$this->set('starts_in',$this->Challenge->getHourMinutes($available_host[0]['Userchallenge']['started_date'],'','hour'));
 		else
 			$this->set('starts_in','');
+                
+                $this->set('challenge_id',$challenge_info[0]['Challenge']['id']);
+                
+                //fetching the comments related to this challenge and create the comment html
+                $this->loadModel('Comment');
+                $comment_arr    =   $this->Comment->getComment(array('Comment.status' => 1, 'Comment.challenge_id' => $challenge_info[0]['Challenge']['id']));
+                $this->set('comment_html',$this->Comment->createComment($comment_arr));
+                $this->set('comment_cnt',count($comment_arr));
+                $this->set('session_user_id',$this->Session->read("session_user_id"));
+                
 	}
 	
 	public function my_challenges() 
@@ -242,4 +282,25 @@ class ChallengesController extends AppController
 			exit();
 		}
 	}
+        
+        public function ajax_set_discover_category()
+        {
+            $this->Session->write("discover_category",$_POST['category']);
+            echo "1";exit;
+        }
+        
+        public function ajax_inser_comment()
+        {
+            $this->loadModel('Comment');
+            
+            if($this->Comment->inserComment($this->Session->read("session_user_id")))
+            {
+                $comment_arr    =   $this->Comment->getComment(array('Comment.status' => 1, 'Comment.challenge_id' => $_POST['challenge_id']));
+                echo "1#@#".$this->Comment->createComment($comment_arr)."#@#".count($comment_arr);exit;
+            }
+            else
+            {
+                echo "0";exit;
+            }
+        }
 }

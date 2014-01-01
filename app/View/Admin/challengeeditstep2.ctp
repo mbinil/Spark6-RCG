@@ -353,7 +353,7 @@ function getParentCategory()
 <?php if(isset($newchallengeinfo[0]['Challenge']['parent_category']) && $newchallengeinfo && ($pcat['Category']['id'] == $newchallengeinfo[0]['Challenge']['parent_category']) ) { 
     echo $child_combo;
 ?>
-Need another child category?<a href="javascript:getChildCategory();">create one now</a>
+Need another child category? <a href="javascript:getChildCategory();">create one now</a>
 <?php } ?>
 </div>
 		<hr/>
@@ -361,7 +361,7 @@ Need another child category?<a href="javascript:getChildCategory();">create one 
 		<input type="hidden" value="<?php echo $newchallengeinfo[0]['Challenge']['parent_category']; ?>" id="chalngparent">
 		</div>
 		<br/>
-        <div class="discrption_label_right" style="margin-top: -20px;">Need another parent category?<a href="javascript:getParentCategory();" >create one now</a></div>
+        <div class="discrption_label_right" style="margin-top: -20px;">Need another parent category? <a href="javascript:getParentCategory();" >create one now</a></div>
       </div>
 <div style="float:right; width:30%; margin-left:20px;">
     <div style="background-color:#EEEEEE;border-radius:100px;height:200px;margin:20px 60px 10px; <?php if(isset($newchallengeinfo[0]['Challenge']['chalngparentchildimagename']) && $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']) { ?>background:url('<?php echo Router::url('/', true); ?>img/badgedesign/<?php echo $newchallengeinfo[0]['Challenge']['chalngparentchildimagename']; ?>')<?php } ?>;" id="child_image_div"></div>;

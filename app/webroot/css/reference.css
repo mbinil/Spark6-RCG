@@ -1256,6 +1256,8 @@ h1{
 	color:#0064D2;
 	text-shadow:none;
 	margin:0;
+	color: #000000;
+    letter-spacing: -1.5px;
 }
 .details-block .image-holder{margin:0;}
 .details-block .image-holder .txt{
@@ -1272,7 +1274,7 @@ h1{
 	display:block;
 	margin:0 0 16px;
 }
-.details-block .image-holder .txt .note a{color:#662e00;}
+.details-block .image-holder .txt .note a{color:#0077C9;}
 .details-block .image-holder .txt .note a:hover{text-decoration:underline;}
 .details-block .about{
 	overflow:hidden;
@@ -1374,7 +1376,7 @@ h1{
 .carousel .btn-next:hover{background-position:-243px 0;}
 .comments-placeholder{
 	overflow:hidden;
-	padding:9px 8px 52px;
+	padding:10px;
 }
 /* discover page */
 .column-holder{margin:0 0 30px;}

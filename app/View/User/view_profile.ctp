@@ -28,7 +28,7 @@ $eBayBusinessUnitLoc = Configure::read('eBayBusinessUnitLoc');
 					<div style="font-size: 16px; margin: 5px 0px; width: 150px; float:left; text-align: center;">finish rate</div>
 				</div>
 				<div class="clear"></div>
-				<hr/>
+				<hr style="border-color:#ccc;"/>
 				<div class="clear"></div>
 				<?php echo $challenges;?>
 			</div>

@@ -4,6 +4,16 @@
 {
 	z-index: 1000;	
 }
+.arrow-up {
+    height: 84px;
+    margin: -53px 0 0 -45px;
+    position: absolute;
+    transform: rotate(45deg);
+	-ms-transform: rotate(45deg); /* IE 9 */
+	-webkit-transform: rotate(45deg); /* Safari and Chrome */
+    width: 43px;
+    z-index: 3;
+}
 </style>
 <?php
 $fullurl = Router::url('/', true);
@@ -16,7 +26,6 @@ if(isset($email_status) && $email_status!="")
 { 
 	echo "<script>alert('".$email_status."');</script>";
 }
-
 ?>
 <script>
 $(document).ready(function(){
@@ -70,11 +79,57 @@ function showAHost(challenge_id)
             } 
     });
 }
+
+function insertComment()
+{
+    if($('#session_user_id').val())
+    {
+        var baseurl         =   $('#baseurl').val();
+        var challenge_id    =   $('#challenge_id').val();
+        var comment         =   $.trim($('#comment_text').val());
+        if(comment)
+        {
+            $.ajax({
+                    type: "POST",  
+                    url: baseurl+'challenges/ajax_inser_comment',
+                    data: "challenge_id="+challenge_id+'&comment='+comment,
+                    async:false,
+                    success: function(response) {
+                        var data    =   new Array();
+                        data        =   response.split('#@#');
+                        if(data[0] == 1)
+                        {
+                            $("#comment_div_id" ).html(data[1]);
+                            $("#comment_cnt_id" ).html("<h2>Comments ( "+data[2]+" )</h2>");
+							$('#comment_text').val('');
+                        }
+                        else
+                        {
+                            $('#message_span').html('Some error occured while inserting the comment!!');
+                            $('#alert_div').show();
+                        }
+                    } 
+            });
+        }
+        else
+        {
+            $('#message_span').html('Please type in your comment!!');
+            $('#alert_div').show();
+        }
+    }
+    else
+    {
+        Loginuser();
+    }
+}
 </script>
 <div class="visual">
 	<img alt="image description" src="<?php echo Router::url('/img/challengeuploads/background/', true) . $challenge_info[0]['Challenge']['hero_image']; ?>">
 </div>
-<div id="main"><input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
+<div id="main">
+    <input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
+    <input type="hidden" id="challenge_id" value="<?php echo $challenge_id; ?>" />
+    <input type="hidden" id="session_user_id" value="<?php echo $session_user_id; ?>" />
 	<!-- two columns block -->
 	<div id="two-columns">
 		<!-- content -->
@@ -83,6 +138,8 @@ function showAHost(challenge_id)
 			<div class="details-block">				
 				<!-- heading -->
 				<header class="title">
+					<div style="position: absolute; z-index: 5; margin: -18px 0 0 -32px;"><img src="<?php echo Router::url('/', true).'img/catuploads/'.$challenge_info[0]['category']['decal']; ?>" border="0" width="25" /></div>
+					<div class="arrow-up" style="background: url('<?php echo Router::url('/', true).'img/badgecolor/'.$challenge_info[0]['badgecombo']['comboimg']; ?>');"></div>
 				 	<h1><?php echo $challenge_info[0]['Challenge']['name']; ?></h1>			
 					<span class="label <?php if($challenge_info[0]['Challenge']['parent_category']=="1") { ?> blue <?php } ?><?php if($challenge_info[0]['Challenge']['parent_category']=="2"){ ?> green <?php } ?><?php if($challenge_info[0]['Challenge']['parent_category']=="3"){ ?> orange<?php } else { ?> blue <?php } ?>"></span>
 				</header>
@@ -90,7 +147,7 @@ function showAHost(challenge_id)
 				<figure class="image-holder">
 					<img src="<?php echo Router::url('/img/challengeuploads/', true) . $challenge_info[0]['Challenge']['hero_image']; ?>" width="710" height="480" alt="image description">
 					<figcaption class="txt">
-						<span class="note">In <a onclick="#" style="cursor:pointer;"><?php echo $challenge_info[0]['category']['title']; ?> Lifestyle</a></span>
+                                            <span class="note">In <a href="javascript:void(0);" onclick="showDiscover('<?php echo $challenge_info[0]['category']['id']; ?>')" style="cursor:pointer;"><?php echo $challenge_info[0]['category']['title']; ?> Lifestyle</a></span>
 						<p><?php echo $challenge_info[0]['Challenge']['daily_commitment']; ?></p>
 					</figcaption>
 				</figure>
@@ -192,10 +249,23 @@ function showAHost(challenge_id)
 				<a id="FBcomments"></a>
 				<!-- comments block -->
 				<div class="section">
-					<h2>Comments</h2>
-					<div class="comments-placeholder">
-					<fb:comments-count href="<?php echo Router::url('/', true) ."discover/". $challenge_info[0]['Challenge']['permalink']; ?>" /></fb:comments-count> Comments		
-					<div class="fb-comments" data-href="<?php echo Router::url('/', true) ."discover/". $challenge_info[0]['Challenge']['permalink']; ?>" data-notify="true" data-num-posts="10"></div>	
+					<div id="comment_cnt_id"><h2>Comments ( <?php echo $comment_cnt;?> )</h2></div>
+					<hr style="margin: 5px 0;"/>
+					<div class="comments-placeholder" id="comment_div_id">
+						<?php echo $comment_html; ?>
+					</div>
+					<!----Error message div------------------>
+					<div class="alert" id="alert_div" style="background-color: #FF6A6A;border-color: red;color:#FFFFFF;width:626px;display:none;">
+						<button type="button" data-dismiss="alert1" class="close fui-cross" onclick="javascript:$('#alert_div').hide();"></button>
+						<span id="message_span"></span>	
+					</div>
+					<!--------------------------------------->
+					<div style="margin: 10px 0 60px 0;">
+						Your comment:
+						<div style="margin: 0 0 5px;"><textarea rows="5" cols="30" id="comment_text"></textarea></div>
+						<div class="btn_next" style="margin: 0 15px 0 0;">
+							<a href="javascript:void(0);" onclick="insertComment();" class="btn btn-primary btn-block">Submit</a>
+						</div>
 					</div>
 				</div>
 			</div>

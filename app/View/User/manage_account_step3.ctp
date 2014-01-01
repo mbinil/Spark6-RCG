@@ -40,14 +40,14 @@ function hoby_fn()
 			</ul>
 		</div>
 		<div class="clear"></div>
-		<hr/>            
-		<div class="container_left">
+		<hr style="border-color:#ccc;"/>            
+		<div class="container_left" style="border:none;">
 			<div class="btn_next">
 			  <a href="javascript:ajax_manage_account_step3();" class="btn btn-primary btn-block" >SAVE</a>
 			</div>
 			<h1>What are your hobbies and interests?</h1>
 			<h3>This info will help us match you withn collegues that have similar interests and passions.</h3>
-			<hr/>
+			<hr style="border-color:#ccc;"/>
 			<div class="clear"></div>
 			<!----Error message div------------------>
 			<div class="alert" id="alert_div" style="background-color: #FF6A6A;border-color: red;color:#FFFFFF;width:700px;display:none;">

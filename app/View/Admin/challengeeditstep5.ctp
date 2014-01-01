@@ -41,7 +41,7 @@ function getClose()
 	$( "#dialog-modal" ).dialog('close');
 	$.ajax({  //Make the Ajax Request
 		type: "POST",  
-		url: baseurl+"ajax_createimage",
+		url: baseurl+"admin/ajax_createimage",
 		data: "val="+$('#color_code').val()+"&gradient=0",
 		async: false,
 		success: function(response) {
@@ -49,7 +49,7 @@ function getClose()
 			data        =   response.split('@#&');
 			if(data[0] != 0)
 			{
-				var div =  '<div style="float:left;margin:5px;"><div style="position: absolute; margin-left:55px; visibility: hidden;" id="'+data[1]+'"><a href="Javascript:deletebadgecombo(\''+data[1]+'\',\''+data[2]+'\');" style="margin:0px;"><img src="'+baseurl+'img/remove.png" border="0" /></a></div><a href="Javascript:badgecombo(\''+data[0]+'\',\''+data[1]+'\');" onmouseover="Javascript:showdeletecombo(\''+data[1]+'\');" onmouseout="Javascript:hidedeletecombo(\''+data[1]+'\');"><img src="'+baseurl+'img/badgecolor/'+data[0]+'" border="0" style="border-radius:100px; width:75px;" /></a></div>'; 
+				var div =  '<div style="float:left;margin:5px;"><div style="position: absolute; margin-left: 66px; visibility: visible;" id="'+data[1]+'"><a href="Javascript:deletebadgecombo(\''+data[1]+'\',\''+data[2]+'\');" style="margin:0px;"><img src="'+baseurl+'img/remove.png" border="0" /></a></div><a href="Javascript:badgecombo(\''+data[0]+'\',\''+data[1]+'\');" onmouseover="Javascript:showdeletecombo(\''+data[1]+'\');" onmouseout="Javascript:hidedeletecombo(\''+data[1]+'\');"><img src="'+baseurl+'img/badgecolor/'+data[0]+'" border="0" style="border-radius:100px; width:75px;" /></a></div>'; 
 				$( ".image_listing" ).append(div);
 			}
 		} 
@@ -70,7 +70,7 @@ function deletebadgecombo(id,val)
 	if(checkstr == true){
 		$.ajax({  //Make the Ajax Request
 			type: "POST",  
-			url: baseurl+"badgecombo_delete",
+			url: baseurl+"admin/badgecombo_delete",
 			data: "id="+id+'&comboimg='+val+'&folder=badgecolor',  //data
 			success: function(response) {
 				if(response=='1')
@@ -130,7 +130,7 @@ function deletebadgecombo(id,val)
       <input type="hidden" name="root_path" id="root_path" value="<?php echo Router::url('/app/webroot/img/challengeuploads', true); ?>" />
       <div id="drop" style="background-color: white;width:705px;height:120px;"> <br/>
         <br/>
-        drop user icon<br/>
+        drop hero image<br/>
         You can also <a style="text-decoration: underline; color:#999999;">browse for a file</a>
         <input type="file" name="upl" />
       </div>
@@ -156,11 +156,11 @@ function deletebadgecombo(id,val)
     <hr/>
     <!--badge color creation starts here-->
     <div style="margin:50px 0 0 0;">Badge Color:</div>
-    <div style="width:85%;" align="center">
+    <div style="width:100%;" align="center">
       <div id="badgecolor" style="margin: 10px 0px; height: 235px;">
         <div id="badgecombo" style="float: left;border: 2px dashed #999999 !important;"> <img src="<?php echo Router::url('/', true); ?>img/badgecolor/<?php echo (!empty($selectedbadgecombo))?$selectedbadgecombo:'Spaceship.png'; ?>" border="0" style="border-radius:100px; width:200px;" /> </div>
         <div style="float: left; position: absolute; margin: 210px 0px 0px; width: 205px; text-align: center;"><?php echo $newchallengeinfo[0]['Challenge']['badge_title'];?></div>
-        <div style="float:left;margin:55px 0 25px 15px;width: 60%;" align="left" class="image_listing">
+        <div style="float:left;margin: 0px 0 25px 15px;width: 75%;" align="left" class="image_listing">
           <?php if(count($badgecombos) > 0) { ?>
           <?php foreach($badgecombos as $badgecinfo) { ?>
           <div style="float:left;margin:5px;">

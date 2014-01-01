@@ -2020,7 +2020,7 @@ function submitLoginuser()
 	var loginusername   = $.trim($("#loginusername").val());
 	var loginpassword   = $.trim($("#loginpassword").val());
     var return_flag = 0;
-        
+    var baseurl			    =   $('#baseurl').val();    
 	if(loginpassword=="" || loginpassword.length < 6)
 	{
 		if(!loginpassword)
@@ -2048,13 +2048,13 @@ function submitLoginuser()
 		$("#loginpassword").css("border-color", "#BDC3C7");
 		$.ajax({  //Make the Ajax Request
 			type: "POST",  
-			url: "ajax_loginchecking",
+			url: baseurl+"users/ajax_loginchecking",
 			data: "loginusername="+loginusername+"&loginpassword="+loginpassword, //data
 			async:false,
 			success: function(response) {
 				if(response=='1')
 				{
-					window.location = "discover";
+					window.location = baseurl+"discover";
 				}
 				else
 				{
@@ -2158,4 +2158,21 @@ function ajax_manage_account_step3()
 			}
 		});
 	}	
+}
+
+function showDiscover(category)
+{
+    var root_url    =   $('#baseurl').val();
+    
+    $.ajax({  //Make the Ajax Request
+            type: "POST",  
+            url: root_url+"challenges/ajax_set_discover_category",
+            data: "category="+category,  //data
+            success: function(response) {
+                    if(response=='1')
+                    {
+                            window.location = root_url+"challenges/discover";
+                    }
+            }
+    });
 }

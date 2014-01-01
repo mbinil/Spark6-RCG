@@ -167,41 +167,47 @@ class Userchallenge extends AppModel
     
     public function getChallengeHostArray($condition)
     {
-        return $challengesinfo = $this->find('all',array('fields'=>array('Userchallenge.*,user.user_profile_picture,user.user_firstname,user.id,
-            challenge.daily_commitment,challenge.name,challenge.learn_more,challenge.daily_commitment,challenge.hero_image,challenge.permalink,difficulty.title,difficulty.decal,category.id,category.title'),
-                                                            'joins' => array(
-                                                                                array(
-                                                                                    'table' => 'users',
-                                                                                    'alias' => 'user',
-                                                                                    'type' => 'inner',
-                                                                                    'foreignKey' => false,
-                                                                                    'conditions'=> array('user.id = Userchallenge.user_id')
-                                                                                ),
-                                                                                array(
-                                                                                    'table' => 'challenges',
-                                                                                    'alias' => 'challenge',
-                                                                                    'type' => 'inner',
-                                                                                    'foreignKey' => false,
-                                                                                    'conditions'=> array('challenge.id = Userchallenge.challenge_id')
-                                                                                ),
-                                                                                array(
-                                                                                    'table' => 'difficulties',
-                                                                                    'alias' => 'difficulty',
-                                                                                    'type' => 'inner',
-                                                                                    'foreignKey' => false,
-                                                                                    'conditions'=> array('difficulty.id = challenge.difficulty')
-                                                                                ),
-                                                                                array(
-                                                                                    'table' => 'categories',
-                                                                                    'alias' => 'category',
-                                                                                    'type' => 'left',
-                                                                                    'foreignKey' => false,
-                                                                                    'conditions'=> array('category.id = challenge.child_category')
-                                                                                )
-                                                                            ),
-                                                            'conditions'=>$condition
-                                                    )
-                                        );
+        return $challengesinfo = $this->find('all',array('fields'=>array('Userchallenge.*, user.user_profile_picture, user.user_firstname, user.id, challenge.daily_commitment, challenge.name, challenge.learn_more, challenge.daily_commitment, challenge.hero_image, challenge.permalink, difficulty.title, difficulty.decal, category.id, category.title, category.decal, badgecombo.comboimg'),
+			'joins' => array(
+				array(
+					'table' => 'users',
+					'alias' => 'user',
+					'type' => 'inner',
+					'foreignKey' => false,
+					'conditions'=> array('user.id = Userchallenge.user_id')
+				),
+				array(
+					'table' => 'challenges',
+					'alias' => 'challenge',
+					'type' => 'inner',
+					'foreignKey' => false,
+					'conditions'=> array('challenge.id = Userchallenge.challenge_id')
+				),
+				array(
+					'table' => 'badgecombos',
+					'alias' => 'badgecombo',
+					'type' => 'inner',
+					'foreignKey' => false,
+					'conditions'=> array('badgecombo.id = challenge.badge_color')
+				),
+				array(
+					'table' => 'difficulties',
+					'alias' => 'difficulty',
+					'type' => 'inner',
+					'foreignKey' => false,
+					'conditions'=> array('difficulty.id = challenge.difficulty')
+				),
+				array(
+					'table' => 'categories',
+					'alias' => 'category',
+					'type' => 'left',
+					'foreignKey' => false,
+					'conditions'=> array('category.id = challenge.parent_category')
+				)
+			),
+			'conditions'=>$condition
+			)
+		);
         
     }
     

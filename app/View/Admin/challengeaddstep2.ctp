@@ -344,7 +344,7 @@ function getParentCategory()
 <?php if(isset($newchallengeinfo['parent_category']) && $newchallengeinfo && ($pcat['Category']['id'] == $newchallengeinfo['parent_category']) ) { 
     echo $child_combo;
 ?>
-Need another child category?<a href="javascript:getChildCategory();">create one now</a>
+Need another child category? <a href="javascript:getChildCategory();">create one now</a>
 <?php } ?>
 </div>
 			<div class="clear"></div>
@@ -354,7 +354,7 @@ Need another child category?<a href="javascript:getChildCategory();">create one 
           <input type="hidden" value="<?php if(isset($newchallengeinfo['parent_category']) && $newchallengeinfo) { echo $newchallengeinfo['parent_category'];}?>" id="chalngparent">
         </div>
 		<br/>
-        <div class="discrption_label_right" style="margin-top: -20px;">Need another parent category?<a href="javascript:getParentCategory();" >create one now</a></div>
+        <div class="discrption_label_right" style="margin-top: -20px;">Need another parent category? <a href="javascript:getParentCategory();" >create one now</a></div>
       
       </div>
 	  

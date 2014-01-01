@@ -199,6 +199,7 @@ class UsersController extends AppController {
 	public function logout()
 	{
 		$this->Session->delete("session_user_id");
+		$this->Session->delete("discover_category");
 		$this->redirect(array('controller' => 'home', 'action' => 'display', 'home'));
 	}	
 	

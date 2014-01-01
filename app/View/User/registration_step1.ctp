@@ -64,14 +64,14 @@ $eBayBusinessUnitLoc = Configure::read('eBayBusinessUnitLoc');
 			</ul>
 		</div>
 		<div class="clear"></div>
-		<hr/>            
-		<div class="container_left">
+		<hr style="border-color:#ccc;"/>            
+		<div class="container_left" style="border:none;">
 			<div class="btn_next">
 			  <a href="javascript:reg_info_ajax();" class="btn btn-primary btn-block" >Next<span class="fui-arrow-right pull-right"></span></a>
 			</div>
 			<h1>Account Information</h1>
 			<h3>Please provide some basic account info.</h3>
-			<hr/>
+			<hr style="border-color:#ccc;"/>
 			<div class="clear"></div>
 			<!----Error message div------------------>
 			<div class="alert" id="alert_div" style="background-color: #FF6A6A;border-color: red;color:#FFFFFF;width:700px;display:none;">

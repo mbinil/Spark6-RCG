@@ -1245,23 +1245,30 @@ class AdminController extends AppController
 	 */
 	public function ajax_createimage()
 	{
-
-		$color_val1                      =   $this->_hex2rgb($_POST['color1']);
-		$color_val2                      =   $this->_hex2rgb($_POST['color2']);
-		$color_val3                      =   $this->_hex2rgb($_POST['color3']);
-		$color_val4                      =   $this->_hex2rgb($_POST['color4']);
-		$newchildcatinfo['gradient']    =   $_POST['gradient'];
-		$destination                    =   ($_POST['gradient'] == '1')?'badgedesign':'badgecolor';
-		
-		// Create a 55x30 image
 		$im = imagecreate(200, 200);
-		$red = imagecolorallocate($im, $color_val1[0], $color_val1[1], $color_val1[2]);
-		$red1 = imagecolorallocate($im, $color_val2[0], $color_val2[1], $color_val2[2]);
-		$red2 = imagecolorallocate($im, $color_val3[0], $color_val3[1], $color_val3[2]);     //SELECTED COLOUR
-		$red3 = imagecolorallocate($im, $color_val4[0], $color_val4[1], $color_val4[2]);
-		//$red4 = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
+		$destination   =   ($_POST['gradient'] == '1')?'badgedesign':'badgecolor';
+		$newchildcatinfo['gradient']  =   $_POST['gradient'];
+		if($_POST['gradient'] == '1')
+		{
+			$color_val1                     =   $this->_hex2rgb($_POST['color1']);
+			$color_val2                     =   $this->_hex2rgb($_POST['color2']);
+			$color_val3                     =   $this->_hex2rgb($_POST['color3']);
+			$color_val4                     =   $this->_hex2rgb($_POST['color4']);
+			
+			$red = imagecolorallocate($im, $color_val1[0], $color_val1[1], $color_val1[2]);
+			$red1 = imagecolorallocate($im, $color_val2[0], $color_val2[1], $color_val2[2]);
+			$red2 = imagecolorallocate($im, $color_val3[0], $color_val3[1], $color_val3[2]);     //SELECTED COLOUR
+			$red3 = imagecolorallocate($im, $color_val4[0], $color_val4[1], $color_val4[2]);
+			//$red4 = imagecolorallocate($im, rand(0, 255), rand(0, 255), rand(0, 255));
+		}
+		else
+		{
+			
+			$color_val3  =   $this->_hex2rgb($_POST['val']);
+			$red2 = imagecolorallocate($im, $color_val3[0], $color_val3[1], $color_val3[2]);     //SELECTED COLOUR
+		}
 		$black = imagecolorallocate($im, 0, 0, 0);
-
+		
 		// Make the background transparent
 		imagecolortransparent($im, $black);
 		if($newchildcatinfo['gradient'] == 1)

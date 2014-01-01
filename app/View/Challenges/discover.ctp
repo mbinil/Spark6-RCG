@@ -26,6 +26,16 @@ echo $this->Html->script('discover.js');?>
 .column .meta img {
     margin: 0 -30px 0 5px;
 }
+.arrow-up {
+    height: 65px;
+    position: absolute;
+    width: 65px;
+    z-index: 3;
+	transform: rotate(45deg);
+	-ms-transform: rotate(45deg); /* IE 9 */
+	-webkit-transform: rotate(45deg); /* Safari and Chrome */
+	margin: -33px 0px 0px -33px;
+}
 </style>
 <!-- main content block -->
 <div class="container_left" style="width:100% !important; border: 1px solid #fff;">
@@ -33,6 +43,9 @@ echo $this->Html->script('discover.js');?>
         <h1>
             Discover Fun Challenges.
             <input type='hidden' name='parenthiddn' id='parenthiddn' />
+            <input type='hidden' name='childhiddn' id='childhiddn' />
+            <input type='hidden' name='session_parenthiddn' id='session_parenthiddn' value="<?php echo $session_parent_category;?>"/>
+            <input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
         </h1>
         <div class="clear"></div>
         <!----Error message div------------------>
@@ -60,14 +73,14 @@ echo $this->Html->script('discover.js');?>
                 <nav>
                     <ul class="tabset">
                         <li class="parent_class" id="all_li_id_0">
-							<a href="javascript:void(0);" onclick="showChallenge(this,'parent','','')" class="active" data-default="#0077c9" data-hover="#ffffff" >
+<a href="javascript:void(0);" onclick="showChallenge(this,'parent','','')" <?php if($session_parent_category == 0) { ?> class="active" <?php }else { ?> class="" <?php } ?> data-default="#0077c9" data-hover="#ffffff" >
 								<span>All</span>
 								<em class="mask"><strong class="mask-frame"></strong></em>
 							</a>
 						</li>
                         <?php foreach ($parent_category as $key => $value) { ?>
 						<li class="parent_class" id="all_li_id_<?php echo $value['Category']['id']; ?>">
-							<a href="javascript:void(0);" onclick="showChallenge(this,'parent','','<?php echo $value['Category']['id'];?>')" class="<?php echo $value['Category']['title'];?>" data-default="#0077c9" data-hover="#ffffff">
+                                                        <a href="javascript:void(0);" onclick="showChallenge(this,'parent','','<?php echo $value['Category']['id'];?>')" <?php if($session_parent_category == $value['Category']['id']) { ?>class="active" <?php } else { ?> class="<?php echo $value['Category']['title'];?>"<?php } ?> data-default="#0077c9" data-hover="#ffffff">
 								<em class="ico"></em>
 								<em class="ico-hover"></em>
 								<span><?php echo $value['Category']['title'];?></span>
@@ -128,13 +141,14 @@ function getHourMinutes($from,$to)
     
     function get_fb()
     {
+        var baseurl    =   $('#baseurl').val();
         $.ajax({
             type: "POST",  
-            url: 'ajax_challenge_checking',
+            url: baseurl+'challenges/ajax_challenge_checking',
             data: "",
             success: function(response) {
                 if(response == 1)
-                    showChallenge(this,'parent','','');
+                    showChallenge(this,'','','');
             } 
         });
     }

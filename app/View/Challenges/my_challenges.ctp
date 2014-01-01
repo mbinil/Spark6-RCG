@@ -39,7 +39,7 @@ dl dd:nth-child(4n+2), dl dt:nth-child(4n+1) {
 }
 .tab-content .column {
     min-height: inherit;
-    overflow: visible;
+    overflow: hidden;
 }
 .column .desctiption .days {
     width: 145px;
@@ -57,6 +57,16 @@ dl dd:nth-child(4n+2), dl dt:nth-child(4n+1) {
 .persons-list {
     width: 438px;
 }
+.arrow-up {
+    height: 75px;
+    margin: -52px 0 0 -52px;
+    position: absolute;
+    transform: rotate(45deg);
+	-ms-transform: rotate(45deg); /* IE 9 */
+	-webkit-transform: rotate(45deg); /* Safari and Chrome */
+    width: 75px;
+    z-index: 3;
+}
 </style>
 <script>
 function tabselection(tab)
@@ -69,7 +79,7 @@ function tabselection(tab)
 	 $(tab_id).show();
 }
 </script>
-	<div id="main">
+	<div id="main"><input type="hidden" id="baseurl" value="<?php echo Router::url('/', true); ?>" />
 		<h1>Be Great, Challenge Life.</h1>	
 		<div id="status" style="color:#FF0000"></div>
 		<div class="acount-block">

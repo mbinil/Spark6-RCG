@@ -5,6 +5,7 @@ function showChallenge(ob,from,evt,id)
     {
         case 'parent':
 			$('#parenthiddn').val(id);
+			$('#session_parenthiddn').val(id?id:0);
 			
 			$('li.parent_class').each(function(){
 				$(this).find('a').attr('class','');
@@ -27,7 +28,8 @@ function showChallenge(ob,from,evt,id)
 				$(this).attr('class','');
 			});
 			$(ob).parent().attr('class','active');
-			
+			$('#session_parenthiddn').val($('#parenthiddn').val());
+			$('#childhiddn').val(id);
 			data_arr    =   getResult('from=child&val='+id+'&parent='+$('#parenthiddn').val()).split('@#@');
 			if(data_arr[0] == 1)
 			{
@@ -41,13 +43,26 @@ function showChallenge(ob,from,evt,id)
 
 			if(charCode == 13 || search_keyword.length > 2)
 			{
-				data_arr    =   getResult('from=search&val='+search_keyword+'&parent=').split('@#@');
+                                data_arr    =   getResult('from=search&val='+search_keyword+'&child='+$('#childhiddn').val()+'&parent=').split('@#@');
 				if(data_arr[0] == 1)
 				{
 					data_arr[1] =   data_arr[1]?data_arr[1]:'<div align="center">No Challenges Found...</div>';
 					$('#challenge_total_div').html(data_arr[1]);
 					$('#child_category_side_nav').html(data_arr[2]);
+                                        var child   =   $('#childhiddn').val()?$('#childhiddn').val():0;
+                                        $('#child_category_side_nav ul.child_class li').each(function(){
+                                            $(this).attr('class','');
+                                        });
+                                        $('#li_child_'+child).attr('class','active');
 				}
+			}
+			break;
+             default:
+                        data_arr    =   getResult('from=""&child='+$('#childhiddn').val()).split('@#@');
+			if(data_arr[0] == 1)
+			{
+				data_arr[1] =   data_arr[1]?data_arr[1]:'<div align="center">No Challenges Found...</div>';
+				$('#challenge_total_div').html(data_arr[1]);
 			}
 			break;
     }
@@ -55,10 +70,11 @@ function showChallenge(ob,from,evt,id)
 
 function getResult(data)
 {
+    var baseurl    =   $('#baseurl').val();
     var return_data =   '';
     $.ajax({
             type: "POST",  
-            url: 'get_challenge',
+            url: baseurl+'challenges/get_challenge',
             data: data,
             async:false,
             success: function(response) {//alert(response);
