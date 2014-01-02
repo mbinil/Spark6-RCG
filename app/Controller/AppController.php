@@ -79,12 +79,12 @@ class AppController extends Controller {
 		$this->set('AlertCount', $AlertCount);
                 
                 
-                //notification for challenge invitation
-                if($this->Session->read("session_user_id"))
-                {
-                    $Userchallenge  =   new Userchallenge();
-                    $this->set('Notification_invities', $Userchallenge->createNotification($this->Session->read("session_user_id")));
-                }
+		//notification for challenge invitation
+		if($this->Session->read("session_user_id"))
+		{
+			$Userchallenge  =   new Userchallenge();
+			$this->set('Notification_invities', $Userchallenge->createNotification($this->Session->read("session_user_id")));
+		}
 
    	}
 } 

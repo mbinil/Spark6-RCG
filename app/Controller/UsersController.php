@@ -338,4 +338,36 @@ class UsersController extends AppController {
 		$this->set('userid', $userid);
 		$this->set('challenges', $userid?$this->Challenge->getProfileChallenge($userid):'');
 	}
+	
+	public function ajax_change_invitation()
+	{
+		$status =   7;
+		$accept_flag = 0;
+		if($_POST['need'] == 'agree')
+			$status =   6;
+		
+		$this->loadModel('Userchallenge');
+		if($_POST['need'] == 'agree')
+		{
+			$notcountchall = $this->Userchallenge->getNotificationCountByChallengeid($this->Session->read("session_user_id"), $_POST['chalid']);
+			if(count($notcountchall)>0)
+			{
+				$accept_flag = 1;				
+			}
+		}
+		
+		if($accept_flag == 0)
+		{
+			$this->Userchallenge->id  =   $_POST['id'];
+			if($this->Userchallenge->SaveField('user_challenge_status',$status))
+				echo "1";
+			else
+				echo "0";
+		}
+		else
+		{
+			echo "2";
+		}			
+		exit;
+	}
 }

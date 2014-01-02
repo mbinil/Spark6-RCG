@@ -46,6 +46,9 @@ $.ajax({  //Make the Ajax Request
 #userreg #show_file_ul p {
 	display:none !important;
 }
+#upload ul li span {
+    top: 10px !important;
+}
 </style>
 <!-- main content block -->
 <?php 
@@ -150,6 +153,8 @@ $eBayBusinessUnitLoc = Configure::read('eBayBusinessUnitLoc');
 					<!--drag & drop starting here-->
 	  			<form id="upload" method="post" action="adminuser_uploads" enctype="multipart/form-data">
 					<input type="hidden" name="fileuploaded" id="fileuploaded" />
+					<input type="hidden" name="draganddropfrom" id="draganddropfrom" value="registrationstep1" />
+					<input type="hidden" name="draganddropimagesuccess" id="draganddropimagesuccess" value="0" />
 					<input type="hidden" name="root_path" id="root_path" value="<?php echo Router::url('/app/webroot/img/useruploads', true); ?>" />
 					<input type="hidden" name="image_rand_num" id="image_rand_num" value="" />
 					<div id="drop"> 

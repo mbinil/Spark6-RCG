@@ -99,12 +99,12 @@ class ChallengesController extends AppController
 	{
 		$this->loadModel('Challenge');
 		
-                //$host_array =   $this->Challenge->showAHost($_POST['challenge_id'],$this->Session->read("session_user_id"));
+		//$host_array =   $this->Challenge->showAHost($_POST['challenge_id'],$this->Session->read("session_user_id"));
 
-                $this->set('show_host_array',$this->Challenge->showAHost($_POST['challenge_id'],$this->Session->read("session_user_id")));
-                $this->set('challenge_id',$_POST['challenge_id']);
-                
-                $html   =   $this->render('element_show_host');
+		$this->set('show_host_array',$this->Challenge->showAHost($_POST['challenge_id'],$this->Session->read("session_user_id")));
+		$this->set('challenge_id',$_POST['challenge_id']);
+		
+		$html   =   $this->render('element_show_host');
                                 
 		echo "1#@#".$html;exit;
 	}
@@ -233,35 +233,46 @@ class ChallengesController extends AppController
 			
 			$this->loadModel("Challenge");
 			$challenge_info =   $this->Challenge->getChallengebyCondition(array('permalink' => $hostChallengeInfo['challenge_permlink']));
-
+			$insert_array   =   array();
+            $insert_array['challenge_name']    =   $challenge_info[0]['Challenge']['name'];
+			$insert_array['challenge_link']    =   $challenge_info[0]['Challenge']['permalink'];
 			$selected_user_id   =   explode(",", rtrim($hostChallengeInfo['selected_user_id'], ","));
 			array_unshift($selected_user_id, $this->Session->read("session_user_id"));
 			$return_flag    =   1;
 			$i=0;
 			$user_challenge_array   =   array();
+			$user_email_array   =   '';
+			$this->loadModel("User");
+			$inviteduserinfo = $this->User->GetUserById($this->Session->read("session_user_id"));
+			$inviteduserFirstname=$inviteduserinfo[0]['User']['user_firstname'];  // first name
+			$inviteduserLastname=$inviteduserinfo[0]['User']['user_lastname'];    // last name
+			$inviteduserEmail=$inviteduserinfo[0]['User']['user_email'];          //email
 			foreach ($selected_user_id as $key => $value) 
 			{
-				$insert_array   =   array();
 				$insert_array['user_id']    =   $value;
 				$insert_array['challenge_id']    =   $challenge_info[0]['Challenge']['id'];
 				if($i == 0)
 					$insert_array['user_challenge_hostid']    =   '';
 				else
+				{
 					$insert_array['user_challenge_hostid']    =   $selected_user_id[0];
-				
+		        	$Hosteduserinfo = $this->User->GetUserById($value);
+					$user_email_array.=$Hosteduserinfo[0]['User']['user_email'].',';
+				}
 				$insert_array['user_challenge_status']                  =   0;
 				$insert_array['user_challenge_point']                   =   0;
 				$insert_array['user_challenge_weekly_goal_completion']  =   '';
 				$insert_array['user_challenge_notification_completion'] =   '';
 				$insert_array['user_challenge_added']                   =   date("Y-m-d H:i:s");
-				$insert_array['started_date']                           =   date('Y-m-d H:i:s',  strtotime($_POST['chalngbegining']." ".$_POST['time_host'].":00"));
+				$insert_array['started_date']                           =   date('Y-m-d H:i:s',  strtotime($_POST['chalngbegining']." 00:00:00"));
 				$insert_array['started_date_iso']                       =   date('Y-m-d H:i:s',  strtotime($_POST['chalngbegining']." ".$_POST['time_host'].":00"));
-				$insert_array['user_challenge_finished_date']           =   date("Y-m-d H:i:s",strtotime("+".$challenge_info[0]['Challenge']['length_of_challenge']." days", strtotime($_POST['chalngbegining']." ".$_POST['time_host'].":00")));
+				$insert_array['user_challenge_finished_date']           =   date("Y-m-d H:i:s",strtotime("+".$challenge_info[0]['Challenge']['length_of_challenge']." days", strtotime($_POST['chalngbegining']." 12:00:00")));
 				if($i == 0)
 					$insert_array['user_challenge_invitedby']    =   0;
 				else
+				{
 					$insert_array['user_challenge_invitedby']    =   $selected_user_id[0];
-				
+				}
 				$insert_array['user_challenge_private']    =   $hostChallengeInfo['check2'];
 				$insert_array['user_challenge_invitees_invite']    =   $hostChallengeInfo['check1'];
 				$insert_array['user_challenge_daily_total']    =   0;
@@ -273,7 +284,54 @@ class ChallengesController extends AppController
 			if(!$this->Userchallenge->saveMany($user_challenge_array))
 			{
 				$return_flag =  0;
-			}  
+			} 
+			else
+			{
+			
+			//email function starts here
+			//echo  rtrim($user_email_array,',');
+			//echo $this->Session->read("session_user_email");
+			$formcontent='<table width="699" border="0" cellspacing="0" cellpadding="5" align="left">
+						  <tr>
+							<td><img src="'.Router::url('/', true).'img/ebay_inc_logo.png" border="0" /></td>
+						  </tr>
+						  <tr>
+							<td height="20"></td>
+						  </tr>
+						  <tr>
+							<td>'.$inviteduserFirstname.' '.$inviteduserLastname.' has invited you to participate in the challenge "'.$insert_array['challenge_name'].'" at ebay inc.</td>
+						  </tr>
+						  <tr>
+							<td height="10"></td>
+						  </tr>
+						  <tr>
+							<td>Challenge starts on: '.$insert_array['started_date'].'</td>
+						  </tr>
+						  <tr>
+							<td height="10"></td>
+						  </tr>
+						  <tr>
+							<td>Click on the below link to view challenge:</td>
+						  </tr>
+						  <tr>
+							<td>'.Router::url('/discover/', true).$insert_array['challenge_link'].'</td>
+						  </tr>
+						  <tr>
+							<td height="40"></td>
+						  </tr>
+						  <tr>
+							<td>Thnaking you<br/>ebay inc team</td>
+						  </tr>
+					</table>';
+				$recipient = rtrim($user_email_array,',');
+				$subject = "You have a challenge invitation from ebay inc.\n";
+				$headers = "From: ".$inviteduserEmail."\n";
+				$headers .= "MIME-Version: 1.0\n";
+				$headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
+				$headers .= "X-Mailer: PHP \n";
+				mail($recipient, $subject, $formcontent, $headers);
+				/// mail function ends here
+			} 
 			echo $return_flag;exit;
 		}
 		else

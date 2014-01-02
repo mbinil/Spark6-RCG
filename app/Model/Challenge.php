@@ -184,15 +184,46 @@ class Challenge extends AppModel
 	 * @param array $challenges challenge array
 	 * @return string challenge html wil return
 	 */
-	public function getHtml($challenges)
+	public function getHtml($challenges, $login_user_id)
 	{
 		$host_challenge_status  =   array(0,1,4,6);
 		$return_html    =   '';
+                App::import('Model', 'Userchallenge');
+                $Userchallenge = new Userchallenge();
+
 		foreach ($challenges as $key => $value) 
 		{
-			App::import('Model', 'Userchallenge');
-			$Userchallenge = new Userchallenge();
-			$get_host   =   $Userchallenge->getHostArray($value['Challenge']['id']);
+                    $show_challenge_flag    =   0;
+                    if($login_user_id)
+                    {
+                        if(!$this->getHourMinutes($value['Challenge']['start_date'],'','hour') && $value['Challenge']['start_date'] != '0000-00-00 00:00:00')
+                        {
+                            $arrfailed    =   $Userchallenge->getFailedChallenges($login_user_id);
+                            if($arrfailed)
+                            {
+                                if(in_array($value['Challenge']['id'], $arrfailed))
+								{
+                                    $show_challenge_flag    =   1;
+								}	
+                            }
+                            else
+                            {
+								$show_challenge_flag    =   1;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(!$this->getHourMinutes($value['Challenge']['start_date'],'','hour') && $value['Challenge']['start_date'] != '0000-00-00 00:00:00')
+                        {
+                            if(!$Userchallenge->getChallengeActiveUser($value['Challenge']['id']))
+                                $show_challenge_flag    =   1;
+                        }
+                    }
+					
+                    if($show_challenge_flag == 0)
+                    {
+                        $get_host   =   $Userchallenge->getHostArray($value['Challenge']['id']);
 			//echo "<pre>";print_r($get_host);exit;
 			
 			if(empty($this->session_user_id))
@@ -220,7 +251,7 @@ class Challenge extends AppModel
 				{
 					$date_flag  =   0;
 				}
-				if($date_flag  ==   1)
+				if($date_flag  ==   1 || $show_challenge_flag == 0)
 				{
 					$return_html    .=   $anchor;
 					if($this->session_user_id == '')
@@ -280,7 +311,7 @@ class Challenge extends AppModel
 									</div>
 									</a>
 									<ul class="meta">
-										<li>In <a onclick="showChallenge(this,\'parent\',\'\',\''.$value['categorie']['id'].'\')" href="javascript:void(0);">'.$value['categorie']['title'].' Lifestyle</a></li>
+										<li>In <a onclick="showChallenge(this,\'parent\',\'\',\''.$value['categorie']['id'].'\')" href="javascript:void(0);">'.$value['categorie']['title'].'</a></li>
 										<li class="difficulty">
 											<div style="margin: 0px;"><img src="'. Router::url('/', true) . 'img/diffuploads/' . $value['difficulty']['decal'] .'" border="0" width="25" style=" background-color:#CCC;" /></div>
 											<span>'.$value['difficulty']['title'].' Difficulty</span></li>
@@ -330,8 +361,10 @@ class Challenge extends AppModel
 </div>';
 			}
 			$return_html    .=   '</div>';
+                    }
 		}
-		
+		if(!$return_html)
+           $return_html    =   '<div align="center">No Challenges Found...</div>';
 		return $return_html;
 	}
 	
@@ -640,7 +673,7 @@ class Challenge extends AppModel
 					<div class="about">
 						<header class="title">												
 							<h2><a href="'.$fullurl.'discover/'.$value['Challenge']['permalink'].'" style="cursor:pointer;">'.$value['Challenge']['name'].'</a></h2>
-							<span class="note">In <a style="cursor:pointer;" onclick="showDiscover(\''.$value['categorie']['id'].'\')" >'.$value['categorie']['title'].' Lifestyle</a></span>
+							<span class="note">In <a style="cursor:pointer;" onclick="showDiscover(\''.$value['categorie']['id'].'\')" >'.$value['categorie']['title'].'</a></span>
 						</header>
 						<p style="min-height:57px;">'.$string.'</p>
 					</div>
@@ -815,7 +848,7 @@ array('userchallenge.challenge_id = Challenge.id and userchallenge.user_id != '.
         public function createCallenge($from, $val, $parent, $login_user_id, $child)
         {
             $this->session_user_id    =   $login_user_id;
-            return $this->getHtml($this->getValue($this->getConditions($from,$val,$parent, $child)));
+            return $this->getHtml($this->getValue($this->getConditions($from,$val,$parent, $child)), $login_user_id);
         }
         
 	/**

@@ -36,6 +36,9 @@ echo $this->Html->script('discover.js');?>
 	-webkit-transform: rotate(45deg); /* Safari and Chrome */
 	margin: -33px 0px 0px -33px;
 }
+.column-holder .host-block h2 {
+    background: none;
+}
 </style>
 <!-- main content block -->
 <div class="container_left" style="width:100% !important; border: 1px solid #fff;">

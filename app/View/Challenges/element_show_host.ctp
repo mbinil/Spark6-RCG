@@ -8,7 +8,7 @@
 			</div>
 			<!--------------------------------------->           
 			<div class="host_challenge_step1">
-				<div style="margin:0px; width:92%; float:left; border: 2px solid #BDC3C7;">
+				<div style="margin:0px; width:100%; float:left;">
 <?php if($show_host_array && count($show_host_array) > 0) {
 $i          =   0;
 $fullurl    =   Router::url('/', true);
@@ -41,9 +41,6 @@ if($i > 0)
 </div>
 <?php } else { ?>
     <div class="lightbox-holder">
-        <header class="heading">
-            <h1>Join an open group below</h1>
-        </header>				
         <div align="center" class="add_partcipants">No open groups to list</div>
     </div>
 <?php } ?>

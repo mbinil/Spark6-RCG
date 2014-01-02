@@ -115,15 +115,15 @@ echo $this->Html->script('host_challenge.js');
 			</ul>
 		</div>
 		<div class="clear"></div>
-		<hr/>            
+		<hr style="border-color:#CCCCCC;"/>            
 		<div class="container_left">
 			<div class="btn_next">
 			  <a href="javascript:host_challenge_save('');" class="btn btn-primary btn-block" >Save<span class="fui-arrow-right pull-right"></span></a>
 			</div>
-			<h1>When should the challenge start?</h1>
+			<h1>This challenge starts on the date below.</h1>
 			<h3>Start now or any point in the future.</h3>
 			<div style="margin:0px; width:100%; float:left;">
-				<hr/>
+				<hr style="border-color:#CCCCCC;"/>
 			</div>
 			<div class="clear"></div>
 			<!----Error message div------------------>
@@ -140,15 +140,15 @@ echo $this->Html->script('host_challenge.js');
 		</div>   
 		<div class="clear"></div>
 		<div style="margin:0px; width:100%; float:left;">
-			<hr/>
+			<hr style="border-color:#CCCCCC;"/>
 		</div>
 		<div class="clear"></div>
 		<div style="margin:0 0 0 0; width:100%; float:left;">
-			<h3>Start challenge on</h3>
 			<div id="datepicker-from"></div>
 		</div>
 		<div class="clear"></div>
-		<div style="margin:10px 0 0 0; width:100%; float:left;">
+		<input type="hidden" name="time_host" id="time_host" value="00:00" />
+		<?php /*?><div style="margin:10px 0 0 0; width:100%; float:left;">
 			<h3>At</h3>
 			<?php $eBayBusinessUnit = Configure::read('HostTimeInterval'); ?>
 			<select name="time_host" id="time_host">
@@ -157,7 +157,7 @@ echo $this->Html->script('host_challenge.js');
 					<option value="<?php echo $key;?>"><?php echo $value;?></option>;
 				<?php }?>
 			</select>
-		</div>
+		</div><?php */?>
 		<div style="margin:10px 0 0 0; width:100%; float:left;">
 			<input type="checkbox" name="check1" id="check1" value="0" onclick="changecheck1(this)" style="margin:11px 10px 0 0;" /><h3>Allow people to invite their friends</h3>
 		</div>

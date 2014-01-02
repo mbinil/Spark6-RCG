@@ -1,4 +1,3 @@
-<style>.ui-dialog {padding:0;}.ui-widget-header {background: linear-gradient(to bottom, #F3EEE5 0%, #EDE5D9 50%, #E5DBCA 100%) repeat scroll 0 0 rgba(0, 0, 0, 0) !important; border-bottom: 1px solid #D0C8BA !important;} #dialog_host_this #main { margin: 0 auto -1px; padding: 0 0 20px; width: 100%;}.ui-dialog-title { font-size: 28px; line-height: 1.5; text-align: center; width: 100%;}.ui-dialog .ui-dialog-title { width: 100%;}</style>
 <link href="<?php echo Router::url('/app/webroot/file_upload/css/style.css',true); ?>" rel="stylesheet" />
 <script type="text/javascript">
 /*function checkavail(val,mode,id)
@@ -47,9 +46,9 @@ function validateFieldcheck(id,val)
 <div class="clear"></div>
 <div class="container_left" style="width:100% !important; border: 1px solid #fff; padding-right:0px;">
   <!----Error message div------------------>
-  <div class="alert" id="alert_div_login" style="background-color:#FF6A6A;border-color:red;color:#FFF;display:none;">
-    <button type="button" data-dismiss="alert1" class="close fui-cross" onclick="javascript:$('#alert_div_login').hide();"></button>
-    <span id="message_span_login"></span>	
+  <div class="alert" id="alert_div" style="background-color:#FF6A6A;border-color:red;color:#FFF;display:none;">
+    <button type="button" data-dismiss="alert1" class="close fui-cross" onclick="javascript:$('#alert_div').hide();"></button>
+    <span id="message_span"></span>	
   </div>
 <!--------------------------------------->	
   <!--discrption-->

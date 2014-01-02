@@ -125,7 +125,7 @@ class User extends AppModel
             $user_html      .=  '<div class="row">
                                 <div class="col-xs-6 col-md-3" >
                                 <img height="80" width="80" border="0" src="'.$fullurl.'img/useruploads/'.$user_detail[0]['User']['user_profile_picture'].'" alt="Image">
-                                </div><div class="col-xs-6 col-md-9" style="border: 1px solid #EEE;"><div class="row">';
+                                </div><div class="col-xs-6 col-md-9" style="border: 1px solid #CCC;"><div class="row">';
             
             foreach ($user_val as $key => $value) 
             {
@@ -136,7 +136,7 @@ class User extends AppModel
                                         </div>';
             }
             
-            $user_html  .=   '<div class="col-xs-6 col-md-3" style="float: left; text-align: center; width: 120px; padding: 7px 15px; height: 40px; border: 1px dashed rgb(204, 204, 204); margin: 13px;">
+            $user_html  .=   '<div class="col-xs-6 col-md-3" style="float: left; text-align: center; width: 120px; padding: 7px 15px; height: 40px; border: 1px dashed #CCC; margin: 13px;">
                             <a href="'.Router::url('/host_challenge_step1/'.$challenge_permlink, true).'" style="cursor:pointer;"/>Invite more</a>
                             </div></div></div></div>';
             

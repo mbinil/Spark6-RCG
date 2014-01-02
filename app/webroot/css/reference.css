@@ -256,7 +256,7 @@ em.mask{
     border-right: 1px solid #2C3E50;
     clear: none;
     float: left;
-    padding:13px 25px;
+    padding:16px 25px;
     width: 302px;
 }
 #header .search-form fieldset{
@@ -2640,7 +2640,7 @@ h1{
 }
 .single-host .image-holder{
 	float:left;
-	width:100px;
+	width:108px;
 	margin:0 11px 0 0;
 	padding:4px;
 	background:#fff;
@@ -2683,7 +2683,7 @@ h1{
 }
 .multi-host ul li{
 	float:left;
-	width:100px;
+	width:108px;
 	padding:4px;
 	margin:0 0 4px 4px;
 	background:#fff;

@@ -15,16 +15,29 @@ function uniformSearch(evt,ob)
     }
 }
 
-function changeNotification(need,id)
+function changeNotification(need,id,chalid)
 {
+	var baseurl =   $('#baseurl').val();
     $.ajax({  //Make the Ajax Request
             type: "POST",  
-            url: "admin/ajax_change_invitation",
-            data: "need="+need+"&id="+id,  //data
+            url: baseurl+"users/ajax_change_invitation",
+            data: "need="+need+"&id="+id+"&chalid="+chalid,  //data
             async:false,
             success: function(response) {
                 if(response == 1)
-					window.location	=	'discover';
+				{
+					window.location	= baseurl+'discover';
+				}
+				else if(response == 2)
+				{
+					$('#dialog-ChallengeNotification').html("<style>.ui-dialog {padding:0;}.ui-widget-header {background: linear-gradient(to bottom, #F3EEE5 0%, #EDE5D9 50%, #E5DBCA 100%) repeat scroll 0 0 rgba(0, 0, 0, 0) !important; border-bottom: 1px solid #D0C8BA !important;}</style>You have already picked a host for this challenge. So cannot pick again.<br/>Please try later!");
+					$('#dialog-ChallengeNotification').dialog({
+                        height: 150,
+                        width:  700,
+                        title:'Pick host warning!!',
+                        modal: true
+                    });
+				}
             } 
     });
 }
@@ -2024,26 +2037,26 @@ function submitLoginuser()
 	if(loginpassword=="" || loginpassword.length < 6)
 	{
 		if(!loginpassword)
-			$('#message_span').html('Please enter your password!!');
+			$('#message_span_login').html('Please enter your password!!');
 		else if(loginpassword.length < 6)
-			$('#message_span').html('Enter a valid password!!');
-		$('#alert_div').show();
+			$('#message_span_login').html('Enter a valid password!!');
+		$('#alert_div_login').show();
 		$("#loginpassword").css("border-color", "red");
 		return_flag    =   1;
 	}
 	if(loginusername=="" || !filter.test(loginusername))
 	{
 		if(!loginusername)
-			$('#message_span').html('Please enter your username!!');
+			$('#message_span_login').html('Please enter your username!!');
 		else if(!filter.test(loginusername))
-			$('#message_span').html('Enter a valid username(email)!!');
-		$('#alert_div').show();
+			$('#message_span_login').html('Enter a valid username(email)!!');
+		$('#alert_div_login').show();
 		$("#loginusername").css("border-color", "red");
 		return_flag    =   1;
 	}
 	if(return_flag == 0)
 	{
-		$('#alert_div').hide();
+		$('#alert_div_login').hide();
 		$("#loginusername").css("border-color", "#BDC3C7");
 		$("#loginpassword").css("border-color", "#BDC3C7");
 		$.ajax({  //Make the Ajax Request
@@ -2058,8 +2071,8 @@ function submitLoginuser()
 				}
 				else
 				{
-					$('#message_span').html('Invalid login info!!');
-					$('#alert_div').show();
+					$('#message_span_login').html('Invalid login info!!');
+					$('#alert_div_login').show();
 					$("#loginusername").css("border-color", "red");
 					$("#loginpassword").css("border-color", "red");
 				}

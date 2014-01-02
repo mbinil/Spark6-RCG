@@ -339,7 +339,7 @@ class Userchallenge extends AppModel
     
     public function getNotification($login_id)
     {
-        return $this->find('all',array('fields'=>array('Userchallenge.*,challenge.name'),
+        return $this->find('all',array('fields'=>array('Userchallenge.*,challenge.name, user.user_firstname, user.user_profile_picture'),
                                         'joins' => array(
                                                                 array(
                                                                     'table' => 'challenges',
@@ -347,7 +347,15 @@ class Userchallenge extends AppModel
                                                                     'type' => 'inner',
                                                                     'foreignKey' => false,
                                                                     'conditions'=> array('Userchallenge.challenge_id = challenge.id')
-                                                                )),
+                                                                ),
+																array(
+                                                                    'table' => 'users',
+                                                                    'alias' => 'user',
+                                                                    'type' => 'inner',
+                                                                    'foreignKey' => false,
+                                                                    'conditions'=> array('Userchallenge.user_challenge_hostid = user.id')
+                                                                )
+																),
                                         'conditions'=>array(
                                                                 "DATE_FORMAT( NOW() , '%Y-%m-%d %T' ) <= DATE_FORMAT(Userchallenge.started_date, '%Y-%m-%d %T' )",
                                                                 "Userchallenge.user_challenge_hostid IS NOT NULL",
@@ -385,6 +393,16 @@ class Userchallenge extends AppModel
                                                     )
                                         );
     }
+	
+	public function getNotificationCount($userid)
+	{
+		return $this->find('all', array('conditions'=>array("user_challenge_hostid IS NOT NULL", "user_id" => $userid, "user_challenge_status" => 0)));
+	}
+	
+	public function getNotificationCountByChallengeid($userid, $challengeid)
+	{
+		return $this->find('all', array('conditions'=>array("user_challenge_hostid IS NOT NULL", "user_id" => $userid, "challenge_id"=>  $challengeid, "user_challenge_status IN (1,4,5,6)" )));
+	}
     
     public function createNotification($login_id)
     {
@@ -395,7 +413,7 @@ class Userchallenge extends AppModel
         if(count($notification) >= 1)
         {
             $html   =   '<section class="drop-row">
-                            <h2>2 Invites to Join...</h2>
+                            <h2>'.count($this->getNotificationCount($login_id)).' Invites to Join...</h2>
                             <ul>';
             foreach ($notification as $key => $value)
             {
@@ -406,25 +424,16 @@ class Userchallenge extends AppModel
                                     );
                 $co_participants    =   $this->getParticipantsArray($condition);
                 $count              =   count($co_participants);
-                $image              =   '';
-                $name               =   '';
-                foreach ($co_participants as $key1 => $value1)
-                {
-                    if($value1['Userchallenge']['user_id'] != $login_id)
-                    {
-                        $image              =   $value1['user']['user_profile_picture'];
-                        $name               =   $value1['user']['user_firstname'];
-                        break;
-                    }
-                }
+                $image              =   $value['user']['user_profile_picture'];
+                $name               =   $value['user']['user_firstname'];
                 $html   .=  '<li class="">
                                 <div class="holder">
                                     <img height="50" width="50" class="alignleft" alt="image description" src="'.$fullurl.'img/useruploads/'.$image.'">
                                     <div class="txt">
                                         <h3>'.$value['challenge']['name'].'</h3>
                                         <p><a href="#">'.$name.'</a> + '.$count.' participants</p>
-                                        <a class="agree" href="#" style="opacity: 0;" onclick="changeNotification(\'agree\',\''.$value['Userchallenge']['id'].'\')">agree</a>
-                                        <a class="reject" href="#" style="opacity: 0;" onclick="changeNotification(\'reject\',\''.$value['Userchallenge']['id'].'\')">reject</a>
+                                        <a class="agree" href="#" style="opacity: 0;" onclick="changeNotification(\'agree\',\''.$value['Userchallenge']['id'].'\',\''.$value['Userchallenge']['challenge_id'].'\')">agree</a>
+                                        <a class="reject" href="#" style="opacity: 0;" onclick="changeNotification(\'reject\',\''.$value['Userchallenge']['id'].'\',\''.$value['Userchallenge']['challenge_id'].'\')">reject</a>
                                     </div>
                                 </div>
                                 <span class="label orange"></span>
@@ -471,5 +480,41 @@ class Userchallenge extends AppModel
         
         return $html;
     }
+    
+    public function getFailedChallenges($login_user_id)
+    {
+        $arr    =   $this->find('all',array('fields'=>array('Userchallenge.challenge_id'),
+                                                            'conditions'=>array(
+                                                                "Userchallenge.user_challenge_status in (3,8)",
+                                                                "Userchallenge.user_id" => $login_user_id
+                                                            )
+                                                    )
+                                        );
+        $return_arr =   '';
+        if($arr)
+        {
+            $i          =   0;
+            foreach ($arr as $key => $value)
+            {
+                $return_arr[$i] =   $value['Userchallenge']['challenge_id'];
+                $i++;
+            }
+        }
+        
+        return $return_arr;
+    }
+    
+    public function getChallengeActiveUser($challenge_id)
+    {
+        return $this->find('all',array('fields'=>array('Userchallenge.id'),
+                                                            'conditions'=>array(
+                                                                "Userchallenge.user_challenge_status" => 1,
+                                                                "Userchallenge.challenge_id" => $challenge_id
+                                                            )
+                                                    )
+                                        );
+    }
+    
+    
 }
 ?>

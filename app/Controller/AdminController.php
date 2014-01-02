@@ -1225,21 +1225,6 @@ class AdminController extends AppController
 		}
 	}
 	
-        public function ajax_change_invitation()
-        {
-            $status =   7;
-            if($_POST['need'] == 'agree')
-                $status =   6;
-            
-            $this->loadModel('Userchallenge');
-            $this->Userchallenge->id  =   $_POST['id'];
-            if($this->Userchallenge->SaveField('user_challenge_status',$status))
-                echo "1";
-            else
-                echo "0";
-            exit;
-        }
-        
 	/**
 	 * Creating the image for badge while selecting the color from color picker
 	 */

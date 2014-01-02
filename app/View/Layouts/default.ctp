@@ -116,8 +116,8 @@
 function Loginuser()
 {
 	$( "#dialog-loginuser" ).dialog({
-		height: 250,
-		width:  390,
+		height: 280,
+		width:  400,
 		title: "Returning? Sign in!!",
 		modal: true
 	});
@@ -168,7 +168,7 @@ function Loginuser()
 					<li><?php echo $this->Html->link('View Profile',array('controller'=>'users','action'=>'view_profile')); ?></li>
 					<li><?php echo $this->Html->link('Logout',array('controller'=>'users','action'=>'logout')); ?></li>
 				</ul>
-                                <?php echo $Notification_invities;?>
+                <?php echo $Notification_invities;?>
 				<?php echo $this->element('slidedown_challenge_list'); ?>
 			</div>
 		</div>
@@ -272,6 +272,8 @@ function Loginuser()
 <?php } ?>
 <div id="dialog-loginuser" style="display: none;" >
     <?php echo $this->element('loginuser'); ?>
+</div>
+<div id="dialog-ChallengeNotification" style="display: none;" >
 </div>
 </body>
 </html>

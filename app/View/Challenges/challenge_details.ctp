@@ -14,6 +14,9 @@
     width: 43px;
     z-index: 3;
 }
+.container h2 {
+    background: none;
+}
 </style>
 <?php
 $fullurl = Router::url('/', true);
@@ -68,11 +71,11 @@ function showAHost(challenge_id)
                 data        =   response.split('#@#');
                 if(data[0] == 1)
                 {
-                    $( "#dialog_host_this" ).html(data[1]);
-                    $( "#dialog_host_this" ).dialog({
-                        height: 840,
-                        width:  1025,
-                        title:'Pick Host',
+					$('#dialog_host_this').html("<style>.ui-dialog {padding:0;}.ui-widget-header {background: linear-gradient(to bottom, #F3EEE5 0%, #EDE5D9 50%, #E5DBCA 100%) repeat scroll 0 0 rgba(0, 0, 0, 0) !important; border-bottom: 1px solid #D0C8BA !important;} #dialog_host_this #main { margin: 0 auto -1px; padding: 0 0 20px; width: 100%;}.ui-dialog-title { font-size: 28px; line-height: 1.5; text-align: center; width: 100%;}.ui-dialog .ui-dialog-title { width: 100%;}</style>"+data[1]);
+					$('#dialog_host_this').dialog({
+                        height: 200,
+                        width:  935,
+                        title:'Join an open group below',
                         modal: true
                     });
                 }
@@ -147,7 +150,7 @@ function insertComment()
 				<figure class="image-holder">
 					<img src="<?php echo Router::url('/img/challengeuploads/', true) . $challenge_info[0]['Challenge']['hero_image']; ?>" width="710" height="480" alt="image description">
 					<figcaption class="txt">
-                                            <span class="note">In <a href="javascript:void(0);" onclick="showDiscover('<?php echo $challenge_info[0]['category']['id']; ?>')" style="cursor:pointer;"><?php echo $challenge_info[0]['category']['title']; ?> Lifestyle</a></span>
+                                            <span class="note">In <a href="javascript:void(0);" onclick="showDiscover('<?php echo $challenge_info[0]['category']['id']; ?>')" style="cursor:pointer;"><?php echo $challenge_info[0]['category']['title']; ?></a></span>
 						<p><?php echo $challenge_info[0]['Challenge']['daily_commitment']; ?></p>
 					</figcaption>
 				</figure>
@@ -342,7 +345,7 @@ if($hosts_count > 0) { ?>
                                                     <strong class="name"><?php echo $available_host[0]['user']['user_firstname'];?></strong>
                                             </div>
                                     </div>
-<?php if($starts_in) { ?>
+<?php if($starts_in && $starts_in['days'] == 0 && $starts_in['hour'] == 0 && $starts_in['minutes'] < 60) { ?>
                                     <div class="note">
                                             <p>Starts in :<?php echo $starts_in['minutes'];?> minutes</p>
                                     </div>
